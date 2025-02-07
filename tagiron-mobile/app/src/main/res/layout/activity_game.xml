@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="java.util.List" />
+
+        <import type="com.icloud.hashiguchi.tagironmobile.constants.TileColor" />
+
+        <import type="com.icloud.hashiguchi.tagironmobile.data.Tile" />
+
+        <variable
+            name="viewmodel"
+            type="com.icloud.hashiguchi.tagironmobile.data.GameLiveDataViewModel" />
+
+        <variable
+            name="tile"
+            type="Tile" />
+
+        <variable
+            name="myText"
+            type="String" />
+
+        <variable
+            name="myTiles"
+            type="List&lt;Tile>" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_bg"
+        tools:context=".ui.activities.GameActivity">
+
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/linearLayout1"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"-->
+        <!--            app:layout_constraintTop_toTopOf="parent">-->
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{viewmodel.text + viewmodel.myTiles[0].no }"
+            android:textColor="@color/black"
+            android:textSize="40dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout2">
+
+            <include
+                layout="@layout/tile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[0]}" />
+
+            <include
+                layout="@layout/tile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[1]}" />
+
+            <include
+                layout="@layout/tile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[2]}" />
+
+            <include
+                layout="@layout/tile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[3]}" />
+
+            <include
+                layout="@layout/tile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[4]}" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

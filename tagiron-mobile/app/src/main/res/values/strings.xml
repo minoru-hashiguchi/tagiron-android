@@ -5,4 +5,5 @@
     <string name="last_atack">後攻</string>
     <string name="random">ランダム</string>
     <string name="msg_select_for_first_move_or_last_attack">先攻・後攻を選択してください</string>
+    <string name="question_sample">［共有情報カード］¥n数字タイルの最大の数から、¥n最小の数を引いた数は？</string>
 </resources>

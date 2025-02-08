@@ -64,7 +64,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewQuestions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="310dp"
             app:layout_constraintBottom_toTopOf="@id/linearLayoutPlayersLabel"
             app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions" />
 
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:paddingHorizontal="5dp"
             app:layout_constraintBottom_toTopOf="@id/linearLayoutBothPlayersQuestion"
             app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions">
 
@@ -126,12 +126,14 @@
                 android:id="@+id/recyclerViewQuestions1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
                 android:layout_weight="1" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewQuestions2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -141,6 +143,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/your_tiles_label"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@id/linearLayoutYourTileButtons"
             app:layout_constraintTop_toBottomOf="@id/linearLayoutBothPlayersQuestion" />
 
@@ -150,7 +153,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp"
             app:layout_constraintBottom_toTopOf="@id/linearLayoutYourTiles"
             app:layout_constraintTop_toBottomOf="@id/textViewYourTilesLabel">
 

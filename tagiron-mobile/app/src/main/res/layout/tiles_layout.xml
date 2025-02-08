@@ -5,10 +5,6 @@
 
         <import type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
 
-        <!--        <import type="androidx.lifecycle.LiveData" />-->
-
-        <!--        <import type="kotlin.collections.MutableList" />-->
-
         <import type="java.util.List" />
 
         <variable
@@ -18,7 +14,6 @@
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/linearLayoutYourTiles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"

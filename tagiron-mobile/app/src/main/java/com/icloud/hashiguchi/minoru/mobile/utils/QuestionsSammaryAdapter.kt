@@ -9,17 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.tagironmobile.R
 
-class FieldQuestionCardsAdapter(private val questionCardList: LiveData<MutableList<QuestionBase>>) :
-    RecyclerView.Adapter<FieldQuestionCardsAdapter.QuestionCardListRecyclerViewHolder>() {
+class QuestionsSammaryAdapter(private val questionCardList: LiveData<MutableList<QuestionBase>>) :
+    RecyclerView.Adapter<QuestionsSammaryAdapter.QuestionCardListRecyclerViewHolder>() {
 
-    private lateinit var listener: FieldQuestionCardsAdapterListener
+    private lateinit var listener: QuestionsSammaryAdapterListener
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): QuestionCardListRecyclerViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.question_card_layout, parent, false)
+        val view = inflater.inflate(R.layout.question_sammary_layout, parent, false)
         return QuestionCardListRecyclerViewHolder(view)
     }
 
@@ -29,6 +29,7 @@ class FieldQuestionCardsAdapter(private val questionCardList: LiveData<MutableLi
 
     override fun onBindViewHolder(holder: QuestionCardListRecyclerViewHolder, position: Int) {
         holder.questionText.text = questionCardList.value?.get(position)?.text
+        holder.answerText.text = questionCardList.value?.get(position)?.text
 
         holder.itemView.setOnClickListener {
             listener.contentTapped(position)
@@ -37,13 +38,14 @@ class FieldQuestionCardsAdapter(private val questionCardList: LiveData<MutableLi
 
     class QuestionCardListRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var questionText: TextView = itemView.findViewById(R.id.textViewQuestionText)
+        var answerText: TextView = itemView.findViewById(R.id.textViewAnswerText)
     }
 
-    fun setListener(listener: FieldQuestionCardsAdapterListener) {
+    fun setListener(listener: QuestionsSammaryAdapterListener) {
         this.listener = listener
     }
 
-    interface FieldQuestionCardsAdapterListener {
+    interface QuestionsSammaryAdapterListener {
         fun contentTapped(position: Int)
     }
 }

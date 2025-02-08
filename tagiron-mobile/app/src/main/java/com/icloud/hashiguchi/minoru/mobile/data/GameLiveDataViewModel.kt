@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.icloud.hashiguchi.minoru.tagiron.Tile
 import com.icloud.hashiguchi.minoru.tagiron.constants.Color
+import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
+import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 
 class GameLiveDataViewModel : ViewModel() {
     private var _text = MutableLiveData("あなたの手札")
@@ -17,10 +19,20 @@ class GameLiveDataViewModel : ViewModel() {
             Tile(8, Color.RED)
         )
     )
+    private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
+
+    init {
+        for (i in 0..5) {
+            _fieldQuestions.value?.add(Constant.QUESTIONS.get(i))
+        }
+    }
 
     val myTiles: LiveData<MutableList<Tile>>
         get() = _myTiles
 
     val text: LiveData<String>
         get() = _text
+
+    val fieldQuestions: LiveData<MutableList<QuestionBase>>
+        get() = _fieldQuestions
 }

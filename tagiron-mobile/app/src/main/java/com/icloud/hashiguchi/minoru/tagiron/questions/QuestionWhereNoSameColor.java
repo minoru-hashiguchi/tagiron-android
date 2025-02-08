@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class QuestionWhereNoSameColor extends QuestionBase {
     public QuestionWhereNoSameColor() {
-        this.text = "同じ色がとなり合っている数字タイルはどこ？";
+        this.text = "同じ色がとなり合っている\n数字タイルはどこ？";
     }
 
     @Override

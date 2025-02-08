@@ -7,7 +7,7 @@ import java.util.List;
 public class QuestionWhichCenterNo extends QuestionBase implements ShareableQuestion {
 
     public QuestionWhichCenterNo() {
-        this.text = this.getPrefixText("中央の数字タイルは5以上？4以下？");
+        this.text = this.getPrefixText("中央の数字タイルは\n5以上？4以下？");
     }
 
     @Override

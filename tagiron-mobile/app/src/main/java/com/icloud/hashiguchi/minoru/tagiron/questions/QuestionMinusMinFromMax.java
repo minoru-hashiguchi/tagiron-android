@@ -7,7 +7,7 @@ import java.util.List;
 public class QuestionMinusMinFromMax extends QuestionBase implements ShareableQuestion {
 
     public QuestionMinusMinFromMax() {
-        this.text = this.getPrefixText("数字タイルの最大の数から、最小の数を引いた数は？");
+        this.text = this.getPrefixText("数字タイルの最大の数から、\n最小の数を引いた数は？");
     }
 
     @Override

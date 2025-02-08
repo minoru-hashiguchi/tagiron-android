@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class QuestionWhereNoSequential extends QuestionBase {
 
     public QuestionWhereNoSequential() {
-        this.text = "数が連続している数字タイルはどこ？";
+        this.text = "数が連続している\n数字タイルはどこ？";
     }
 
     @Override

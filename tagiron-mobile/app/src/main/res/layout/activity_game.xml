@@ -25,25 +25,24 @@
         tools:context="com.icloud.hashiguchi.minoru.mobile.ui.activities.GameActivity">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewOwnTilesLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{viewmodel.text}"
+            android:text="@string/own_tiles_label"
             android:textColor="@color/black"
-            android:textSize="40dp"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayoutOwnTiles"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/linearLayoutOwnTiles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@id/recyclerViewQuestions"
-            app:layout_constraintTop_toBottomOf="@id/textView">
+            app:layout_constraintBottom_toTopOf="@id/textViewFieldQuestionCardsLabel"
+            app:layout_constraintTop_toBottomOf="@id/textViewOwnTilesLabel">
 
             <include
                 layout="@layout/tile_layout"
@@ -86,12 +85,174 @@
                 app:viewmodel="@{viewmodel.myTiles[4]}" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textViewFieldQuestionCardsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/field_question_cards_label"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerViewQuestions"
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutOwnTiles" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewQuestions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/linearLayoutPlayersLabel"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPlayersLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@id/linearLayoutBothPlayersQuestion"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/first_move"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/human_player"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/last_atack"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/computer_player"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutBothPlayersQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@id/textViewYourTilesLabel"
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutPlayersLabel">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewQuestions1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewQuestions2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewYourTilesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/your_tiles_label"
+            app:layout_constraintBottom_toTopOf="@id/linearLayoutYourTileButtons"
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutBothPlayersQuestion" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutYourTileButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@id/linearLayoutYourTiles"
+            app:layout_constraintTop_toBottomOf="@id/textViewYourTilesLabel">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="1"
+                android:text="@string/edit_button" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="1"
+                android:text="@string/call_button" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutYourTiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout2" />
+            app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons">
+
+            <include
+                layout="@layout/tile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[0]}" />
+
+            <include
+                layout="@layout/tile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[1]}" />
+
+            <include
+                layout="@layout/tile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[2]}" />
+
+            <include
+                layout="@layout/tile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[3]}" />
+
+            <include
+                layout="@layout/tile_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
+                app:viewmodel="@{viewmodel.myTiles[4]}" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -5,5 +5,11 @@
     <string name="last_atack">後攻</string>
     <string name="random">ランダム</string>
     <string name="msg_select_for_first_move_or_last_attack">先攻・後攻を選択してください</string>
-    <string name="question_sample">［共有情報カード］\n数字タイルの最大の数から、\n最小の数を引いた数は？</string>
+    <string name="human_player">あなた</string>
+    <string name="computer_player">ＣＯＭ</string>
+    <string name="own_tiles_label">あなたの手札</string>
+    <string name="field_question_cards_label">フィールドの質問カード</string>
+    <string name="your_tiles_label">相手の予想手札</string>
+    <string name="edit_button">編集する</string>
+    <string name="call_button">宣言する</string>
 </resources>

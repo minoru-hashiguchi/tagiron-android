@@ -67,7 +67,7 @@
             app:layout_constraintTop_toBottomOf="@id/linearLayout2">
 
             <include
-                layout="@layout/tile"
+                layout="@layout/tile_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
@@ -75,7 +75,7 @@
                 app:viewmodel="@{viewmodel.myTiles[0]}" />
 
             <include
-                layout="@layout/tile"
+                layout="@layout/tile_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
@@ -83,7 +83,7 @@
                 app:viewmodel="@{viewmodel.myTiles[1]}" />
 
             <include
-                layout="@layout/tile"
+                layout="@layout/tile_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
@@ -91,7 +91,7 @@
                 app:viewmodel="@{viewmodel.myTiles[2]}" />
 
             <include
-                layout="@layout/tile"
+                layout="@layout/tile_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
@@ -99,7 +99,7 @@
                 app:viewmodel="@{viewmodel.myTiles[3]}" />
 
             <include
-                layout="@layout/tile"
+                layout="@layout/tile_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"

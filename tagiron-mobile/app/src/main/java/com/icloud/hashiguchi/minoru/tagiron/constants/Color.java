@@ -1,8 +1,8 @@
-package com.icloud.hashiguchi.tagironmobile.constants;
+package com.icloud.hashiguchi.minoru.tagiron.constants;
 
 import com.icloud.hashiguchi.tagironmobile.R;
 
-public enum TileColor {
+public enum Color {
     RED(),
     BLUE(),
     YELLOW(),
@@ -13,7 +13,7 @@ public enum TileColor {
         return this.name().substring(0, 1);
     }
 
-    public TileColor toggle() {
+    public Color toggle() {
         switch (this) {
             case YELLOW:
                 return YELLOW;

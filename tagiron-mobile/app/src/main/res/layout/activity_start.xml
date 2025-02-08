@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:background="@color/app_bg"
     android:gravity="center"
-    tools:context=".ui.activities.StartActivity">
+    tools:context="com.icloud.hashiguchi.minoru.mobile.ui.activities.StartActivity">
 
 
     <LinearLayout

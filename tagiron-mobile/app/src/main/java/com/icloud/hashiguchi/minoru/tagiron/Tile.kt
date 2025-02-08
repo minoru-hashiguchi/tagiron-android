@@ -1,24 +1,24 @@
-package com.icloud.hashiguchi.tagironmobile.data
+package com.icloud.hashiguchi.minoru.tagiron
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import com.icloud.hashiguchi.minoru.tagiron.constants.Color
+import com.icloud.hashiguchi.minoru.tagiron.constants.Color.BLUE
+import com.icloud.hashiguchi.minoru.tagiron.constants.Color.RED
+import com.icloud.hashiguchi.minoru.tagiron.constants.Color.YELLOW
 import com.icloud.hashiguchi.tagironmobile.R
-import com.icloud.hashiguchi.tagironmobile.constants.TileColor
-import com.icloud.hashiguchi.tagironmobile.constants.TileColor.BLUE
-import com.icloud.hashiguchi.tagironmobile.constants.TileColor.RED
-import com.icloud.hashiguchi.tagironmobile.constants.TileColor.YELLOW
 
-class Tile(no: Int?, color: TileColor?) : ViewModel(), Cloneable {
+class Tile(no: Int?, color: Color?) : ViewModel(), Cloneable {
     private val _no: MutableLiveData<Int?> = MutableLiveData(no)
-    private val _color: MutableLiveData<TileColor?> = MutableLiveData(color)
+    private val _color: MutableLiveData<Color?> = MutableLiveData(color)
 
     constructor() : this(null, null)
 
     val no: LiveData<Int?>
         get() = _no
-    val color: LiveData<TileColor?>
+    val color: LiveData<Color?>
         get() = _color
     val colorInt: LiveData<Int>
         get() = _color.map { it?.colorInt ?: R.color.tile_color_undefined }

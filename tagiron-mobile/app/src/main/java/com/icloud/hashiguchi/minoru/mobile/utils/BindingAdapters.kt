@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.icloud.hashiguchi.tagironmobile
+package com.icloud.hashiguchi.minoru.mobile.utils
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter

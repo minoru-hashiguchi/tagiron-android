@@ -6,13 +6,13 @@
 
         <import type="java.util.List" />
 
-        <import type="com.icloud.hashiguchi.tagironmobile.constants.TileColor" />
+        <import type="com.icloud.hashiguchi.minoru.tagiron.constants.Color" />
 
-        <import type="com.icloud.hashiguchi.tagironmobile.data.Tile" />
+        <import type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
 
         <variable
             name="viewmodel"
-            type="com.icloud.hashiguchi.tagironmobile.data.GameLiveDataViewModel" />
+            type="com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_bg"
-        tools:context=".ui.activities.GameActivity">
+        tools:context="com.icloud.hashiguchi.minoru.mobile.ui.activities.GameActivity">
 
         <TextView
             android:id="@+id/textView"

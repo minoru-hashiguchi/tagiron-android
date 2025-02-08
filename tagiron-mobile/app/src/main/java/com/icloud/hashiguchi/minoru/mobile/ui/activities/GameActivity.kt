@@ -1,11 +1,11 @@
-package com.icloud.hashiguchi.tagironmobile.ui.activities
+package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel
 import com.icloud.hashiguchi.tagironmobile.R
-import com.icloud.hashiguchi.tagironmobile.data.GameLiveDataViewModel
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.icloud.hashiguchi.tagironmobile.constants;
+package com.icloud.hashiguchi.minoru.tagiron.constants;
 
 /**
  * [ ] PLAIN		... 存在する可能性がある。ほぼ未検討</br>

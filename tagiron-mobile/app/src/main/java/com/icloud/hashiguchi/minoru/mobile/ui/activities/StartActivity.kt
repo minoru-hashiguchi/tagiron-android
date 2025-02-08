@@ -1,4 +1,4 @@
-package com.icloud.hashiguchi.tagironmobile.ui.activities
+package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
 import android.app.Activity
 import android.content.Intent

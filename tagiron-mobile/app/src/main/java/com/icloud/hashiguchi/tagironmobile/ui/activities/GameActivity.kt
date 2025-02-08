@@ -11,11 +11,8 @@ import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
 class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_game)
-        val viewModel by viewModels<GameLiveDataViewModel>()
 
-//        val binding: ActivityGameBinding = ActivityGameBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
+        val viewModel by viewModels<GameLiveDataViewModel>()
 
         // Obtain binding
         val binding: ActivityGameBinding =
@@ -26,8 +23,6 @@ class GameActivity : AppCompatActivity() {
 
         // LiveData needs the lifecycle owner
         binding.lifecycleOwner = this
-
-//        Toast.makeText(applicationContext, viewModel.text.value, Toast.LENGTH_SHORT).show()
     }
 
 }

@@ -13,18 +13,6 @@
         <variable
             name="viewmodel"
             type="com.icloud.hashiguchi.tagironmobile.data.GameLiveDataViewModel" />
-
-        <variable
-            name="tile"
-            type="Tile" />
-
-        <variable
-            name="myText"
-            type="String" />
-
-        <variable
-            name="myTiles"
-            type="List&lt;Tile>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,20 +24,12 @@
         android:background="@color/app_bg"
         tools:context=".ui.activities.GameActivity">
 
-        <!--        <LinearLayout-->
-        <!--            android:id="@+id/linearLayout1"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"-->
-        <!--            app:layout_constraintTop_toTopOf="parent">-->
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{viewmodel.text + viewmodel.myTiles[0].no }"
+            android:text="@{viewmodel.text}"
             android:textColor="@color/black"
             android:textSize="40dp"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"

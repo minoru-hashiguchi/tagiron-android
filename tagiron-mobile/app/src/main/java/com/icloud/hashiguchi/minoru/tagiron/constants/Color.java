@@ -3,10 +3,20 @@ package com.icloud.hashiguchi.minoru.tagiron.constants;
 import com.icloud.hashiguchi.tagironmobile.R;
 
 public enum Color {
-    RED(),
-    BLUE(),
-    YELLOW(),
+    RED("赤"),
+    BLUE("青"),
+    YELLOW("黄"),
     ;
+
+    private final String kanji;
+
+    Color(String kanji) {
+        this.kanji = kanji;
+    }
+
+    public String getKanji() {
+        return this.kanji;
+    }
 
     @Override
     public String toString() {

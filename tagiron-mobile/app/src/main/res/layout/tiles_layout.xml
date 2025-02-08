@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
+
+        <!--        <import type="androidx.lifecycle.LiveData" />-->
+
+        <!--        <import type="kotlin.collections.MutableList" />-->
+
+        <import type="java.util.List" />
+
+        <variable
+            name="viewmodel"
+            type="List&lt;Tile>" />
+    </data>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayoutYourTiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <include
+            layout="@layout/tile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            app:viewmodel="@{viewmodel[0]}" />
+
+        <include
+            layout="@layout/tile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            app:viewmodel="@{viewmodel[1]}" />
+
+        <include
+            layout="@layout/tile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            app:viewmodel="@{viewmodel[2]}" />
+
+        <include
+            layout="@layout/tile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            app:viewmodel="@{viewmodel[3]}" />
+
+        <include
+            layout="@layout/tile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            app:viewmodel="@{viewmodel[4]}" />
+    </LinearLayout>
+</layout>
+

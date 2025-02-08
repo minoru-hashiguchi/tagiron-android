@@ -45,44 +45,10 @@
             app:layout_constraintTop_toBottomOf="@id/textViewOwnTilesLabel">
 
             <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[0]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[1]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[2]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[3]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[4]}" />
+                layout="@layout/tiles_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons"
+                app:viewmodel="@{viewmodel.myTiles}" />
         </LinearLayout>
 
         <TextView
@@ -214,44 +180,10 @@
             app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons">
 
             <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[0]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[1]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[2]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[3]}" />
-
-            <include
-                layout="@layout/tile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
-                android:layout_weight="1"
-                app:viewmodel="@{viewmodel.myTiles[4]}" />
+                layout="@layout/tiles_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons"
+                app:viewmodel="@{viewmodel.myTiles}" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.icloud.hashiguchi.minoru.mobile.data
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 
 class GameLiveDataViewModel : ViewModel() {
+    private var _isQuestion = MutableLiveData<Boolean>(true)
     private var _gameTiles =
         MutableLiveData<MutableList<Tile>>(Constant.TILES.toMutableList())
     private var _gameQuestions =
@@ -48,4 +50,16 @@ class GameLiveDataViewModel : ViewModel() {
 
     val thinkingTiles: LiveData<MutableList<Tile>>
         get() = _thinkingTiles
+
+    val isQuestion: LiveData<Boolean>
+        get() = _isQuestion
+
+
+    fun onClickSelectQestion(view: View) {
+        _isQuestion.postValue(true)
+    }
+
+    fun onClickSelectCall(view: View) {
+        _isQuestion.postValue(false)
+    }
 }

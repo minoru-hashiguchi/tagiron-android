@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <import type="java.util.List" />
 
         <import type="com.icloud.hashiguchi.minoru.tagiron.constants.Color" />
@@ -24,9 +26,10 @@
         android:background="@color/app_bg"
         tools:context="com.icloud.hashiguchi.minoru.mobile.ui.activities.GameActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textViewOwnTilesLabel"
@@ -51,8 +54,35 @@
                 <include
                     layout="@layout/tiles_layout"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons"
                     app:viewmodel="@{viewmodel.ownTiles}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutYourTileButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_weight="1"
+                    android:allowClickWhenDisabled="false"
+                    android:enabled="@{!viewmodel.isQuestion()}"
+                    android:onClick="@{viewmodel::onClickSelectQestion}"
+                    android:text="質問する" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_weight="1"
+                    android:allowClickWhenDisabled="false"
+                    android:enabled="@{viewmodel.isQuestion()}"
+                    android:onClick="@{viewmodel::onClickSelectCall}"
+                    android:text="@string/call_button" />
             </LinearLayout>
 
             <TextView
@@ -63,6 +93,7 @@
                 android:gravity="center"
                 android:text="@string/field_question_cards_label"
                 android:textColor="@color/black"
+                android:visibility="@{viewmodel.isQuestion() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/recyclerViewQuestions"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutOwnTiles" />
 
@@ -70,8 +101,174 @@
                 android:id="@+id/recyclerViewQuestions"
                 android:layout_width="match_parent"
                 android:layout_height="310dp"
+                android:visibility="@{viewmodel.isQuestion() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/linearLayoutPlayersLabel"
                 app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions" />
+
+
+            <TextView
+                android:id="@+id/textViewYourTilesLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:gravity="center"
+                android:text="@string/your_tiles_label"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@id/linearLayoutYourTileButtons"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutBothPlayersQuestion" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutYourTiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:baselineAligned="false"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <include
+                    layout="@layout/tiles_layout"
+                    app:viewmodel="@{viewmodel.thinkingTiles}" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="@{viewmodel.isQuestion() ? View.GONE : View.VISIBLE}">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="クリア" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="赤"
+                    android:textColor="@color/tile_color_red" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="青"
+                    android:textColor="@color/tile_color_blue" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="黄"
+                    android:textColor="@color/tile_color_yellow" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="@{viewmodel.isQuestion() ? View.GONE : View.VISIBLE}">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="1" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="2" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="3" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="4" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="@{viewmodel.isQuestion() ? View.GONE : View.VISIBLE}">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="5" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="6" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="7" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="8" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:text="9" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- 下から引っ張り出すView (BottomSheet) -->
+        <LinearLayout
+            android:id="@+id/bottomSheetLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/tile_color_yellow"
+            android:orientation="vertical"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="300dp"
+            app:layout_behavior="@string/bottom_sheet_behavior">
+
+            <!-- BottomSheetに表示したいViewを設定する -->
 
             <LinearLayout
                 android:id="@+id/linearLayoutPlayersLabel"
@@ -139,192 +336,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
                     android:layout_weight="1" />
-            </LinearLayout>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- 下から引っ張り出すView (BottomSheet) -->
-        <LinearLayout
-            android:id="@+id/bottomSheetLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/tile_color_yellow"
-            android:orientation="vertical"
-            app:behavior_hideable="false"
-            app:behavior_peekHeight="300dp"
-            app:layout_behavior="@string/bottom_sheet_behavior">
-
-            <!-- BottomSheetに表示したいViewを設定する -->
-
-            <TextView
-                android:id="@+id/textViewYourTilesLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
-                android:gravity="center"
-                android:text="@string/your_tiles_label"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@id/linearLayoutYourTileButtons"
-                app:layout_constraintTop_toBottomOf="@id/linearLayoutBothPlayersQuestion" />
-
-            <LinearLayout
-                android:id="@+id/linearLayoutYourTiles"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:baselineAligned="false"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <include
-                    layout="@layout/tiles_layout"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons"
-                    app:viewmodel="@{viewmodel.thinkingTiles}" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayoutYourTileButtons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_weight="1"
-                    android:text="@string/edit_button" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_weight="1"
-                    android:text="@string/call_button" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="クリア" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="赤"
-                    android:textColor="@color/tile_color_red" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="青"
-                    android:textColor="@color/tile_color_blue" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="黄"
-                    android:textColor="@color/tile_color_yellow" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="0" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="1" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="2" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="3" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="4" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="5" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="6" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="7" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="8" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:text="9" />
             </LinearLayout>
 
         </LinearLayout>

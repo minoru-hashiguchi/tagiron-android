@@ -48,13 +48,14 @@
                 layout="@layout/tiles_layout"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons"
-                app:viewmodel="@{viewmodel.myTiles}" />
+                app:viewmodel="@{viewmodel.ownTiles}" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/textViewFieldQuestionCardsLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="@string/field_question_cards_label"
             android:textColor="@color/black"
@@ -175,6 +176,7 @@
             android:id="@+id/linearLayoutYourTiles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:baselineAligned="false"
             android:gravity="center"
             android:orientation="horizontal"
@@ -185,7 +187,7 @@
                 layout="@layout/tiles_layout"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutYourTileButtons"
-                app:viewmodel="@{viewmodel.myTiles}" />
+                app:viewmodel="@{viewmodel.thinkingTiles}" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

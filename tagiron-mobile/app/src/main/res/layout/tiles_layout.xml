@@ -26,6 +26,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
+            app:position="@{1}"
             app:viewmodel="@{viewmodel[0]}" />
 
         <include
@@ -34,6 +35,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
+            app:position="@{2}"
             app:viewmodel="@{viewmodel[1]}" />
 
         <include
@@ -42,6 +44,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
+            app:position="@{3}"
             app:viewmodel="@{viewmodel[2]}" />
 
         <include
@@ -50,6 +53,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
+            app:position="@{4}"
             app:viewmodel="@{viewmodel[3]}" />
 
         <include
@@ -58,6 +62,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
+            app:position="@{5}"
             app:viewmodel="@{viewmodel[4]}" />
     </LinearLayout>
 </layout>

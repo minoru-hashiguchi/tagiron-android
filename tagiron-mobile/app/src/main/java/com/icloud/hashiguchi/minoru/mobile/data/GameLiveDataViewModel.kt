@@ -12,7 +12,8 @@ class GameLiveDataViewModel : ViewModel() {
         MutableLiveData<MutableList<Tile>>(Constant.TILES.toMutableList())
     private var _gameQuestions =
         MutableLiveData<MutableList<QuestionBase>>(Constant.QUESTIONS.toMutableList())
-    private var _myTiles = MutableLiveData<MutableList<Tile>>(mutableListOf())
+    private var _ownTiles = MutableLiveData<MutableList<Tile>>(mutableListOf())
+    private var _thinkingTiles = MutableLiveData<MutableList<Tile>>(mutableListOf())
     private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
 
     init {
@@ -23,11 +24,12 @@ class GameLiveDataViewModel : ViewModel() {
         for (i in 0..4) {
             val item = _gameTiles.value?.get(0)
             if (item != null) {
-                _myTiles.value?.add(item)
+                _ownTiles.value?.add(item)
                 _gameTiles.value?.remove(item)
             }
+            _thinkingTiles.value?.add(Tile())
         }
-        _myTiles.value?.sortWith(compareBy<Tile> { it.no.value }.thenBy { it.color.value })
+        _ownTiles.value?.sortWith(compareBy<Tile> { it.no.value }.thenBy { it.color.value })
 
         for (i in 0..5) {
             val item = _gameQuestions.value?.get(0)
@@ -38,9 +40,12 @@ class GameLiveDataViewModel : ViewModel() {
         }
     }
 
-    val myTiles: LiveData<MutableList<Tile>>
-        get() = _myTiles
+    val ownTiles: LiveData<MutableList<Tile>>
+        get() = _ownTiles
 
     val fieldQuestions: LiveData<MutableList<QuestionBase>>
         get() = _fieldQuestions
+
+    val thinkingTiles: LiveData<MutableList<Tile>>
+        get() = _thinkingTiles
 }

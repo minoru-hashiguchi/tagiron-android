@@ -8,6 +8,10 @@
         <variable
             name="viewmodel"
             type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
+
+        <variable
+            name="position"
+            type="Integer" />
     </data>
 
 
@@ -21,13 +25,20 @@
         android:padding="5dp">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|top"
+            android:text="@{position + `番目`}"
+            android:textSize="10sp" />
+
+        <TextView
             android:id="@+id/textViewNo"
             textViewBackground="@{viewmodel.colorStr}"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@{viewmodel.noText}"
+            android:text="@{viewmodel.noText ?? `-`}"
             android:textColor="@color/white"
             android:textSize="50sp"
             android:textStyle="bold" />

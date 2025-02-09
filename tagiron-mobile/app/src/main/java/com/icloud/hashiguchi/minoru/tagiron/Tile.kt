@@ -20,11 +20,9 @@ class Tile(no: Int?, color: Color?) : ViewModel(), Cloneable {
         get() = _no
     val color: LiveData<Color?>
         get() = _color
-    val colorInt: LiveData<Int>
-        get() = _color.map { it?.colorInt ?: R.color.tile_color_undefined }
 
-    val noText: LiveData<String> = _no.map {
-        it.toString()
+    val noText: LiveData<String?> = _no.map {
+        it?.toString()
     }
 
     val colorStr: LiveData<Int> = _color.map {

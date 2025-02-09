@@ -71,6 +71,13 @@ class GameActivity : AppCompatActivity() {
         rightRecyclerView.layoutManager = LinearLayoutManager(this)
         val separate2 = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         rightRecyclerView.addItemDecoration(separate2)
+
+        qsAdapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
+            override fun contentTapped(position: Int) {
+//                TODO("Not yet implemented")
+            }
+
+        })
     }
 
 }

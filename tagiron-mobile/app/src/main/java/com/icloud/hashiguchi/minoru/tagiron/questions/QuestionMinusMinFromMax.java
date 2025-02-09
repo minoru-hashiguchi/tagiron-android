@@ -11,6 +11,11 @@ public class QuestionMinusMinFromMax extends QuestionBase implements ShareableQu
     }
 
     @Override
+    public String getSummaryText() {
+        return "[共]最大ひく最小は？";
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         int answer = opponentTiles.get(opponentTiles.size() - 1).getNo().getValue()
                 - opponentTiles.get(0).getNo().getValue();

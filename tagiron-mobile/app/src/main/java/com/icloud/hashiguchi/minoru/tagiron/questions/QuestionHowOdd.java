@@ -3,13 +3,17 @@ package com.icloud.hashiguchi.minoru.tagiron.questions;
 import com.icloud.hashiguchi.minoru.tagiron.Tile;
 import com.icloud.hashiguchi.minoru.tagiron.utils.TileUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class QuestionHowOdd extends QuestionHowBase {
 
     public QuestionHowOdd() {
         this.text = "奇数は何枚ある？";
+    }
+
+    @Override
+    public String getSummaryText() {
+        return "奇数は何枚？";
     }
 
     @Override

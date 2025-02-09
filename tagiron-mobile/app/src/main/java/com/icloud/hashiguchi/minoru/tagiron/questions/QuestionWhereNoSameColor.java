@@ -13,6 +13,11 @@ public class QuestionWhereNoSameColor extends QuestionBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return "同色が隣り合う場所は？";
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         List<Integer> list = new ArrayList<>();
         Color old = null;

@@ -13,6 +13,11 @@ public class QuestionWhereNoSequential extends QuestionBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return "数が連続する場所は？";
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         List<Integer> list = new ArrayList<>();
         int old = 0;

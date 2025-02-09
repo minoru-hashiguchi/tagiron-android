@@ -11,6 +11,11 @@ public class QuestionHowPairNo extends QuestionBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return "同じ数字ペアは何組？";
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         int answer = 0;
 

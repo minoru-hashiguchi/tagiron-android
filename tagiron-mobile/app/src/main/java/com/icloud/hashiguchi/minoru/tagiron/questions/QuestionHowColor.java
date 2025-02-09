@@ -16,6 +16,11 @@ public class QuestionHowColor extends QuestionHowBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return String.format("%sは何枚？", this.specifidColor.getKanji());
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
 
         // 同色のタイルを探す

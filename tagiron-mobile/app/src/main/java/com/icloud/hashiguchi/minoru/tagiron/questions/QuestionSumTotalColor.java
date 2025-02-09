@@ -19,6 +19,11 @@ public class QuestionSumTotalColor extends QuestionBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return String.format("%sの数の合計は？", this.color.getKanji());
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         int sum = opponentTiles.stream()
                 .filter(t -> t.getColor().getValue() == color)

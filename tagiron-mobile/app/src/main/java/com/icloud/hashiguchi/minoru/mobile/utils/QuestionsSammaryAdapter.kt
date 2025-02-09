@@ -28,8 +28,8 @@ class QuestionsSammaryAdapter(private val questionCardList: LiveData<MutableList
     }
 
     override fun onBindViewHolder(holder: QuestionCardListRecyclerViewHolder, position: Int) {
-        holder.questionText.text = questionCardList.value?.get(position)?.text
-        holder.answerText.text = questionCardList.value?.get(position)?.text
+        holder.questionText.text = questionCardList.value?.get(position)?.summaryText
+        holder.answerText.text = questionCardList.value?.get(position)?.answerText
 
         holder.itemView.setOnClickListener {
             listener.contentTapped(position)

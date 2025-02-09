@@ -9,4 +9,8 @@ public class QuestionSumTotalRangeAll extends QuestionSumTotalRange implements S
         this.text = this.getPrefixText(this.text);
     }
 
+    @Override
+    public String getSummaryText() {
+        return "[共]" + super.getSummaryText();
+    }
 }

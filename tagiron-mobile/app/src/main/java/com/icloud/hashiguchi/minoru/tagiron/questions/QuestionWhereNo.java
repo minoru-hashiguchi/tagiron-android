@@ -24,6 +24,11 @@ public class QuestionWhereNo extends QuestionBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return String.format("%sはどこ？", selectedNo);
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < opponentTiles.size(); i++) {

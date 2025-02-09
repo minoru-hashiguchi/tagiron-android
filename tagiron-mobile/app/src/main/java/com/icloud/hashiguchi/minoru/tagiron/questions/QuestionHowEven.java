@@ -12,6 +12,11 @@ public class QuestionHowEven extends QuestionHowBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return "偶数は何枚？";
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
 
         // 0含む偶数のタイルを探す

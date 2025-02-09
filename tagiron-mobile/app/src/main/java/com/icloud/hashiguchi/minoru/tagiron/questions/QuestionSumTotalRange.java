@@ -20,6 +20,11 @@ public class QuestionSumTotalRange extends QuestionBase {
     }
 
     @Override
+    public String getSummaryText() {
+        return String.format("%sの合計は？", this.totalValueType.getSummaryText());
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         int sum = TileUtil.sumTileNumber(opponentTiles, this.totalValueType.getIndexes());
         return List.of(sum);

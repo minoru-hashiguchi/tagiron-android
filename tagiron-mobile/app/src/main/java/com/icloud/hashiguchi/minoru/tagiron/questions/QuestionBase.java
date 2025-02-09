@@ -42,6 +42,21 @@ public abstract class QuestionBase implements Cloneable {
         this.answers = answers;
     }
 
+    public abstract String getSummaryText();
+
+    public String getAnswerText() {
+        if (answers == null) {
+            return "";
+        }
+        String answerStr = answers.size() < 1
+                ? "なし"
+                : answers.stream().map(v -> {
+            v++;
+            return v + getAnswerUnit();
+        }).collect(Collectors.joining(", "));
+        return answerStr;
+    }
+
     public abstract List<Integer> answer(List<Tile> opponentTiles);
 
     public abstract String getAnswerUnit();
@@ -75,13 +90,7 @@ public abstract class QuestionBase implements Cloneable {
                 ? String.format("[%sを選択]", selectedNo)
                 : "";
 
-        String answerStr = answers.size() < 1
-                ? "なし"
-                : answers.stream().map(v -> {
-            v++;
-            return v + getAnswerUnit();
-        }).collect(Collectors.joining(", "));
-
+        String answerStr = getAnswerText();
 //        logger.debug("!! {} {} -> [{}]",
 //                text,
 //                selectStr,

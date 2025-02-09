@@ -11,6 +11,11 @@ public class QuestionWhichCenterNo extends QuestionBase implements ShareableQues
     }
 
     @Override
+    public String getSummaryText() {
+        return "[共]中央は5以上？4以下？";
+    }
+
+    @Override
     public List<Integer> answer(List<Tile> opponentTiles) {
         int answer = 0;
         if (opponentTiles.get(2).getNo().getValue() < 5) {

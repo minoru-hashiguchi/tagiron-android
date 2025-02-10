@@ -4,12 +4,14 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.icloud.hashiguchi.minoru.tagiron.Tile
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 
 class GameLiveDataViewModel : ViewModel() {
-    private var _isQuestion = MutableLiveData<Boolean>(true)
+    private var _isPlaying = MutableLiveData(true)
+    private var _isQuestion = MutableLiveData(true)
     private var _gameTiles =
         MutableLiveData<MutableList<Tile>>(Constant.TILES.toMutableList())
     private var _gameQuestions =
@@ -17,6 +19,8 @@ class GameLiveDataViewModel : ViewModel() {
     private var _ownTiles = MutableLiveData<MutableList<Tile>>(mutableListOf())
     private var _thinkingTiles = MutableLiveData<MutableList<Tile>>(mutableListOf())
     private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
+
+    private var _selectedThinkingTilePosition = MutableLiveData<Int>(null)
 
     init {
         // シャッフル
@@ -42,18 +46,12 @@ class GameLiveDataViewModel : ViewModel() {
         }
     }
 
-    val ownTiles: LiveData<MutableList<Tile>>
-        get() = _ownTiles
-
-    val fieldQuestions: LiveData<MutableList<QuestionBase>>
-        get() = _fieldQuestions
-
-    val thinkingTiles: LiveData<MutableList<Tile>>
-        get() = _thinkingTiles
-
-    val isQuestion: LiveData<Boolean>
-        get() = _isQuestion
-
+    val ownTiles: LiveData<MutableList<Tile>> = _ownTiles
+    val fieldQuestions: LiveData<MutableList<QuestionBase>> = _fieldQuestions
+    val thinkingTiles: LiveData<MutableList<Tile>> = _thinkingTiles
+    val showQuestionSelector: LiveData<Boolean> = _isQuestion.map { it && _isPlaying.value!! }
+    val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it && _isPlaying.value!! }
+    val selectedTilePosition: LiveData<Int> = _selectedThinkingTilePosition
 
     fun onClickSelectQestion(view: View) {
         _isQuestion.postValue(true)
@@ -61,5 +59,16 @@ class GameLiveDataViewModel : ViewModel() {
 
     fun onClickSelectCall(view: View) {
         _isQuestion.postValue(false)
+    }
+
+    fun onClickTile(number: Int) {
+        _selectedThinkingTilePosition.postValue(number)
+    }
+
+    fun onClickNumber(number: Int) {
+        var tile = _selectedThinkingTilePosition.value?.let { _thinkingTiles.value?.get(it - 1) }
+        if (tile != null) {
+            tile.setNo(number)
+        }
     }
 }

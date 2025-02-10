@@ -54,7 +54,7 @@
                 <include
                     layout="@layout/tiles_layout"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:viewmodel="@{viewmodel.ownTiles}" />
+                    app:tileList="@{viewmodel.ownTiles}" />
             </LinearLayout>
 
             <LinearLayout
@@ -70,7 +70,7 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_weight="1"
                     android:allowClickWhenDisabled="false"
-                    android:enabled="@{!viewmodel.isQuestion()}"
+                    android:enabled="@{!viewmodel.showQuestionSelector}"
                     android:onClick="@{viewmodel::onClickSelectQestion}"
                     android:text="質問する" />
 
@@ -80,7 +80,7 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_weight="1"
                     android:allowClickWhenDisabled="false"
-                    android:enabled="@{viewmodel.isQuestion()}"
+                    android:enabled="@{!viewmodel.showCallEditor}"
                     android:onClick="@{viewmodel::onClickSelectCall}"
                     android:text="@string/call_button" />
             </LinearLayout>
@@ -93,7 +93,7 @@
                 android:gravity="center"
                 android:text="@string/field_question_cards_label"
                 android:textColor="@color/black"
-                android:visibility="@{viewmodel.isQuestion() ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewmodel.showQuestionSelector ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/recyclerViewQuestions"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutOwnTiles" />
 
@@ -101,7 +101,7 @@
                 android:id="@+id/recyclerViewQuestions"
                 android:layout_width="match_parent"
                 android:layout_height="310dp"
-                android:visibility="@{viewmodel.isQuestion() ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewmodel.showQuestionSelector ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/linearLayoutPlayersLabel"
                 app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions" />
 
@@ -128,14 +128,15 @@
 
                 <include
                     layout="@layout/tiles_layout"
-                    app:viewmodel="@{viewmodel.thinkingTiles}" />
+                    app:tileList="@{viewmodel.thinkingTiles}"
+                    app:viewmodel="@{viewmodel}" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="@{viewmodel.isQuestion() ? View.GONE : View.VISIBLE}">
+                android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}">
 
                 <Button
                     android:layout_width="match_parent"
@@ -174,13 +175,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="@{viewmodel.isQuestion() ? View.GONE : View.VISIBLE}">
+                android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(0)}"
                     android:text="0" />
 
                 <Button
@@ -188,6 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(1)}"
                     android:text="1" />
 
                 <Button
@@ -195,6 +198,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(2)}"
                     android:text="2" />
 
                 <Button
@@ -202,6 +206,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(3)}"
                     android:text="3" />
 
                 <Button
@@ -209,6 +214,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(4)}"
                     android:text="4" />
 
             </LinearLayout>
@@ -217,13 +223,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="@{viewmodel.isQuestion() ? View.GONE : View.VISIBLE}">
+                android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(5)}"
                     android:text="5" />
 
                 <Button
@@ -231,6 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(6)}"
                     android:text="6" />
 
                 <Button
@@ -238,6 +246,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(7)}"
                     android:text="7" />
 
                 <Button
@@ -245,6 +254,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(8)}"
                     android:text="8" />
 
                 <Button
@@ -252,6 +262,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:onClick="@{() -> viewmodel.onClickNumber(9)}"
                     android:text="9" />
             </LinearLayout>
 

@@ -1,6 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class QuestionWhereNo extends QuestionBase {
     }
 
     @Override
-    public List<Integer> answer(List<Tile> opponentTiles) {
+    public List<Integer> answer(List<TileViewModel> opponentTiles) {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < opponentTiles.size(); i++) {
             if (opponentTiles.get(i).getNo().getValue() == this.selectedNo) {

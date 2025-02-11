@@ -3,7 +3,7 @@
 
     <data>
 
-        <import type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
+        <import type="com.icloud.hashiguchi.minoru.tagiron.TileViewModel" />
 
         <import type="java.util.List" />
 
@@ -13,7 +13,7 @@
 
         <variable
             name="tileList"
-            type="List&lt;Tile>" />
+            type="List&lt;TileViewModel>" />
 
     </data>
 

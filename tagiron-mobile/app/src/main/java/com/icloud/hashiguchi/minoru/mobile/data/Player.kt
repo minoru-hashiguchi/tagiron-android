@@ -1,34 +1,25 @@
 package com.icloud.hashiguchi.minoru.mobile.data
 
 import android.util.Log
-import com.icloud.hashiguchi.minoru.tagiron.Tile
+import androidx.lifecycle.MutableLiveData
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
 import com.icloud.hashiguchi.minoru.tagiron.constants.Color
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import java.util.Arrays
+import java.util.Objects
 import java.util.function.Consumer
 import java.util.stream.Collectors
 
-abstract class Player {
-    protected var name: String? = null
-    protected var ownTiles: MutableList<Tile> = mutableListOf()
-    protected var markingTiles: MutableList<Tile?> = mutableListOf()
-    protected var questionsAndAnswers: MutableList<QuestionBase> = mutableListOf()
-    protected var patterns: MutableList<Array<Tile>> = mutableListOf()
-
-    /**
-     * コンストラクタ
-     * @param type
-     * @param name
-     */
-    protected fun PlayerBase(name: String?) {
-        this.name = name
-        //手札候補の初期化（ディープコピー）
-        for (tile in Constant.TILES) {
-            markingTiles.add(tile.clone())
-        }
-    }
+abstract class Player(var name: String) {
+    var ownTiles: MutableLiveData<MutableList<TileViewModel>> =
+        MutableLiveData<MutableList<TileViewModel>>(mutableListOf())
+        protected set
+    var questionsAndAnswers: MutableList<QuestionBase> = mutableListOf()
+        protected set
+    var patterns: MutableSet<Array<TileViewModel>> = mutableSetOf()
+        protected set
 
     /**
      * 質問か宣言か、行動を選択する
@@ -36,7 +27,7 @@ abstract class Player {
      * @param questions
      * @return 行動が質問の場合は質問番号、宣言の場合はnull
      */
-    abstract fun selectAction(questions: MutableList<QuestionBase?>?): Int?
+    abstract fun selectAction(questions: MutableList<QuestionBase>): Int?
 
     /**
      * 宣言する
@@ -44,7 +35,7 @@ abstract class Player {
      * @param yourTiles
      * @return true: 正解、false: 不正解
      */
-    abstract fun call(yourTiles: MutableList<Tile?>?): Boolean
+    abstract fun call(yourTiles: MutableList<TileViewModel>): Boolean
 
     /**
      * 指定した質問の数字を選択する
@@ -52,29 +43,43 @@ abstract class Player {
      * @param question 数字選択式の質問カード
      * @return 選択した数字
      */
-    abstract fun selectNumber(question: QuestionWhereNoBySelect?): Int
+    abstract fun selectNumber(question: QuestionWhereNoBySelect): Int
 
     /**
      * ゲーム開始時に数字タイルを5枚、手札に追加し並べ替える
      *
      * @param fieldTiles ランダムに並んだ山札のタイル
      */
-    fun pickTiles(fieldTiles: MutableList<Tile?>) {
+    fun pickTilesAfterThatSort(fieldTiles: MutableList<TileViewModel>) {
         for (i in 0..4) {
-            val picked: Tile = fieldTiles.get(0)!!
-            ownTiles.add(picked)
+            val picked: TileViewModel = fieldTiles.get(0)
+            ownTiles.value?.add(picked)
             fieldTiles.removeAt(0)
         }
         // 手札の並べ替え
-        ownTiles.sortWith(compareBy<Tile> { it.no.value }.thenBy { it.color.value })
+        ownTiles.value?.sortWith(compareBy<TileViewModel> { it.no.value }.thenBy { it.color.value })
 
         printMyTiles()
     }
 
-    fun think(q: QuestionBase) {
-        if (q.deletePatterns(patterns)) {
-//            Log.println(Log.INFO, "LOG", "特定！！ -> {}", Arrays.toString(patterns.getFirst()))
+    fun deletePatterns(q: QuestionBase): Boolean {
+//        logger.debug("current patterns count -> {} ", patterns.size());
+        val itr = patterns.iterator()
+        while (itr.hasNext()) {
+            val tiles = Arrays.stream(itr.next()).collect(Collectors.toList())
+            val verify: List<Int> = q.answer(tiles)
+            val notMatch = !Objects.deepEquals(q.answers, verify)
+            if (notMatch) {
+//                if (D) {
+//                    logger.debug("answer:{}, verify:{}, delete pattern -> {}", answers.toString(), verify.toString(),
+//                            tiles.toString());
+//                }
+                itr.remove()
+            }
         }
+
+        //        logger.debug("current patterns count -> {} ", patterns.size());
+        return patterns.size == 1
     }
 
     /**
@@ -84,7 +89,7 @@ abstract class Player {
      * @param questions 6枚以下の質問カード
      * @return 選択した質問カード
      */
-    fun pickQuestion(pickedIndex: Int, questions: MutableList<QuestionBase?>): QuestionBase? {
+    fun pickQuestion(pickedIndex: Int, questions: MutableList<QuestionBase>): QuestionBase {
         val picked = questions[pickedIndex]
         questions.removeAt(pickedIndex)
         return picked
@@ -96,7 +101,7 @@ abstract class Player {
      * @param yourTiles 相手手札のタイル
      * @param picked 自身が選択した質問カード
      */
-    fun askQuestion(yourTiles: MutableList<Tile?>?, picked: QuestionBase) {
+    fun askQuestion(yourTiles: MutableList<TileViewModel>, picked: QuestionBase) {
         // 質問時に数値を選択する必要がある場合
         if (picked is QuestionWhereNoBySelect) {
             val q = picked
@@ -110,7 +115,7 @@ abstract class Player {
         picked.printAll()
 
         // 相手プレイヤーの回答を元に思考する
-        think(picked)
+        deletePatterns(picked)
         questionsAndAnswers.add(picked)
     }
 
@@ -118,13 +123,13 @@ abstract class Player {
      * 手札のタイルを出力する
      */
     fun printMyTiles() {
-        Log.println(Log.INFO, "LOG", "-- " + name + "の手札 --")
+        Log.println(Log.INFO, Constant.LOG_TAG, "-- " + name + "の手札 --")
         // カンマ区切りで出力
-        val str: String = ownTiles.stream()
-            .map<Any> { v: Tile -> v.toString() }
+        val str: String = ownTiles.value!!.stream()
+            .map<Any> { v: TileViewModel -> v.toString() }
             .collect(Collectors.toList())
             .joinToString(", ")
-        Log.println(Log.INFO, "LOG", str)
+        Log.println(Log.INFO, Constant.LOG_TAG, str)
     }
 
     /**
@@ -132,7 +137,7 @@ abstract class Player {
      * 相手の共有情報カードも含む
      */
     fun printQuestionsAnswers() {
-        Log.println(Log.INFO, "LOG", "-- 質問とその回答 --")
+        Log.println(Log.INFO, Constant.LOG_TAG, "-- 質問とその回答 --")
         questionsAndAnswers.forEach(Consumer { a: QuestionBase -> a.printAll() })
     }
 
@@ -142,10 +147,10 @@ abstract class Player {
      * @param size 予想手札パターン数の閾値
      */
     fun printPatterns(size: Int) {
-        Log.println(Log.INFO, "LOG", "候補件数 -> " + patterns.size)
+        Log.println(Log.INFO, Constant.LOG_TAG, "候補件数 -> " + patterns.size)
         if (patterns.size <= size) {
-            patterns.forEach(Consumer<Array<Tile>> { p: Array<Tile>? ->
-                Log.println(Log.INFO, "LOG", Arrays.toString(p))
+            patterns.forEach(Consumer<Array<TileViewModel>> { p: Array<TileViewModel> ->
+                Log.println(Log.INFO, Constant.LOG_TAG, Arrays.toString(p))
             })
         }
     }
@@ -154,108 +159,91 @@ abstract class Player {
      * 初回思考
      * 相手手札候補から自分の手札と一致するものを除外する。
      */
-    fun markOnFirst() {
+    fun createTilePattern() {
+        val startTime = System.currentTimeMillis() // 処理開始時間を取得
+
         // 自身の手札と同じ(参照が同じ)タイルは除外
-        val baseTiles: List<Tile> = Constant.TILES.toMutableList().filter {
-            tile -> !ownTiles.any { it === tile }
-        }
+        val baseTiles: List<TileViewModel> = Constant.TILES.toMutableList()
+            .filter { tile ->
+                !ownTiles.value!!.any { it === tile }
+            }
+
+        Log.println(Log.DEBUG, Constant.LOG_TAG, "baseTiles => " + baseTiles)
 
         for (t1 in baseTiles) {
-
-            for (t2 in baseTiles) {
-                if (t1 === t2 || t1.greaterThan(t2) ||
-                    (t1.no == t2.no && t1.match(Color.BLUE) && t2.match(Color.RED))
-                ) {
-                    continue
-                }
-
-                for (t3 in baseTiles) {
-                    if (t1 === t3 || t2 === t3 || t1.greaterThan(t3) || t2.greaterThan(t3) ||
-                        (t2.no == t3.no && t2.match(Color.BLUE) && t3.match(Color.RED))
-                    ) {
-                        continue
-                    }
-
-                    for (t4 in baseTiles) {
-                        if (t1 === t4 || t2 === t4 || t3 === t4 ||
-                            t1.greaterThan(t4) || t2.greaterThan(t4) || t3.greaterThan(t4) ||
-                            (t3.no == t4.no && t3.match(Color.BLUE) && t4.match(Color.RED))
-                        ) {
-                            continue
-                        }
-
-                        for (t5 in baseTiles) {
-                        for (t5 in baseTiles) {
-                            if (t1 === t5 || t2 === t5 || t3 === t5 || t4 === t5 ||
-                                t1.greaterThan(t5) || t2.greaterThan(t5) || t3.greaterThan(t5) || t4.greaterThan(t5) ||
-                                (t4.no === t5.no && t4.match(Color.BLUE) && t5.match(Color.RED))
-                            ) {
-                                continue
-                            }
-                            val tiles: Array<Tile> = arrayOf<Tile>(t1, t2, t3, t4, t5)
-                            patterns.add(tiles)
-                        }
-                    }
-                }
-            }
+            doNestedCreateTilePattern(baseTiles, t1)
         }
 
-        /* ----------------------------------------------------------
-		 *  パターンリストを多重ループで作成する都合上、
-		 *  同色同数字で2枚存在するY5を含むパターンに重複が発生してしまう。
-		 *  下記にてArrays.equalsを用いて自力で重複削除する必要がある。
-		 * ---------------------------------------------------------- */
-        Log.println(Log.DEBUG, "LOG", "候補件数[重複排除前] => " + patterns.size)
-        val tmpList: MutableList<Array<Tile>> = ArrayList<Array<Tile>>()
-        for (x in patterns) {
-            val count = tmpList.stream().filter { y: Array<Tile>? -> Arrays.equals(x, y) }.count()
-            if (count == 0L) {
-                tmpList.add(x)
+        Log.println(Log.DEBUG, Constant.LOG_TAG, "候補件数[重複排除後] => " + patterns.size)
+        val endTime = System.currentTimeMillis() // 処理終了時間を取得
+        val elapsedTime = endTime - startTime // 処理時間を計算
+        Log.println(Log.DEBUG, Constant.LOG_TAG, "処理時間: $elapsedTime ms")
+    }
+
+    private fun doNestedCreateTilePattern(baseTiles: List<TileViewModel>, t1: TileViewModel) {
+        for (t2 in baseTiles) {
+            if (t1 === t2 || t1.greaterThan(t2) ||
+                (t1.no.value == t2.no.value && t1.match(Color.BLUE) && t2.match(Color.RED))
+            ) {
+                continue
             }
+            doNestedCreateTilePattern(baseTiles, t1, t2)
         }
-        patterns = tmpList
-        Log.println(Log.DEBUG, "LOG", "候補件数[重複排除後] => " + patterns.size)
     }
 
-//    /**
-//     * 指定した数字と色に合致する手札候補に一つマークする
-//     *
-//     * @param mark マーク
-//     * @param number タイル数字
-//     * @param color タイル色
-//     */
-//    fun setMarkingTiles(mark: Mark, number: Int, color: Color, clz: Class<*>, step: Int) {
-//        val searched: Tile? = markingTiles.stream()
-//            .filter { t: Tile? -> t.getMark() === Mark.NONE && t.no === number && t.color === color }
-//            .findFirst().orElse(null)
-//        if (searched != null) {
-//            if (D && mark != searched.getMark()) {
-//                Log.println(
-//                    Log.DEBUG, "LOG",
-//                    java.lang.String.format(
-//                        "marked [%s] %s%s ...%s #%s",
-//                        mark.toString(), color, number, clz.simpleName, step
-//                    )
-//                )
-//            }
-//            // 検索結果を手札候補にマーク
-//            searched.setMark(mark)
-//        }
-//    }
-
-    /**
-     * プレイヤー名を取得する
-     * @return
-     */
-    fun getName(): String? {
-        return name
+    private fun doNestedCreateTilePattern(
+        baseTiles: List<TileViewModel>,
+        t1: TileViewModel,
+        t2: TileViewModel
+    ) {
+        for (t3 in baseTiles) {
+            if (t1 === t3 || t2 === t3 || t1.greaterThan(t3) || t2.greaterThan(t3) ||
+                (t2.no
+                    .value == t3.no.value && t2.match(Color.BLUE) && t3.match(Color.RED))
+            ) {
+                continue
+            }
+            doNestedCreateTilePattern(baseTiles, t1, t2, t3)
+        }
     }
 
-    /**
-     * 自身の手札タイルを取得する
-     * @return
-     */
-    fun getOwnTiles(): MutableList<Tile> {
-        return ownTiles
+    private fun doNestedCreateTilePattern(
+        baseTiles: List<TileViewModel>,
+        t1: TileViewModel,
+        t2: TileViewModel,
+        t3: TileViewModel
+    ) {
+        for (t4 in baseTiles) {
+            if (t1 === t4 || t2 === t4 || t3 === t4 ||
+                t1.greaterThan(t4) || t2.greaterThan(t4) || t3.greaterThan(t4) ||
+                (t3.no.value == t4.no.value && t3.match(Color.BLUE) && t4.match(Color.RED))
+            ) {
+                continue
+            }
+            doNestedCreateTilePattern(baseTiles, t1, t2, t3, t4)
+        }
+    }
+
+    private fun doNestedCreateTilePattern(
+        baseTiles: List<TileViewModel>,
+        t1: TileViewModel,
+        t2: TileViewModel,
+        t3: TileViewModel,
+        t4: TileViewModel
+    ) {
+        for (t5 in baseTiles) {
+            if (t1 === t5 || t2 === t5 || t3 === t5 || t4 === t5 ||
+                t1.greaterThan(t5) || t2.greaterThan(t5) || t3.greaterThan(t5) || t4.greaterThan(
+                    t5
+                ) || (t4.no.value == t5.no.value && t4.match(Color.BLUE) && t5.match(
+                    Color.RED
+                ))
+            ) {
+                continue
+            }
+
+            val tiles: Array<TileViewModel> = arrayOf(t1, t2, t3, t4, t5)
+            patterns.add(tiles)
+        }
     }
 }

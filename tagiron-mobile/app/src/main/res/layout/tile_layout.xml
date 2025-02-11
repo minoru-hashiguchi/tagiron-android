@@ -3,7 +3,7 @@
 
     <data>
 
-        <import type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
+        <import type="com.icloud.hashiguchi.minoru.tagiron.TileViewModel" />
 
         <import type="android.view.View" />
 
@@ -13,7 +13,7 @@
 
         <variable
             name="tile"
-            type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
+            type="com.icloud.hashiguchi.minoru.tagiron.TileViewModel" />
 
         <variable
             name="position"

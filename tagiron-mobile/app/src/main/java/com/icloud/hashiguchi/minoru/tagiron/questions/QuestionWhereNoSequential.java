@@ -1,6 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class QuestionWhereNoSequential extends QuestionBase {
     }
 
     @Override
-    public List<Integer> answer(List<Tile> opponentTiles) {
+    public List<Integer> answer(List<TileViewModel> opponentTiles) {
         List<Integer> list = new ArrayList<>();
         int old = 0;
         for (int i = 0; i < opponentTiles.size(); i++) {

@@ -1,6 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class QuestionMinusMinFromMax extends QuestionBase implements ShareableQu
     }
 
     @Override
-    public List<Integer> answer(List<Tile> opponentTiles) {
+    public List<Integer> answer(List<TileViewModel> opponentTiles) {
         int answer = opponentTiles.get(opponentTiles.size() - 1).getNo().getValue()
                 - opponentTiles.get(0).getNo().getValue();
         return List.of(answer);

@@ -1,6 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 import com.icloud.hashiguchi.minoru.tagiron.constants.Color;
 import com.icloud.hashiguchi.minoru.tagiron.utils.TileUtil;
 
@@ -21,7 +21,7 @@ public class QuestionHowColor extends QuestionHowBase {
     }
 
     @Override
-    public List<Integer> answer(List<Tile> opponentTiles) {
+    public List<Integer> answer(List<TileViewModel> opponentTiles) {
 
         // 同色のタイルを探す
         int count = TileUtil.selectOneColorTiles(opponentTiles, this.specifidColor).size();

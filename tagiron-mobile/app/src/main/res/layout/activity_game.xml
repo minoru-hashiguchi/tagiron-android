@@ -11,7 +11,7 @@
 
         <import type="com.icloud.hashiguchi.minoru.tagiron.constants.Color" />
 
-        <import type="com.icloud.hashiguchi.minoru.tagiron.Tile" />
+        <import type="com.icloud.hashiguchi.minoru.tagiron.TileViewModel" />
 
         <variable
             name="viewmodel"

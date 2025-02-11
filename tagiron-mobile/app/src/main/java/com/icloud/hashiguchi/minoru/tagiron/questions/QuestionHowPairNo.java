@@ -1,6 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class QuestionHowPairNo extends QuestionBase {
     }
 
     @Override
-    public List<Integer> answer(List<Tile> opponentTiles) {
+    public List<Integer> answer(List<TileViewModel> opponentTiles) {
         int answer = 0;
 
         // 5枚の数字タイルの重複排除した結果を基にペアの組数を判定する

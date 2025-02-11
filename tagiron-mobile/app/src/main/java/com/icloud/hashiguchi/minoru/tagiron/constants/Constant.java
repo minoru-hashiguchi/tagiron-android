@@ -1,6 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.constants;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase;
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionHowColor;
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionHowEven;
@@ -17,34 +17,31 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoSequential;
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhichCenterNo;
 
 public class Constant {
-
     public static final boolean D = false;
-
+    public static final String LOG_TAG = "TAGIRON_LOG";
     public static final String TEXT_SHARED_Q = "[共有情報カード]";
-
-    public static final Tile[] TILES = new Tile[]{
-            new Tile(0, Color.RED),
-            new Tile(1, Color.RED),
-            new Tile(2, Color.RED),
-            new Tile(3, Color.RED),
-            new Tile(4, Color.RED),
-            new Tile(5, Color.YELLOW),
-            new Tile(6, Color.RED),
-            new Tile(7, Color.RED),
-            new Tile(8, Color.RED),
-            new Tile(9, Color.RED),
-            new Tile(0, Color.BLUE),
-            new Tile(1, Color.BLUE),
-            new Tile(2, Color.BLUE),
-            new Tile(3, Color.BLUE),
-            new Tile(4, Color.BLUE),
-            new Tile(5, Color.YELLOW),
-            new Tile(6, Color.BLUE),
-            new Tile(7, Color.BLUE),
-            new Tile(8, Color.BLUE),
-            new Tile(9, Color.BLUE),
+    public static final TileViewModel[] TILES = new TileViewModel[]{
+            new TileViewModel(0, Color.RED),
+            new TileViewModel(1, Color.RED),
+            new TileViewModel(2, Color.RED),
+            new TileViewModel(3, Color.RED),
+            new TileViewModel(4, Color.RED),
+            new TileViewModel(5, Color.YELLOW),
+            new TileViewModel(6, Color.RED),
+            new TileViewModel(7, Color.RED),
+            new TileViewModel(8, Color.RED),
+            new TileViewModel(9, Color.RED),
+            new TileViewModel(0, Color.BLUE),
+            new TileViewModel(1, Color.BLUE),
+            new TileViewModel(2, Color.BLUE),
+            new TileViewModel(3, Color.BLUE),
+            new TileViewModel(4, Color.BLUE),
+            new TileViewModel(5, Color.YELLOW),
+            new TileViewModel(6, Color.BLUE),
+            new TileViewModel(7, Color.BLUE),
+            new TileViewModel(8, Color.BLUE),
+            new TileViewModel(9, Color.BLUE),
     };
-
     public static final QuestionBase[] QUESTIONS = new QuestionBase[]{
 
             // 数字の場所を問う系
@@ -106,6 +103,5 @@ public class Constant {
             new QuestionMinusMinFromMax(),
 
     };
-
     public static final int OPEN_QUESTIONS_COUNT = QUESTIONS.length;
 }

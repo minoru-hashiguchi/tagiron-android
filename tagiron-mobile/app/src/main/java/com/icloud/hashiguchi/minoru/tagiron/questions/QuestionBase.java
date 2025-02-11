@@ -1,12 +1,9 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant;
 
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class QuestionBase implements Cloneable {
@@ -57,29 +54,9 @@ public abstract class QuestionBase implements Cloneable {
         return answerStr;
     }
 
-    public abstract List<Integer> answer(List<Tile> opponentTiles);
+    public abstract List<Integer> answer(List<TileViewModel> opponentTiles);
 
     public abstract String getAnswerUnit();
-
-    public boolean deletePatterns(List<Tile[]> patterns) {
-//        logger.debug("current patterns count -> {} ", patterns.size());
-        Iterator<Tile[]> itr = patterns.iterator();
-        while (itr.hasNext()) {
-            List<Tile> tiles = Arrays.asList(itr.next());
-            List<Integer> verify = answer(tiles);
-            boolean match = !Objects.deepEquals(answers, verify);
-            if (match) {
-//                if (D) {
-//                    logger.debug("answer:{}, verify:{}, delete pattern -> {}", answers.toString(), verify.toString(),
-//                            tiles.toString());
-//                }
-                itr.remove();
-            }
-        }
-//        logger.debug("current patterns count -> {} ", patterns.size());
-
-        return patterns.size() == 1;
-    }
 
     public String getStringPirntQuestion() {
         return " " + text;

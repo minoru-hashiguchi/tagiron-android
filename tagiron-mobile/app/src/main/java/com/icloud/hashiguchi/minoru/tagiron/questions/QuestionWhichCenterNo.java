@@ -1,6 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import com.icloud.hashiguchi.minoru.tagiron.Tile;
+import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class QuestionWhichCenterNo extends QuestionBase implements ShareableQues
     }
 
     @Override
-    public List<Integer> answer(List<Tile> opponentTiles) {
+    public List<Integer> answer(List<TileViewModel> opponentTiles) {
         int answer = 0;
         if (opponentTiles.get(2).getNo().getValue() < 5) {
             answer = 4;

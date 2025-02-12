@@ -13,8 +13,6 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 
 class GameLiveDataViewModel : ViewModel() {
     private var _isMyTurn = MutableLiveData(false)
-    private var me = HumanPlayer("あなた")
-    private var you = ComputerPlayer("相手")
     private var _isPlaying = MutableLiveData(true)
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
@@ -29,8 +27,10 @@ class GameLiveDataViewModel : ViewModel() {
         )
     )
     private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
-
     private var _selectedThinkingTilePosition = MutableLiveData<Int>(null)
+
+    private var me = HumanPlayer("あなた")
+    private var you = ComputerPlayer("相手")
 
     init {
         // シャッフル
@@ -49,6 +49,8 @@ class GameLiveDataViewModel : ViewModel() {
 
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
     val fieldQuestions: LiveData<MutableList<QuestionBase>> = _fieldQuestions
+    val leftQuestionsHistory: LiveData<MutableList<QuestionBase>> = me.questionsAndAnswers
+    val rightQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
     val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
     val showQuestionSelector: LiveData<Boolean> = _isQuestion.map { it && _isPlaying.value!! }
     val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it && _isPlaying.value!! }
@@ -110,7 +112,7 @@ class GameLiveDataViewModel : ViewModel() {
 
             // 共有情報カードの場合は自分も相手に回答する
             if (picked is ShareableQuestion) {
-                me.askQuestion(you.ownTiles.value!!, picked)
+                me.askQuestion(you.ownTiles.value!!, picked.clone())
             }
             _isMyTurn.postValue(true)
         }

@@ -16,7 +16,8 @@ abstract class Player(var name: String) {
     var ownTiles: MutableLiveData<MutableList<TileViewModel>> =
         MutableLiveData<MutableList<TileViewModel>>(mutableListOf())
         protected set
-    var questionsAndAnswers: MutableList<QuestionBase> = mutableListOf()
+    var questionsAndAnswers: MutableLiveData<MutableList<QuestionBase>> =
+        MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
         protected set
     var patterns: MutableSet<Array<TileViewModel>> = mutableSetOf()
         protected set
@@ -119,7 +120,7 @@ abstract class Player(var name: String) {
 
         // 相手プレイヤーの回答を元に思考する
         deletePatterns(picked)
-        questionsAndAnswers.add(picked)
+        questionsAndAnswers.value?.add(picked)
     }
 
     /**
@@ -141,7 +142,7 @@ abstract class Player(var name: String) {
      */
     fun printQuestionsAnswers() {
         Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "-- 質問とその回答 --")
-        questionsAndAnswers.forEach(Consumer { a: QuestionBase -> a.printAll() })
+        questionsAndAnswers.value?.forEach(Consumer { a: QuestionBase -> a.printAll() })
     }
 
     /**

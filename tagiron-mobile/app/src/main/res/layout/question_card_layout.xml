@@ -19,13 +19,13 @@
         android:orientation="vertical"
         android:padding="3dp">
 
-        <Button
+        <TextView
             android:id="@+id/textViewQuestionText"
             android:layout_width="190dp"
             android:layout_height="90dp"
             android:layout_gravity="center"
             android:background="@color/question_card_bg1"
-            android:enabled="false"
+            android:enabled="true"
             android:gravity="center"
             android:maxLines="3"
             android:text="@string/call_button"

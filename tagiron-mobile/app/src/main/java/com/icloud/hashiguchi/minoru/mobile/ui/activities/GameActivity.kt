@@ -72,21 +72,21 @@ class GameActivity : AppCompatActivity() {
             }
         })
 
-        val qsAdapter = QuestionsSammaryAdapter(viewModel.fieldQuestions)
-
+        val qsLeftAdapter = QuestionsSammaryAdapter(viewModel.leftQuestionsHistory)
         val leftRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions1)
-        leftRecyclerView.adapter = qsAdapter
+        leftRecyclerView.adapter = qsLeftAdapter
         leftRecyclerView.layoutManager = LinearLayoutManager(this)
         val separate1 = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         leftRecyclerView.addItemDecoration(separate1)
 
+        val qsRightAdapter = QuestionsSammaryAdapter(viewModel.rightQuestionsHistory)
         val rightRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions2)
-        rightRecyclerView.adapter = qsAdapter
+        rightRecyclerView.adapter = qsRightAdapter
         rightRecyclerView.layoutManager = LinearLayoutManager(this)
         val separate2 = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         rightRecyclerView.addItemDecoration(separate2)
 
-        qsAdapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
+        qsLeftAdapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
             override fun contentTapped(position: Int) {
 //                TODO("Not yet implemented")
             }

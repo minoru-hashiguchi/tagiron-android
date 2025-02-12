@@ -5,6 +5,7 @@ import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class QuestionWhereNo extends QuestionBase {
     protected int[] selectNumbers = new int[]{};
@@ -38,6 +39,17 @@ public class QuestionWhereNo extends QuestionBase {
             }
         }
         return list;
+    }
+
+    @Override
+    public String getAnswerText() {
+        if (answers.isEmpty()) {
+            return "";
+        }
+        String answerStr = answers.size() < 1
+                ? "なし"
+                : answers.stream().map(v -> ++v + getAnswerUnit()).collect(Collectors.joining(", "));
+        return answerStr;
     }
 
     @Override

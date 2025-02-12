@@ -1,8 +1,11 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
+import android.util.Log;
+
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +14,7 @@ public abstract class QuestionBase implements Cloneable {
     //    private static final Logger logger = LogManager.getLogger("");
     protected String text;
 
-    protected List<Integer> answers;
+    protected List<Integer> answers = new ArrayList<>();
 
     protected Integer selectedNo = null;
 
@@ -42,15 +45,12 @@ public abstract class QuestionBase implements Cloneable {
     public abstract String getSummaryText();
 
     public String getAnswerText() {
-        if (answers == null) {
+        if (answers.isEmpty()) {
             return "";
         }
         String answerStr = answers.size() < 1
                 ? "なし"
-                : answers.stream().map(v -> {
-            v++;
-            return v + getAnswerUnit();
-        }).collect(Collectors.joining(", "));
+                : answers.stream().map(v -> v + getAnswerUnit()).collect(Collectors.joining(", "));
         return answerStr;
     }
 
@@ -68,10 +68,10 @@ public abstract class QuestionBase implements Cloneable {
                 : "";
 
         String answerStr = getAnswerText();
-//        logger.debug("!! {} {} -> [{}]",
-//                text,
-//                selectStr,
-//                answerStr);
+        Log.println(Log.INFO, Constant.LOG_TAG, String.format("!! %s %s -> [%s]",
+                text.replaceAll("\n", ""),
+                selectStr,
+                answerStr));
     }
 
     @Override

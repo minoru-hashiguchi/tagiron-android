@@ -266,20 +266,6 @@
                     android:text="9" />
             </LinearLayout>
 
-        </LinearLayout>
-
-        <!-- 下から引っ張り出すView (BottomSheet) -->
-        <LinearLayout
-            android:id="@+id/bottomSheetLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/tile_color_yellow"
-            android:orientation="vertical"
-            app:behavior_hideable="false"
-            app:behavior_peekHeight="300dp"
-            app:layout_behavior="@string/bottom_sheet_behavior">
-
-            <!-- BottomSheetに表示したいViewを設定する -->
 
             <LinearLayout
                 android:id="@+id/linearLayoutPlayersLabel"
@@ -328,8 +314,7 @@
             <LinearLayout
                 android:id="@+id/linearLayoutBothPlayersQuestion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutPlayersLabel">
@@ -348,7 +333,22 @@
                     android:layout_marginHorizontal="1dp"
                     android:layout_weight="1" />
             </LinearLayout>
-
         </LinearLayout>
+
+        <!--        &lt;!&ndash; 下から引っ張り出すView (BottomSheet) &ndash;&gt;-->
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/bottomSheetLayout"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:background="@color/tile_color_yellow"-->
+        <!--            android:orientation="vertical"-->
+        <!--            app:behavior_hideable="false"-->
+        <!--            app:behavior_peekHeight="300dp"-->
+        <!--            app:layout_behavior="@string/bottom_sheet_behavior">-->
+
+        <!--            &lt;!&ndash; BottomSheetに表示したいViewを設定する &ndash;&gt;-->
+
+
+        <!--        </LinearLayout>-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

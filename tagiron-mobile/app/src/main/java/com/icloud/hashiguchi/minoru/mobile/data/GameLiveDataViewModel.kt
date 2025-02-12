@@ -28,6 +28,7 @@ class GameLiveDataViewModel : ViewModel() {
     )
     private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
     private var _selectedThinkingTilePosition = MutableLiveData<Int>(null)
+    private var _initCount = MutableLiveData(0)
 
     private var me = HumanPlayer("あなた")
     private var you = ComputerPlayer("相手")
@@ -39,8 +40,12 @@ class GameLiveDataViewModel : ViewModel() {
 
         listOf(me, you).forEach {
             it.pickTilesAfterThatSort(_gameTiles)
+//            Thread {
             it.createTilePattern()
+//                _initCount.postValue(_initCount.value?.plus(1) ?: 0)
+//            }.start()
         }
+//        you.createTilePattern()
 
         replenishQuestions()
 
@@ -52,9 +57,12 @@ class GameLiveDataViewModel : ViewModel() {
     val leftQuestionsHistory: LiveData<MutableList<QuestionBase>> = me.questionsAndAnswers
     val rightQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
     val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
-    val showQuestionSelector: LiveData<Boolean> = _isQuestion.map { it && _isPlaying.value!! }
-    val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it && _isPlaying.value!! }
+    val showQuestionSelector: LiveData<Boolean> =
+        _isQuestion.map { it && _isPlaying.value!! && _initCount.value == 2 }
+    val showCallEditor: LiveData<Boolean> =
+        _isQuestion.map { !it && _isPlaying.value!! && _initCount.value == 2 }
     val selectedTilePosition: LiveData<Int> = _selectedThinkingTilePosition
+    val isPlaying: LiveData<Boolean> = _isPlaying.map { it && _initCount.value == 2 }
 
     fun onClickSelectQestion(view: View) {
         _isQuestion.postValue(true)
@@ -82,6 +90,8 @@ class GameLiveDataViewModel : ViewModel() {
         if (picked is ShareableQuestion) {
             you.askQuestion(me.ownTiles.value!!, picked.clone())
         }
+
+        replenishQuestions()
         _isMyTurn.postValue(false)
 
         autoPlay()
@@ -126,6 +136,8 @@ class GameLiveDataViewModel : ViewModel() {
             if (picked is ShareableQuestion) {
                 me.askQuestion(you.ownTiles.value!!, picked.clone())
             }
+
+            replenishQuestions()
             _isMyTurn.postValue(true)
         }
     }

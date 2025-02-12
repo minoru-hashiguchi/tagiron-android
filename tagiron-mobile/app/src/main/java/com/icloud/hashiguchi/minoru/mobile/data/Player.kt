@@ -21,6 +21,7 @@ abstract class Player(var name: String) {
         protected set
     var patterns: MutableSet<Array<TileViewModel>> = mutableSetOf()
         protected set
+    var isCreatedPatterns = MutableLiveData(false)
 
     companion object {
         const val D = Constant.D
@@ -174,6 +175,7 @@ abstract class Player(var name: String) {
     fun createTilePattern() {
         val startTime = System.currentTimeMillis() // 処理開始時間を取得
 
+        var patternsMap: HashMap<String, Array<TileViewModel>> = hashMapOf()
         // 自身の手札と同じ(参照が同じ)タイルは除外
         val baseTiles: List<TileViewModel> = Constant.TILES.toMutableList()
             .filter { tile ->
@@ -183,8 +185,9 @@ abstract class Player(var name: String) {
         Log.println(Log.DEBUG, Constant.LOG_TAG + "[${name}]", "baseTiles => " + baseTiles)
 
         for (t1 in baseTiles) {
-            doNestedCreateTilePattern(baseTiles, t1)
+            doNestedCreateTilePattern(patternsMap, baseTiles, t1)
         }
+        patterns = patternsMap.values.toMutableSet()
 
         Log.println(
             Log.DEBUG,
@@ -194,20 +197,26 @@ abstract class Player(var name: String) {
         val endTime = System.currentTimeMillis() // 処理終了時間を取得
         val elapsedTime = endTime - startTime // 処理時間を計算
         Log.println(Log.DEBUG, Constant.LOG_TAG + "[${name}]", "処理時間: $elapsedTime ms")
+        isCreatedPatterns.postValue(true)
     }
 
-    private fun doNestedCreateTilePattern(baseTiles: List<TileViewModel>, t1: TileViewModel) {
+    private fun doNestedCreateTilePattern(
+        patternsMap: HashMap<String, Array<TileViewModel>>,
+        baseTiles: List<TileViewModel>,
+        t1: TileViewModel
+    ) {
         for (t2 in baseTiles) {
             if (t1 === t2 || t1.greaterThan(t2) ||
                 (t1.no.value == t2.no.value && t1.match(Color.BLUE) && t2.match(Color.RED))
             ) {
                 continue
             }
-            doNestedCreateTilePattern(baseTiles, t1, t2)
+            doNestedCreateTilePattern(patternsMap, baseTiles, t1, t2)
         }
     }
 
     private fun doNestedCreateTilePattern(
+        patternsMap: HashMap<String, Array<TileViewModel>>,
         baseTiles: List<TileViewModel>,
         t1: TileViewModel,
         t2: TileViewModel
@@ -219,11 +228,12 @@ abstract class Player(var name: String) {
             ) {
                 continue
             }
-            doNestedCreateTilePattern(baseTiles, t1, t2, t3)
+            doNestedCreateTilePattern(patternsMap, baseTiles, t1, t2, t3)
         }
     }
 
     private fun doNestedCreateTilePattern(
+        patternsMap: HashMap<String, Array<TileViewModel>>,
         baseTiles: List<TileViewModel>,
         t1: TileViewModel,
         t2: TileViewModel,
@@ -236,11 +246,12 @@ abstract class Player(var name: String) {
             ) {
                 continue
             }
-            doNestedCreateTilePattern(baseTiles, t1, t2, t3, t4)
+            doNestedCreateTilePattern(patternsMap, baseTiles, t1, t2, t3, t4)
         }
     }
 
     private fun doNestedCreateTilePattern(
+        patternsMap: HashMap<String, Array<TileViewModel>>,
         baseTiles: List<TileViewModel>,
         t1: TileViewModel,
         t2: TileViewModel,
@@ -258,8 +269,12 @@ abstract class Player(var name: String) {
                 continue
             }
 
+
             val tiles: Array<TileViewModel> = arrayOf(t1, t2, t3, t4, t5)
-            patterns.add(tiles)
+            val key = tiles.joinToString { it.no.value.toString() + it.color.value.toString() }
+//            Log.d(Constant.LOG_TAG + "[${name}]", "key -> ${key}")
+            patternsMap.put(key, tiles)
+
         }
     }
 }

@@ -103,5 +103,5 @@ public class Constant {
             new QuestionMinusMinFromMax(),
 
     };
-    public static final int OPEN_QUESTIONS_COUNT = QUESTIONS.length;
+    public static final int OPEN_QUESTIONS_COUNT = 6;
 }

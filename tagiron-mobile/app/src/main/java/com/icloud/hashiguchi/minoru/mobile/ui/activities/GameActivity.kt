@@ -39,15 +39,15 @@ class GameActivity : AppCompatActivity() {
 
         setup(viewModel, binding)
 
-        val bottomSheetLayout = findViewById<LinearLayout>(R.id.bottomSheetLayout)
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
-        bottomSheetBehavior.let { behavior ->
-            // maxHeightやpeekHeightは任意の高さを設定してください。
-            behavior.maxHeight = 1000 // BottomSheetが最大限まで拡張されたときの高さを設定
-            behavior.peekHeight = 500 // BottomSheetが初期状態で表示される高さを設定
-            behavior.isHideable = false
-            behavior.isDraggable = true
-        }
+//        val bottomSheetLayout = findViewById<LinearLayout>(R.id.bottomSheetLayout)
+//        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+//        bottomSheetBehavior.let { behavior ->
+//            // maxHeightやpeekHeightは任意の高さを設定してください。
+//            behavior.maxHeight = 1000 // BottomSheetが最大限まで拡張されたときの高さを設定
+//            behavior.peekHeight = 500 // BottomSheetが初期状態で表示される高さを設定
+//            behavior.isHideable = false
+//            behavior.isDraggable = true
+//        }
     }
 
     private fun setup(viewModel: GameLiveDataViewModel, binding: ActivityGameBinding) {

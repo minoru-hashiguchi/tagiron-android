@@ -75,6 +75,18 @@ class GameLiveDataViewModel : ViewModel() {
         }
     }
 
+    fun onSelectQuestion(index: Int) {
+        val picked = me.pickQuestion(index, _fieldQuestions)
+        me.askQuestion(you.ownTiles.value!!, picked)
+        // 共有情報カードの場合は自分も相手に回答する
+        if (picked is ShareableQuestion) {
+            you.askQuestion(me.ownTiles.value!!, picked.clone())
+        }
+        _isMyTurn.postValue(false)
+
+        autoPlay()
+    }
+
     private fun replenishQuestions() {
         // 不足数
         val count: Int = Constant.OPEN_QUESTIONS_COUNT - _fieldQuestions.value?.size!!
@@ -107,7 +119,7 @@ class GameLiveDataViewModel : ViewModel() {
             }
         } else {
             // 質問
-            val picked = you.pickQuestion(actionNo, _fieldQuestions.value!!)
+            val picked = you.pickQuestion(actionNo, _fieldQuestions)
             you.askQuestion(me.ownTiles.value!!, picked)
 
             // 共有情報カードの場合は自分も相手に回答する

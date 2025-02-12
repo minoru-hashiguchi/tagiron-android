@@ -83,6 +83,9 @@ abstract class Player(var name: String) {
             Log.DEBUG, Constant.LOG_TAG + "[${name}]",
             "patterns count: ${oldSize} -> ${patterns.size} "
         )
+        if (patterns.size <= 10) {
+            patterns.forEach { Log.d(Constant.LOG_TAG, Arrays.toString(it)) }
+        }
         return patterns.size == 1
     }
 
@@ -93,10 +96,14 @@ abstract class Player(var name: String) {
      * @param questions 6枚以下の質問カード
      * @return 選択した質問カード
      */
-    fun pickQuestion(pickedIndex: Int, questions: MutableList<QuestionBase>): QuestionBase {
-        val picked = questions[pickedIndex]
-        questions.removeAt(pickedIndex)
-        return picked
+    fun pickQuestion(
+        pickedIndex: Int,
+        questions: MutableLiveData<MutableList<QuestionBase>>
+    ): QuestionBase {
+        val picked = questions.value?.get(pickedIndex)
+        questions.value?.removeAt(pickedIndex)
+        questions.postValue(questions.value)
+        return picked!!
     }
 
     /**
@@ -121,6 +128,7 @@ abstract class Player(var name: String) {
         // 相手プレイヤーの回答を元に思考する
         deletePatterns(picked)
         questionsAndAnswers.value?.add(picked)
+        questionsAndAnswers.postValue(questionsAndAnswers.value)
     }
 
     /**

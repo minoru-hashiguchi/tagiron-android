@@ -45,12 +45,9 @@ public abstract class QuestionBase implements Cloneable {
     public abstract String getSummaryText();
 
     public String getAnswerText() {
-        if (answers.isEmpty()) {
-            return "";
-        }
         String answerStr = answers.size() < 1
                 ? "なし"
-                : answers.stream().map(v -> v + getAnswerUnit()).collect(Collectors.joining(", "));
+                : answers.stream().map(v -> v + "").collect(Collectors.joining(",")) + getAnswerUnit();
         return answerStr;
     }
 

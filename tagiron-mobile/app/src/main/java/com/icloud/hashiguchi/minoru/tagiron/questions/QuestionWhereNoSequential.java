@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class QuestionWhereNoSequential extends QuestionBase {
+public class QuestionWhereNoSequential extends QuestionWhereBase {
 
     public QuestionWhereNoSequential() {
         this.text = "数が連続している\n数字タイルはどこ？";
@@ -38,10 +38,5 @@ public class QuestionWhereNoSequential extends QuestionBase {
         }
         // 重複するインデックス番号を削除して返却
         return list.stream().distinct().collect(Collectors.toList());
-    }
-
-    @Override
-    public String getAnswerUnit() {
-        return "番目";
     }
 }

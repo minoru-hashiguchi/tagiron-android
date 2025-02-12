@@ -2,10 +2,10 @@ package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
 import android.os.Bundle
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +35,9 @@ class GameActivity : AppCompatActivity() {
         // LiveData needs the lifecycle owner
         binding.lifecycleOwner = this
 
-        setup(viewModel)
+        binding.recyclerViewQuestions.adapter
+
+        setup(viewModel, binding)
 
         val bottomSheetLayout = findViewById<LinearLayout>(R.id.bottomSheetLayout)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
@@ -48,7 +50,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    private fun setup(viewModel: GameLiveDataViewModel) {
+    private fun setup(viewModel: GameLiveDataViewModel, binding: ActivityGameBinding) {
 
         val fqcAdapter = FieldQuestionCardsAdapter(viewModel.fieldQuestions)
         val fqcRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions)
@@ -63,14 +65,17 @@ class GameActivity : AppCompatActivity() {
         fqcAdapter.setListener(object :
             FieldQuestionCardsAdapter.FieldQuestionCardsAdapterListener {
             override fun contentTapped(position: Int) {
-                // セルをタップした時の処理
-                Toast.makeText(
-                    applicationContext,
-                    "[${position}] ${viewModel.fieldQuestions.value?.get(position)?.text}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                viewModel.onSelectQuestion(position)
             }
         })
+
+        binding.recyclerViewQuestions.adapter = fqcAdapter
+        viewModel.fieldQuestions.observe(this, Observer {
+            it.let {
+                fqcAdapter.data = it
+            }
+        })
+
 
         val qsLeftAdapter = QuestionsSammaryAdapter(viewModel.leftQuestionsHistory)
         val leftRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions1)
@@ -79,6 +84,13 @@ class GameActivity : AppCompatActivity() {
         val separate1 = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         leftRecyclerView.addItemDecoration(separate1)
 
+        binding.recyclerViewQuestions1.adapter = qsLeftAdapter
+        viewModel.leftQuestionsHistory.observe(this, Observer {
+            it.let {
+                qsLeftAdapter.data = it
+            }
+        })
+
         val qsRightAdapter = QuestionsSammaryAdapter(viewModel.rightQuestionsHistory)
         val rightRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions2)
         rightRecyclerView.adapter = qsRightAdapter
@@ -86,12 +98,19 @@ class GameActivity : AppCompatActivity() {
         val separate2 = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         rightRecyclerView.addItemDecoration(separate2)
 
-        qsLeftAdapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
-            override fun contentTapped(position: Int) {
-//                TODO("Not yet implemented")
+        binding.recyclerViewQuestions2.adapter = qsRightAdapter
+        viewModel.rightQuestionsHistory.observe(this, Observer {
+            it.let {
+                qsRightAdapter.data = it
             }
-
         })
+
+//        qsLeftAdapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
+//            override fun contentTapped(position: Int) {
+////                TODO("Not yet implemented")
+//            }
+//
+//        })
     }
 
 }

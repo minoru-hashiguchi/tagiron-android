@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class QuestionWhereNoSameColor extends QuestionBase {
+public class QuestionWhereNoSameColor extends QuestionWhereBase {
     public QuestionWhereNoSameColor() {
         this.text = "同じ色がとなり合っている\n数字タイルはどこ？";
     }
@@ -38,10 +38,5 @@ public class QuestionWhereNoSameColor extends QuestionBase {
         }
         // 重複するインデックス番号を削除して返却
         return list.stream().distinct().collect(Collectors.toList());
-    }
-
-    @Override
-    public String getAnswerUnit() {
-        return "番目";
     }
 }

@@ -14,6 +14,14 @@ class FieldQuestionCardsAdapter(private val questionCardList: LiveData<MutableLi
 
     private lateinit var listener: FieldQuestionCardsAdapterListener
 
+    // RecyclerViewに表示するデータオブジェクト
+    var data: MutableList<QuestionBase> = questionCardList.value!!
+        set(value) {
+            field = value
+            // データ変更時に自動で再描画するための設定
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -24,11 +32,11 @@ class FieldQuestionCardsAdapter(private val questionCardList: LiveData<MutableLi
     }
 
     override fun getItemCount(): Int {
-        return questionCardList.value?.size ?: 0
+        return data.size
     }
 
     override fun onBindViewHolder(holder: QuestionCardListRecyclerViewHolder, position: Int) {
-        holder.questionText.text = questionCardList.value?.get(position)?.text
+        holder.questionText.text = data.get(position).text
 
         holder.itemView.setOnClickListener {
             listener.contentTapped(position)

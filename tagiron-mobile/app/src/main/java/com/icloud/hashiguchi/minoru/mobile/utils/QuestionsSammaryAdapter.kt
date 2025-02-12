@@ -14,6 +14,14 @@ class QuestionsSammaryAdapter(private val questionCardList: LiveData<MutableList
 
     private lateinit var listener: QuestionsSammaryAdapterListener
 
+    // RecyclerViewに表示するデータオブジェクト
+    var data: MutableList<QuestionBase> = questionCardList.value!!
+        set(value) {
+            field = value
+            // データ変更時に自動で再描画するための設定
+            notifyDataSetChanged()
+        }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -24,12 +32,12 @@ class QuestionsSammaryAdapter(private val questionCardList: LiveData<MutableList
     }
 
     override fun getItemCount(): Int {
-        return questionCardList.value?.size ?: 0
+        return data.size
     }
 
     override fun onBindViewHolder(holder: QuestionCardListRecyclerViewHolder, position: Int) {
-        holder.questionText.text = questionCardList.value?.get(position)?.summaryText
-        holder.answerText.text = questionCardList.value?.get(position)?.answerText
+        holder.questionText.text = data.get(position).summaryText
+        holder.answerText.text = data.get(position).answerText
 
         holder.itemView.setOnClickListener {
             listener.contentTapped(position)

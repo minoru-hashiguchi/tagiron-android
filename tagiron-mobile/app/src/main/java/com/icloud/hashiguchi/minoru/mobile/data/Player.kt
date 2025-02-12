@@ -21,6 +21,10 @@ abstract class Player(var name: String) {
     var patterns: MutableSet<Array<TileViewModel>> = mutableSetOf()
         protected set
 
+    companion object {
+        const val D = Constant.D
+    }
+
     /**
      * 質問か宣言か、行動を選択する
      *
@@ -63,22 +67,21 @@ abstract class Player(var name: String) {
     }
 
     fun deletePatterns(q: QuestionBase): Boolean {
-//        logger.debug("current patterns count -> {} ", patterns.size());
+        val oldSize = patterns.size
         val itr = patterns.iterator()
         while (itr.hasNext()) {
             val tiles = Arrays.stream(itr.next()).collect(Collectors.toList())
             val verify: List<Int> = q.answer(tiles)
             val notMatch = !Objects.deepEquals(q.answers, verify)
             if (notMatch) {
-//                if (D) {
-//                    logger.debug("answer:{}, verify:{}, delete pattern -> {}", answers.toString(), verify.toString(),
-//                            tiles.toString());
-//                }
                 itr.remove()
             }
         }
 
-        //        logger.debug("current patterns count -> {} ", patterns.size());
+        Log.println(
+            Log.DEBUG, Constant.LOG_TAG + "[${name}]",
+            "patterns count: ${oldSize} -> ${patterns.size} "
+        )
         return patterns.size == 1
     }
 
@@ -123,13 +126,13 @@ abstract class Player(var name: String) {
      * 手札のタイルを出力する
      */
     fun printMyTiles() {
-        Log.println(Log.INFO, Constant.LOG_TAG, "-- " + name + "の手札 --")
+        Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "-- 手札 --")
         // カンマ区切りで出力
         val str: String = ownTiles.value!!.stream()
             .map<Any> { v: TileViewModel -> v.toString() }
             .collect(Collectors.toList())
             .joinToString(", ")
-        Log.println(Log.INFO, Constant.LOG_TAG, str)
+        Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", str)
     }
 
     /**
@@ -137,7 +140,7 @@ abstract class Player(var name: String) {
      * 相手の共有情報カードも含む
      */
     fun printQuestionsAnswers() {
-        Log.println(Log.INFO, Constant.LOG_TAG, "-- 質問とその回答 --")
+        Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "-- 質問とその回答 --")
         questionsAndAnswers.forEach(Consumer { a: QuestionBase -> a.printAll() })
     }
 
@@ -147,10 +150,10 @@ abstract class Player(var name: String) {
      * @param size 予想手札パターン数の閾値
      */
     fun printPatterns(size: Int) {
-        Log.println(Log.INFO, Constant.LOG_TAG, "候補件数 -> " + patterns.size)
+        Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "候補件数 -> " + patterns.size)
         if (patterns.size <= size) {
             patterns.forEach(Consumer<Array<TileViewModel>> { p: Array<TileViewModel> ->
-                Log.println(Log.INFO, Constant.LOG_TAG, Arrays.toString(p))
+                Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", Arrays.toString(p))
             })
         }
     }
@@ -168,16 +171,20 @@ abstract class Player(var name: String) {
                 !ownTiles.value!!.any { it === tile }
             }
 
-        Log.println(Log.DEBUG, Constant.LOG_TAG, "baseTiles => " + baseTiles)
+        Log.println(Log.DEBUG, Constant.LOG_TAG + "[${name}]", "baseTiles => " + baseTiles)
 
         for (t1 in baseTiles) {
             doNestedCreateTilePattern(baseTiles, t1)
         }
 
-        Log.println(Log.DEBUG, Constant.LOG_TAG, "候補件数[重複排除後] => " + patterns.size)
+        Log.println(
+            Log.DEBUG,
+            Constant.LOG_TAG + "[${name}]",
+            "候補件数[重複排除後] => " + patterns.size
+        )
         val endTime = System.currentTimeMillis() // 処理終了時間を取得
         val elapsedTime = endTime - startTime // 処理時間を計算
-        Log.println(Log.DEBUG, Constant.LOG_TAG, "処理時間: $elapsedTime ms")
+        Log.println(Log.DEBUG, Constant.LOG_TAG + "[${name}]", "処理時間: $elapsedTime ms")
     }
 
     private fun doNestedCreateTilePattern(baseTiles: List<TileViewModel>, t1: TileViewModel) {

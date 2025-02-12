@@ -14,7 +14,7 @@ class ComputerPlayer(name: String) : Player(name) {
     override fun selectAction(questions: MutableList<QuestionBase>): Int? {
         // 場の質問カードがないときは宣言のみ
         if (questions.size == 0 || patterns.size == 1) {
-            Log.println(Log.INFO, Constant.LOG_TAG, "宣言する")
+            Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "宣言する")
             return null
         }
         // TODO 質問は暫定でランダム
@@ -24,10 +24,10 @@ class ComputerPlayer(name: String) : Player(name) {
 
     override fun call(yourTiles: MutableList<TileViewModel>): Boolean {
         if (Objects.deepEquals(yourTiles, patterns.elementAt(0))) {
-            Log.println(Log.INFO, Constant.LOG_TAG, "正解！")
+            Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "正解！")
             return true
         } else {
-            Log.println(Log.ERROR, Constant.LOG_TAG, "不正解！")
+            Log.println(Log.ERROR, Constant.LOG_TAG + "[${name}]", "不正解！")
             return false
         }
     }

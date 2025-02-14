@@ -80,8 +80,13 @@ class GameLiveDataViewModel : ViewModel() {
         }
     }
 
-    fun onSelectQuestion(index: Int) {
+    fun getQuestion(index: Int): QuestionBase {
+        return _fieldQuestions.value?.get(index)!!
+    }
+
+    fun onSelectQuestion(index: Int, selected: Int) {
         val picked = me.pickQuestion(index, _fieldQuestions)
+        me.selectPosition = selected
         me.askQuestion(you.ownTiles.value!!, picked)
         // 共有情報カードの場合は自分も相手に回答する
         if (picked is ShareableQuestion) {

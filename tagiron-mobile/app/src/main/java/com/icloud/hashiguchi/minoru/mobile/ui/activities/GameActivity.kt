@@ -1,7 +1,10 @@
 package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,11 +14,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBindings
 import com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.QuestionsSammaryAdapter
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
+import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
 
@@ -88,10 +93,58 @@ class GameActivity : AppCompatActivity() {
 
         fqcAdapter.setListener(object :
             FieldQuestionCardsAdapter.FieldQuestionCardsAdapterListener {
+
+            /**
+             * 場の質問カードを選択したとき、確認ダイアログを表示する</br>
+             *
+             * この際、選択式の質問の場合は数字の選択肢を合わせて表示する
+             * @param position タップした質問カードの位置
+             */
             override fun contentTapped(position: Int) {
 
-                SampleDialog().show(supportFragmentManager, "aaaas")
-//                viewModel.onSelectQuestion(position)
+                val inflater = this@GameActivity.layoutInflater
+                val dialogView = inflater.inflate(R.layout.question_card_layout, null)
+                val text: TextView =
+                    ViewBindings.findChildViewById<View>(
+                        dialogView,
+                        R.id.textViewQuestionText
+                    ) as TextView
+                val q = viewModel.getQuestion(position)
+                text.text = q.text
+                val selectable = q is QuestionWhereNoBySelect
+                var selectPosition = 0
+
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+                builder
+                    .setTitle("この質問で良いですか？")
+                    .setView(dialogView)
+                    .setPositiveButton("OK") { dialog, which ->
+                        // Do something.
+                        viewModel.onSelectQuestion(position, selectPosition)
+                    }
+                    .setNegativeButton("やめる") { dialog, which ->
+                        // Do something else.
+                    }
+
+                if (selectable) {
+                    val items: Array<String> =
+                        (q as QuestionWhereNoBySelect).selectNumbers.map { "${it} にする" }
+                            .toTypedArray()
+                    builder
+                        .setSingleChoiceItems(
+                            items, 0
+                        ) { dialog, which ->
+                            // Do something.
+                            selectPosition = which
+                        }
+                }
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+//                SampleDialog(viewModel.getQuestion(position), position).show(
+//                    supportFragmentManager,
+//                    "aaaas"
+//                )
             }
         })
 

@@ -7,6 +7,8 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 
 class HumanPlayer(name: String) : Player(name) {
 
+    var selectPosition: Int? = null
+
     override fun selectAction(questions: MutableList<QuestionBase>): Int? {
         TODO("Not yet implemented")
     }
@@ -16,6 +18,11 @@ class HumanPlayer(name: String) : Player(name) {
     }
 
     override fun selectNumber(question: QuestionWhereNoBySelect): Int {
-        TODO("Not yet implemented")
+        try {
+            val items = question.selectNumbers
+            return items.get(selectPosition!!)
+        } finally {
+            selectPosition = null
+        }
     }
 }

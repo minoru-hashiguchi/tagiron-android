@@ -23,6 +23,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
+import com.icloud.hashiguchi.tagironmobile.databinding.CallLayoutBinding
 
 class GameActivity : AppCompatActivity() {
 
@@ -64,6 +65,71 @@ class GameActivity : AppCompatActivity() {
         viewModel.showCallEditor.observe(this) {
             Log.d(Constant.LOG_TAG, "showCallEditor.observe=${it}")
         }
+        viewModel.commuterSelectedQuestion.observe(this) {
+            Log.d(
+                Constant.LOG_TAG,
+                "comSelectedQuestion.observe -- ${viewModel.commuterSelectedQuestion.value}"
+            )
+            if (viewModel.commuterSelectedQuestion.value != null) {
+                Thread.sleep(1000)
+                val inflater = this@GameActivity.layoutInflater
+                val dialogView = inflater.inflate(R.layout.question_card_layout, null)
+                val text: TextView =
+                    ViewBindings.findChildViewById<View>(
+                        dialogView,
+                        R.id.textViewQuestionText
+                    ) as TextView
+                val q = viewModel.commuterSelectedQuestion.value
+                text.text = q?.text
+
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+                builder
+                    .setTitle("相手からの質問です")
+                    .setView(dialogView)
+//                .setPositiveButton("OK") { dialog, which ->
+//                    // Do something.
+//                    viewModel.onSelectQuestion(position, selectPosition)
+//                }
+                    .setNegativeButton("OK") { dialog, which ->
+                        viewModel.clearComputerSelectedQuestion()
+                        viewModel.computerAutoPlayAskQuestion(q!!)
+                    }
+
+//            if (selectable) {
+//                val items: Array<String> =
+//                    (q as QuestionWhereNoBySelect).selectNumbers.map { "${it} にする" }
+//                        .toTypedArray()
+//                builder
+//                    .setSingleChoiceItems(
+//                        items, 0
+//                    ) { dialog, which ->
+//                        // Do something.
+//                        selectPosition = which
+//                    }
+//            }
+
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+        }
+
+        viewModel.computerCalledTiles.observe(this) {
+            if (viewModel.computerCalledTiles.value?.isNotEmpty()!!) {
+                val inflater = this@GameActivity.layoutInflater
+                val binding: CallLayoutBinding = CallLayoutBinding.inflate(inflater)
+                binding.viewmodel = viewModel
+                binding.lifecycleOwner = this
+                val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+                builder
+                    .setTitle("相手が宣言しました")
+                    .setView(binding.root)
+                    .setNegativeButton("OK") { dialog, which ->
+
+                    }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+        }
 
 //        val bottomSheetLayout = findViewById<LinearLayout>(R.id.bottomSheetLayout)
 //        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
@@ -74,6 +140,7 @@ class GameActivity : AppCompatActivity() {
 //            behavior.isHideable = false
 //            behavior.isDraggable = true
 //        }
+
     }
 
     private fun setupFieldQuestionCards(
@@ -119,11 +186,10 @@ class GameActivity : AppCompatActivity() {
                     .setTitle("この質問で良いですか？")
                     .setView(dialogView)
                     .setPositiveButton("OK") { dialog, which ->
-                        // Do something.
                         viewModel.onSelectQuestion(position, selectPosition)
                     }
                     .setNegativeButton("やめる") { dialog, which ->
-                        // Do something else.
+                        // Do nothing.
                     }
 
                 if (selectable) {
@@ -141,16 +207,13 @@ class GameActivity : AppCompatActivity() {
 
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
-//                SampleDialog(viewModel.getQuestion(position), position).show(
-//                    supportFragmentManager,
-//                    "aaaas"
-//                )
             }
         })
 
         binding.recyclerViewQuestions.adapter = fqcAdapter
         viewModel.fieldQuestions.observe(this, Observer {
             it.let {
+                Log.d(Constant.LOG_TAG, "fieldQuestions.observe -> ${it.size}")
                 fqcAdapter.data = it
             }
         })
@@ -189,7 +252,7 @@ class GameActivity : AppCompatActivity() {
 
         val viewModel by viewModels<GameLiveDataViewModel>()
         Log.d(Constant.LOG_TAG, "showQuestionSelector=${viewModel.showQuestionSelector.value}")
-        viewModel.autoPlay()
+        viewModel.computerAutoPlay()
         Log.d(Constant.LOG_TAG, "onStart -- end")
     }
 }

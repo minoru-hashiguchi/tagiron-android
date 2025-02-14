@@ -13,8 +13,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 
 
 class GameLiveDataViewModel : ViewModel() {
-    private var _isMyTurn = MutableLiveData(false)
-    private var _isPlaying = MutableLiveData(false)
+    private var _isPlaying = MutableLiveData(true)
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
     private var _gameQuestions = Constant.QUESTIONS.toMutableList()
@@ -29,7 +28,8 @@ class GameLiveDataViewModel : ViewModel() {
     )
     private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
     private var _selectedThinkingTilePosition = MutableLiveData<Int>(null)
-    private var _initCount = MutableLiveData(0)
+    private var _comSelectedQuestion = MutableLiveData<QuestionBase?>(null)
+    private var _computerCalledTiles = MutableLiveData<MutableList<TileViewModel>>()
 
     private var me = HumanPlayer("あなた")
     private var you = ComputerPlayer("相手")
@@ -60,6 +60,9 @@ class GameLiveDataViewModel : ViewModel() {
     val showCallEditor: LiveData<Boolean> =
         _isQuestion.map { !it && _isPlaying.value!! }
     val selectedTilePosition: LiveData<Int> = _selectedThinkingTilePosition
+    val commuterSelectedQuestion: LiveData<QuestionBase?> = _comSelectedQuestion
+    val isPlaying: LiveData<Boolean> = _isPlaying
+    val computerCalledTiles: LiveData<MutableList<TileViewModel>> = _computerCalledTiles
 
     fun onClickSelectQestion(view: View) {
         _isQuestion.postValue(true)
@@ -92,12 +95,15 @@ class GameLiveDataViewModel : ViewModel() {
         if (picked is ShareableQuestion) {
             you.askQuestion(me.ownTiles.value!!, picked.clone())
         }
-        _isMyTurn.postValue(false)
+
+        // 相手のターン
         replenishQuestions()
-        autoPlay()
+        computerAutoPlay()
     }
 
     private fun replenishQuestions() {
+        Log.d(Constant.LOG_TAG, "replenishQuestions -- begin")
+        val old = _fieldQuestions.value?.size
         // 不足数
         val count: Int = Constant.OPEN_QUESTIONS_COUNT - _fieldQuestions.value?.size!!
         for (i in 0 until count) {
@@ -108,42 +114,50 @@ class GameLiveDataViewModel : ViewModel() {
 
             // 山札の先頭を場に追加
             _fieldQuestions.value!!.add(_gameQuestions.get(0))
+            _fieldQuestions.postValue(_fieldQuestions.value)
             // 山札の先頭を削除
             _gameQuestions.removeAt(0)
         }
+        Log.d(
+            Constant.LOG_TAG,
+            "replenishQuestions -- end (${old} -> ${_fieldQuestions.value!!.size})"
+        )
     }
 
-    fun autoPlay() {
+    fun clearComputerSelectedQuestion() {
+        _comSelectedQuestion.postValue(null)
+    }
+
+    fun computerAutoPlay() {
         Log.d(Constant.LOG_TAG, "autoPlay -- begin")
-        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isMyTurn=${_isMyTurn.value}")
+        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
         _isPlaying.postValue(true)
-        _isMyTurn.postValue(false)
 
         // 行動の決定
         val actionNo = you.selectAction(_fieldQuestions.value!!)
 
         if (actionNo == null) {
             // 宣言
+            _computerCalledTiles.postValue(you.patterns.elementAt(0).toMutableList())
             val result = you.call(me.ownTiles.value!!)
-            when (result) {
-//                isPlaying = false
-                true -> return
-                false -> _isMyTurn.postValue(true)
-            }
+            _isPlaying.postValue(!result)
         } else {
             // 質問
             val picked = you.pickQuestion(actionNo, _fieldQuestions)
-            you.askQuestion(me.ownTiles.value!!, picked)
+            _comSelectedQuestion.postValue(picked)
 
-            // 共有情報カードの場合は自分も相手に回答する
-            if (picked is ShareableQuestion) {
-                me.askQuestion(you.ownTiles.value!!, picked.clone())
-            }
-
-            replenishQuestions()
-            _isMyTurn.postValue(true)
-            Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isMyTurn=${_isMyTurn.value}")
             Log.d(Constant.LOG_TAG, "autoPlay -- end")
         }
+    }
+
+    fun computerAutoPlayAskQuestion(picked: QuestionBase) {
+        you.askQuestion(me.ownTiles.value!!, picked)
+        // 共有情報カードの場合は自分も相手に回答する
+        if (picked is ShareableQuestion) {
+            me.askQuestion(you.ownTiles.value!!, picked.clone())
+        }
+
+        replenishQuestions()
+        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
     }
 }

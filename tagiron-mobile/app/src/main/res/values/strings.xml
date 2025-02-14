@@ -10,6 +10,12 @@
     <string name="own_tiles_label">あなたの手札</string>
     <string name="field_question_cards_label">フィールドの質問カード</string>
     <string name="your_tiles_label">相手の予想手札</string>
-    <string name="edit_button">編集する</string>
+    <string name="question_button">質問する</string>
+    <string name="edit_button">予想する</string>
     <string name="call_button">宣言する</string>
+    <string name="ng_message_on_call_check">未入力のタイルがあります</string>
+    <string name="confirm_message_on_question">この内容で宣言しますか？</string>
+    <string name="confirm_message_on_call">この内容で宣言しますか？</string>
+    <string name="button_label_cancel">やめる</string>
+    <string name="button_label_ok">OK</string>
 </resources>

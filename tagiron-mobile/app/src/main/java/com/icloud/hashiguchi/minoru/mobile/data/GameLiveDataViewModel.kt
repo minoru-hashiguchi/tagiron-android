@@ -7,9 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
+import com.icloud.hashiguchi.minoru.tagiron.constants.Color
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
+import java.util.Objects
 
 
 class GameLiveDataViewModel : ViewModel() {
@@ -46,7 +48,7 @@ class GameLiveDataViewModel : ViewModel() {
 
         replenishQuestions()
         _isPlaying.postValue(true)
-
+        computerAutoPlay()
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isQuestion=${_isQuestion.value}")
     }
 
@@ -80,6 +82,25 @@ class GameLiveDataViewModel : ViewModel() {
         var tile = _selectedThinkingTilePosition.value?.let { _thinkingTiles.value?.get(it - 1) }
         if (tile != null) {
             tile.setNo(number)
+        }
+    }
+
+    fun onClickColor(strColor: String) {
+        var tile = _selectedThinkingTilePosition.value?.let { _thinkingTiles.value?.get(it - 1) }
+        if (tile != null) {
+            when (strColor) {
+                "RED" -> tile.setColor(Color.RED)
+                "BLUE" -> tile.setColor(Color.BLUE)
+                "YELLOW" -> tile.setColor(Color.YELLOW)
+            }
+        }
+    }
+
+    fun onClickClear() {
+        var tile = _selectedThinkingTilePosition.value?.let { _thinkingTiles.value?.get(it - 1) }
+        if (tile != null) {
+            tile.setNo(null)
+            tile.setColor(null)
         }
     }
 
@@ -160,4 +181,21 @@ class GameLiveDataViewModel : ViewModel() {
         replenishQuestions()
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
     }
+
+    fun isNgOnCallTilesCheck(): Boolean {
+        val ngCount = _thinkingTiles.value?.filter {
+//            Log.d(
+//                Constant.LOG_TAG,
+//                "isNgOnCallTilesCheck -> no=${it.no.value}, color=${it.color.value}"
+//            )
+            it.no.value == null || it.color.value == null
+        }?.size
+        return ngCount != 0
+    }
+
+    fun onCall(): Boolean {
+        val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
+        return result
+    }
+
 }

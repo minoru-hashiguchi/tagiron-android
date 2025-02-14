@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -84,6 +86,7 @@ class GameActivity : AppCompatActivity() {
 
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                 builder
+                    .setCancelable(false)
                     .setTitle("相手からの質問です")
                     .setView(dialogView)
 //                .setPositiveButton("OK") { dialog, which ->
@@ -118,29 +121,41 @@ class GameActivity : AppCompatActivity() {
                 val inflater = this@GameActivity.layoutInflater
                 val binding: CallLayoutBinding = CallLayoutBinding.inflate(inflater)
                 binding.viewmodel = viewModel
+                binding.tileList = viewModel.computerCalledTiles.value
                 binding.lifecycleOwner = this
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                 builder
+                    .setCancelable(false)
                     .setTitle("相手が宣言しました")
                     .setView(binding.root)
                     .setNegativeButton("OK") { dialog, which ->
-
+                        // Do nothing.
                     }
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
             }
         }
 
-//        val bottomSheetLayout = findViewById<LinearLayout>(R.id.bottomSheetLayout)
-//        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
-//        bottomSheetBehavior.let { behavior ->
-//            // maxHeightやpeekHeightは任意の高さを設定してください。
-//            behavior.maxHeight = 1000 // BottomSheetが最大限まで拡張されたときの高さを設定
-//            behavior.peekHeight = 500 // BottomSheetが初期状態で表示される高さを設定
-//            behavior.isHideable = false
-//            behavior.isDraggable = true
-//        }
+        onBackPressedDispatcher.addCallback(callback)
+    }
 
+    val callback = object : OnBackPressedCallback(true) {
+        //コールバックのhandleOnBackPressedを呼び出して、戻るキーを押したときの処理を記述
+        override fun handleOnBackPressed() {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+            builder
+                .setTitle("ゲームを終了しますか？")
+                .setPositiveButton("終わる") { dialog, which ->
+                    finish()
+                }
+                .setNegativeButton("まだ続ける") { dialog, which ->
+                    // Do nothing.
+                }
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+            return
+        }
     }
 
     private fun setupFieldQuestionCards(
@@ -183,7 +198,7 @@ class GameActivity : AppCompatActivity() {
 
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                 builder
-                    .setTitle("この質問で良いですか？")
+                    .setTitle("この内容で質問しますか？")
                     .setView(dialogView)
                     .setPositiveButton("OK") { dialog, which ->
                         viewModel.onSelectQuestion(position, selectPosition)
@@ -246,14 +261,42 @@ class GameActivity : AppCompatActivity() {
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d(Constant.LOG_TAG, "onStart -- begin")
-
+    fun onClickCall(view: View) {
+        Log.d(Constant.LOG_TAG, "onClickCall -- begin")
         val viewModel by viewModels<GameLiveDataViewModel>()
-        Log.d(Constant.LOG_TAG, "showQuestionSelector=${viewModel.showQuestionSelector.value}")
-        viewModel.computerAutoPlay()
-        Log.d(Constant.LOG_TAG, "onStart -- end")
+        if (viewModel.isNgOnCallTilesCheck()) {
+            Toast.makeText(
+                this,
+                "未入力のタイルがあります",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val inflater = this@GameActivity.layoutInflater
+        val binding: CallLayoutBinding = CallLayoutBinding.inflate(inflater)
+        binding.viewmodel = viewModel
+        binding.tileList = viewModel.thinkingTiles.value
+        binding.lifecycleOwner = this
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+        builder
+            .setTitle("この内容で宣言しますか？")
+            .setView(binding.root)
+            .setPositiveButton("OK") { dialog, which ->
+                val result = viewModel.onCall()
+                if (result) {
+                    Toast.makeText(this, "正解！！あなたの勝ち！！", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "不正解！！", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("いいえ") { dialog, which ->
+                // Do nothing.
+            }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+        Log.d(Constant.LOG_TAG, "onClickCall -- end")
     }
+
 }
 

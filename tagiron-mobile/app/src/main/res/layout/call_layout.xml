@@ -24,7 +24,7 @@
 
         <include
             layout="@layout/tiles_layout"
-            app:tileList="@{viewmodel.computerCalledTiles}" />
+            app:tileList="@{tileList}" />
 
         <TextView
             android:id="@+id/textViewCallResult"

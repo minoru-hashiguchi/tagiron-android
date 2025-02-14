@@ -1,26 +1,28 @@
 package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
 import android.os.Bundle
-import android.widget.LinearLayout
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.QuestionsSammaryAdapter
+import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
+import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity() {
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(Constant.LOG_TAG, "onCreate -- begin")
         super.onCreate(savedInstanceState)
 
         val viewModel by viewModels<GameLiveDataViewModel>()
@@ -37,7 +39,26 @@ class GameActivity : AppCompatActivity() {
 
         binding.recyclerViewQuestions.adapter
 
-        setup(viewModel, binding)
+        setupFieldQuestionCards(viewModel, binding)
+
+        setupQuestionHistory(
+            R.id.recyclerViewQuestions1,
+            viewModel.leftQuestionsHistory,
+            binding.recyclerViewQuestions1
+        )
+
+        setupQuestionHistory(
+            R.id.recyclerViewQuestions2,
+            viewModel.rightQuestionsHistory,
+            binding.recyclerViewQuestions2
+        )
+
+        viewModel.showQuestionSelector.observe(this) {
+            Log.d(Constant.LOG_TAG, "showQuestionSelector.observe=${it}")
+        }
+        viewModel.showCallEditor.observe(this) {
+            Log.d(Constant.LOG_TAG, "showCallEditor.observe=${it}")
+        }
 
 //        val bottomSheetLayout = findViewById<LinearLayout>(R.id.bottomSheetLayout)
 //        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
@@ -50,7 +71,10 @@ class GameActivity : AppCompatActivity() {
 //        }
     }
 
-    private fun setup(viewModel: GameLiveDataViewModel, binding: ActivityGameBinding) {
+    private fun setupFieldQuestionCards(
+        viewModel: GameLiveDataViewModel,
+        binding: ActivityGameBinding
+    ) {
 
         val fqcAdapter = FieldQuestionCardsAdapter(viewModel.fieldQuestions)
         val fqcRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions)
@@ -65,7 +89,9 @@ class GameActivity : AppCompatActivity() {
         fqcAdapter.setListener(object :
             FieldQuestionCardsAdapter.FieldQuestionCardsAdapterListener {
             override fun contentTapped(position: Int) {
-                viewModel.onSelectQuestion(position)
+
+                SampleDialog().show(supportFragmentManager, "aaaas")
+//                viewModel.onSelectQuestion(position)
             }
         })
 
@@ -75,42 +101,43 @@ class GameActivity : AppCompatActivity() {
                 fqcAdapter.data = it
             }
         })
-
-
-        val qsLeftAdapter = QuestionsSammaryAdapter(viewModel.leftQuestionsHistory)
-        val leftRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions1)
-        leftRecyclerView.adapter = qsLeftAdapter
-        leftRecyclerView.layoutManager = LinearLayoutManager(this)
-        val separate1 = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        leftRecyclerView.addItemDecoration(separate1)
-
-        binding.recyclerViewQuestions1.adapter = qsLeftAdapter
-        viewModel.leftQuestionsHistory.observe(this, Observer {
-            it.let {
-                qsLeftAdapter.data = it
-            }
-        })
-
-        val qsRightAdapter = QuestionsSammaryAdapter(viewModel.rightQuestionsHistory)
-        val rightRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions2)
-        rightRecyclerView.adapter = qsRightAdapter
-        rightRecyclerView.layoutManager = LinearLayoutManager(this)
-        val separate2 = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        rightRecyclerView.addItemDecoration(separate2)
-
-        binding.recyclerViewQuestions2.adapter = qsRightAdapter
-        viewModel.rightQuestionsHistory.observe(this, Observer {
-            it.let {
-                qsRightAdapter.data = it
-            }
-        })
-
-//        qsLeftAdapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
-//            override fun contentTapped(position: Int) {
-////                TODO("Not yet implemented")
-//            }
-//
-//        })
     }
 
+    fun setupQuestionHistory(
+        rid: Int,
+        liveData: LiveData<MutableList<QuestionBase>>,
+        bindingRecyclerView: RecyclerView
+    ) {
+        val adapter = QuestionsSammaryAdapter(liveData)
+        val recyclerView: RecyclerView = findViewById(rid)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val separate = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        recyclerView.addItemDecoration(separate)
+
+        bindingRecyclerView.adapter = adapter
+        liveData.observe(this, Observer {
+            it.let {
+                adapter.data = it
+            }
+        })
+
+        adapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
+            override fun contentTapped(position: Int) {
+                // Do nothing.
+            }
+
+        })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(Constant.LOG_TAG, "onStart -- begin")
+
+        val viewModel by viewModels<GameLiveDataViewModel>()
+        Log.d(Constant.LOG_TAG, "showQuestionSelector=${viewModel.showQuestionSelector.value}")
+        viewModel.autoPlay()
+        Log.d(Constant.LOG_TAG, "onStart -- end")
+    }
 }
+

@@ -1,5 +1,6 @@
 package com.icloud.hashiguchi.minoru.mobile.data
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +14,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 
 class GameLiveDataViewModel : ViewModel() {
     private var _isMyTurn = MutableLiveData(false)
-    private var _isPlaying = MutableLiveData(true)
+    private var _isPlaying = MutableLiveData(false)
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
     private var _gameQuestions = Constant.QUESTIONS.toMutableList()
@@ -40,16 +41,13 @@ class GameLiveDataViewModel : ViewModel() {
 
         listOf(me, you).forEach {
             it.pickTilesAfterThatSort(_gameTiles)
-//            Thread {
             it.createTilePattern()
-//                _initCount.postValue(_initCount.value?.plus(1) ?: 0)
-//            }.start()
         }
-//        you.createTilePattern()
 
         replenishQuestions()
+        _isPlaying.postValue(true)
 
-        autoPlay()
+        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isQuestion=${_isQuestion.value}")
     }
 
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
@@ -58,11 +56,10 @@ class GameLiveDataViewModel : ViewModel() {
     val rightQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
     val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
     val showQuestionSelector: LiveData<Boolean> =
-        _isQuestion.map { it && _isPlaying.value!! && _initCount.value == 2 }
+        _isQuestion.map { it && _isPlaying.value!! }
     val showCallEditor: LiveData<Boolean> =
-        _isQuestion.map { !it && _isPlaying.value!! && _initCount.value == 2 }
+        _isQuestion.map { !it && _isPlaying.value!! }
     val selectedTilePosition: LiveData<Int> = _selectedThinkingTilePosition
-    val isPlaying: LiveData<Boolean> = _isPlaying.map { it && _initCount.value == 2 }
 
     fun onClickSelectQestion(view: View) {
         _isQuestion.postValue(true)
@@ -90,10 +87,8 @@ class GameLiveDataViewModel : ViewModel() {
         if (picked is ShareableQuestion) {
             you.askQuestion(me.ownTiles.value!!, picked.clone())
         }
-
-        replenishQuestions()
         _isMyTurn.postValue(false)
-
+        replenishQuestions()
         autoPlay()
     }
 
@@ -113,7 +108,10 @@ class GameLiveDataViewModel : ViewModel() {
         }
     }
 
-    private fun autoPlay() {
+    fun autoPlay() {
+        Log.d(Constant.LOG_TAG, "autoPlay -- begin")
+        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isMyTurn=${_isMyTurn.value}")
+        _isPlaying.postValue(true)
         _isMyTurn.postValue(false)
 
         // 行動の決定
@@ -139,6 +137,8 @@ class GameLiveDataViewModel : ViewModel() {
 
             replenishQuestions()
             _isMyTurn.postValue(true)
+            Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isMyTurn=${_isMyTurn.value}")
+            Log.d(Constant.LOG_TAG, "autoPlay -- end")
         }
     }
 }

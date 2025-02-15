@@ -15,4 +15,9 @@
     <string name="confirm_message_on_call">この内容で宣言しますか？</string>
     <string name="button_label_cancel">やめる</string>
     <string name="button_label_ok">OK</string>
+    <string-array name="first_move_last_attack_list">
+        <item>先攻</item>
+        <item>後攻</item>
+        <item>ランダム</item>
+    </string-array>
 </resources>

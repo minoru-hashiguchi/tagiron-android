@@ -1,10 +1,12 @@
 package com.icloud.hashiguchi.minoru.mobile.data
 
+import android.content.Intent
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
 import com.icloud.hashiguchi.minoru.tagiron.constants.Color
@@ -14,7 +16,20 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 import java.util.Objects
 
 
-class GameLiveDataViewModel : ViewModel() {
+class GameLiveDataViewModel(intent: Intent) : ViewModel() {
+    // ViewModelに引数を追加する設定
+    class Factory(private val intent: Intent) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            GameLiveDataViewModel(intent) as T
+    }
+
+    companion object {
+        const val SEND_MESSAGE = "SEND_MESSAGE"
+    }
+
+    private val _isFirstMove: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>(true) }
+
     private var _isPlaying = MutableLiveData(true)
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
@@ -30,17 +45,17 @@ class GameLiveDataViewModel : ViewModel() {
     )
     private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
     private var _selectedThinkingTilePosition = MutableLiveData<Int>(null)
-    private var _comSelectedQuestion = MutableLiveData<QuestionBase?>(null)
+    private var _computerSelectedQuestion = MutableLiveData<QuestionBase?>(null)
     private var _computerCalledTiles = MutableLiveData<MutableList<TileViewModel>>()
     private var _isMyTurn = MutableLiveData(true)
-    private var _isFirstMove = MutableLiveData(false)
-    private var _turnCount = MutableLiveData(0)
+    private var _turnCount = MutableLiveData(1)
     private var _isWin = MutableLiveData(false)
 
     private var me = HumanPlayer("あなた")
     private var you = ComputerPlayer("相手")
 
     init {
+        _isFirstMove.value = intent.getBooleanExtra(SEND_MESSAGE, true)
         // シャッフル
         _gameTiles.shuffle()
         _gameQuestions.shuffle()
@@ -52,7 +67,9 @@ class GameLiveDataViewModel : ViewModel() {
 
         replenishQuestions()
         _isPlaying.postValue(true)
-        computerAutoPlay()
+        if (_isFirstMove.value == false) {
+            computerAutoPlay()
+        }
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isQuestion=${_isQuestion.value}")
     }
 
@@ -67,11 +84,11 @@ class GameLiveDataViewModel : ViewModel() {
     val showCallEditor: LiveData<Boolean> =
         _isQuestion.map { !it && _isPlaying.value!! }
     val selectedTilePosition: LiveData<Int> = _selectedThinkingTilePosition
-    val commuterSelectedQuestion: LiveData<QuestionBase?> = _comSelectedQuestion
+    val computerSelectedQuestion: LiveData<QuestionBase?> = _computerSelectedQuestion
     val isPlaying: LiveData<Boolean> = _isPlaying
     val computerCalledTiles: LiveData<MutableList<TileViewModel>> = _computerCalledTiles
     val isMyTurn: LiveData<Boolean> = _isMyTurn
-    val isFirstMove: LiveData<Boolean> = _isFirstMove
+    var isFirstMove: LiveData<Boolean> = _isFirstMove
     val turnCount: LiveData<Int> = _turnCount
     val isWin: LiveData<Boolean> = _isWin
 
@@ -128,10 +145,10 @@ class GameLiveDataViewModel : ViewModel() {
 
         replenishQuestions()
 
-        // 相手のターン
         if (_isFirstMove.value == false) {
-            computerAutoPlay()
+            _turnCount.postValue(_turnCount.value!! + 1)
         }
+        computerAutoPlay()
     }
 
     private fun replenishQuestions() {
@@ -158,17 +175,13 @@ class GameLiveDataViewModel : ViewModel() {
     }
 
     fun clearComputerSelectedQuestion() {
-        _comSelectedQuestion.postValue(null)
+        _computerSelectedQuestion.postValue(null)
     }
 
     fun computerAutoPlay() {
         Log.d(Constant.LOG_TAG, "autoPlay -- begin")
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
         _isMyTurn.postValue(false)
-        if (_isFirstMove.value == false) {
-            _turnCount.postValue(_turnCount.value!! + 1)
-        }
-
 
         // 行動の決定
         val actionNo = you.selectAction(_fieldQuestions.value!!)
@@ -188,7 +201,7 @@ class GameLiveDataViewModel : ViewModel() {
         } else {
             // 質問
             val picked = you.pickQuestion(actionNo, _fieldQuestions)
-            _comSelectedQuestion.postValue(picked)
+            _computerSelectedQuestion.postValue(picked)
 
             Log.d(Constant.LOG_TAG, "autoPlay -- end")
         }
@@ -224,6 +237,10 @@ class GameLiveDataViewModel : ViewModel() {
         val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
         if (result) {
             _isPlaying.postValue(false)
+        } else {
+            if (_isFirstMove.value == false) {
+                _turnCount.postValue(_turnCount.value!! + 1)
+            }
         }
         return result
     }

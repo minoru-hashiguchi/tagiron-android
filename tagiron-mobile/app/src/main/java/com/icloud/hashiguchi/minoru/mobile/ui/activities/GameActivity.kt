@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,16 +29,27 @@ import com.icloud.hashiguchi.tagironmobile.databinding.CallLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.TilesLayoutBinding
 
 class GameActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityGameBinding
+    private lateinit var viewModel: GameLiveDataViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(Constant.LOG_TAG, "onCreate -- begin")
         super.onCreate(savedInstanceState)
 
-        val viewModel by viewModels<GameLiveDataViewModel>()
+//        val viewModel by viewModels<GameLiveDataViewModel>()
+// viewBinding初期化
+        binding = ActivityGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Obtain binding
-        val binding: ActivityGameBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_game)
+        // viewModel初期化
+        viewModel = ViewModelProvider(
+            this,
+            GameLiveDataViewModel.Factory(intent)
+        )[GameLiveDataViewModel::class.java]
+
+//        // Obtain binding
+//        val binding: ActivityGameBinding =
+//            DataBindingUtil.setContentView(this, R.layout.activity_game)
 
         // Bind layout with ViewModel
         binding.viewmodel = viewModel
@@ -68,12 +79,12 @@ class GameActivity : AppCompatActivity() {
         viewModel.showCallEditor.observe(this) {
             Log.d(Constant.LOG_TAG, "showCallEditor.observe=${it}")
         }
-        viewModel.commuterSelectedQuestion.observe(this) {
+        viewModel.computerSelectedQuestion.observe(this) {
             Log.d(
                 Constant.LOG_TAG,
-                "comSelectedQuestion.observe -- ${viewModel.commuterSelectedQuestion.value}"
+                "comSelectedQuestion.observe -- ${viewModel.computerSelectedQuestion.value}"
             )
-            if (viewModel.commuterSelectedQuestion.value != null) {
+            if (viewModel.computerSelectedQuestion.value != null) {
                 Thread.sleep(1000)
                 val inflater = this@GameActivity.layoutInflater
                 val dialogView = inflater.inflate(R.layout.question_card_layout, null)
@@ -82,7 +93,7 @@ class GameActivity : AppCompatActivity() {
                         dialogView,
                         R.id.textViewQuestionText
                     ) as TextView
-                val q = viewModel.commuterSelectedQuestion.value
+                val q = viewModel.computerSelectedQuestion.value
                 text.text = q?.text
 
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
@@ -137,10 +148,10 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        onBackPressedDispatcher.addCallback(callback)
+        onBackPressedDispatcher.addCallback(callbackBackPressed)
     }
 
-    val callback = object : OnBackPressedCallback(true) {
+    val callbackBackPressed = object : OnBackPressedCallback(true) {
         //コールバックのhandleOnBackPressedを呼び出して、戻るキーを押したときの処理を記述
         override fun handleOnBackPressed() {
             val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)

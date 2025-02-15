@@ -19,7 +19,9 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name="com.icloud.hashiguchi.minoru.mobile.ui.activities.StartActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

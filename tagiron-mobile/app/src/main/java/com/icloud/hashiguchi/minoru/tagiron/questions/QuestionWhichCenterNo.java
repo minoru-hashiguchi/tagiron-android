@@ -28,7 +28,7 @@ public class QuestionWhichCenterNo extends QuestionBase implements ShareableQues
 
     @Override
     public String getAnswerUnit() {
-        if (answers.getFirst() == 4) {
+        if (answers.get(0) == 4) {
             return "以下";
         } else {
             return "以上";

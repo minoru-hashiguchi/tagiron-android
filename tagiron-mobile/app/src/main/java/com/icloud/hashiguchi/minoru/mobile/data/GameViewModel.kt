@@ -30,7 +30,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
 
     private val _isFirstMove: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>(true) }
 
-    private var _isPlaying = MutableLiveData(true)
+    private var _isPlaying = MutableLiveData(false)
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
     private var _gameQuestions = Constant.QUESTIONS.toMutableList()
@@ -190,6 +190,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             val result = you.call(me.ownTiles.value!!)
             if (result) {
                 _isPlaying.postValue(!result)
+                _isPlayerWin.postValue(false)
             } else {
                 if (_isFirstMove.value == false) {
                     _turnCount.postValue(_turnCount.value!! + 1)

@@ -21,7 +21,7 @@ public class QuestionHowPairNo extends QuestionBase {
 
         // 5枚の数字タイルの重複排除した結果を基にペアの組数を判定する
         int count = (int) opponentTiles.stream()
-                .map(t -> t.getNo())
+                .map(t -> t.getNo().getValue())
                 .distinct()
                 .count();
 

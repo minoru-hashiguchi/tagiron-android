@@ -33,14 +33,18 @@
 
             <include
                 layout="@layout/tiles_view_layout"
+                app:selectedTilePosition="@{-1}"
                 app:tileList="@{viewmodel.ownTiles}"
                 app:userName="@{`あなた`}"
+                app:viewmodel="@{viewmodel}"
                 app:visible="@{true}" />
 
             <include
                 layout="@layout/tiles_view_layout"
+                app:selectedTilePosition="@{-1}"
                 app:tileList="@{viewmodel.computerTiles}"
-                app:userName="@{`あいて`}"
+                app:userName="@{`相手`}"
+                app:viewmodel="@{viewmodel}"
                 app:visible="@{!viewmodel.isPlaying()}" />
 
             <LinearLayout
@@ -90,8 +94,10 @@
 
             <include
                 layout="@layout/tiles_view_layout"
+                app:selectedTilePosition="@{viewmodel.selectedTilePosition}"
                 app:tileList="@{viewmodel.thinkingTiles}"
                 app:userName="@{`相手(予想)`}"
+                app:viewmodel="@{viewmodel}"
                 app:visible="@{true}" />
 
             <LinearLayout

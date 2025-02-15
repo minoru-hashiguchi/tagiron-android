@@ -11,6 +11,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="viewmodel"
+            type="com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel" />
+
+        <variable
             name="userName"
             type="String" />
 
@@ -21,6 +25,10 @@
         <variable
             name="visible"
             type="Boolean" />
+
+        <variable
+            name="selectedTilePosition"
+            type="Integer" />
 
     </data>
 
@@ -65,7 +73,9 @@
             <include
                 layout="@layout/tiles_layout"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:tileList="@{tileList}" />
+                app:selectedTilePosition="@{selectedTilePosition}"
+                app:tileList="@{tileList}"
+                app:viewmodel="@{viewmodel}" />
         </LinearLayout>
 
     </LinearLayout>

@@ -12,6 +12,10 @@
             type="com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel" />
 
         <variable
+            name="selectedTilePosition"
+            type="Integer" />
+
+        <variable
             name="tileList"
             type="List&lt;TileViewModel>" />
 
@@ -32,6 +36,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             app:position="@{1}"
+            app:selectedTilePosition="@{selectedTilePosition}"
             app:tile="@{tileList[0]}"
             app:viewmodel="@{viewmodel}" />
 
@@ -42,6 +47,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             app:position="@{2}"
+            app:selectedTilePosition="@{selectedTilePosition}"
             app:tile="@{tileList[1]}"
             app:viewmodel="@{viewmodel}" />
 
@@ -52,6 +58,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             app:position="@{3}"
+            app:selectedTilePosition="@{selectedTilePosition}"
             app:tile="@{tileList[2]}"
             app:viewmodel="@{viewmodel}" />
 
@@ -62,6 +69,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             app:position="@{4}"
+            app:selectedTilePosition="@{selectedTilePosition}"
             app:tile="@{tileList[3]}"
             app:viewmodel="@{viewmodel}" />
 
@@ -72,6 +80,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             app:position="@{5}"
+            app:selectedTilePosition="@{selectedTilePosition}"
             app:tile="@{tileList[4]}"
             app:viewmodel="@{viewmodel}" />
     </LinearLayout>

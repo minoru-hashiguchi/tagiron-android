@@ -46,7 +46,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginVertical="30dp"
-            android:text="@string/start_button" />
+            android:background="@drawable/button_background"
+            android:text="@string/start_button"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </LinearLayout>

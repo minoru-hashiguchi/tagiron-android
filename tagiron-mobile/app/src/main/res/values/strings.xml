@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ひとりでタギロン！</string>
+    <string name="app_name">ひとりで\nタギロン！</string>
     <string name="start_button">はじめる</string>
     <string name="first_move">先攻</string>
     <string name="last_atack">後攻</string>

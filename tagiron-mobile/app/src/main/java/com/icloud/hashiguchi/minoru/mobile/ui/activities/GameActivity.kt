@@ -196,44 +196,48 @@ class GameActivity : AppCompatActivity() {
              */
             override fun contentTapped(position: Int) {
 
-                val inflater = this@GameActivity.layoutInflater
-                val dialogView = inflater.inflate(R.layout.question_card_layout, null)
-                val text: TextView =
-                    ViewBindings.findChildViewById<View>(
-                        dialogView,
-                        R.id.textViewQuestionText
-                    ) as TextView
-                val q = viewModel.getQuestion(position)
-                text.text = q.text
-                val selectable = q is QuestionWhereNoBySelect
-                var selectPosition = 0
+                if (viewModel.isPlaying.value == true) {
+                    val inflater = this@GameActivity.layoutInflater
+                    val dialogView = inflater.inflate(R.layout.question_card_layout, null)
+                    val text: TextView =
+                        ViewBindings.findChildViewById<View>(
+                            dialogView,
+                            R.id.textViewQuestionText
+                        ) as TextView
+                    val q = viewModel.getQuestion(position)
+                    text.text = q.text
+                    val selectable = q is QuestionWhereNoBySelect
+                    var selectPosition = 0
 
-                val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
-                builder
-                    .setTitle("この内容で質問しますか？")
-                    .setView(dialogView)
-                    .setPositiveButton("OK") { dialog, which ->
-                        viewModel.onSelectQuestion(position, selectPosition)
-                    }
-                    .setNegativeButton("やめる") { dialog, which ->
-                        // Do nothing.
-                    }
-
-                if (selectable) {
-                    val items: Array<String> =
-                        (q as QuestionWhereNoBySelect).selectNumbers.map { "${it} にする" }
-                            .toTypedArray()
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                     builder
-                        .setSingleChoiceItems(
-                            items, 0
-                        ) { dialog, which ->
-                            // Do something.
-                            selectPosition = which
+                        .setTitle("この内容で質問しますか？")
+                        .setView(dialogView)
+                        .setPositiveButton("OK") { dialog, which ->
+                            viewModel.onSelectQuestion(position, selectPosition)
                         }
-                }
+                        .setNegativeButton("やめる") { dialog, which ->
+                            // Do nothing.
+                        }
 
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
+                    if (selectable) {
+                        val items: Array<String> =
+                            (q as QuestionWhereNoBySelect).selectNumbers.map { "${it} にする" }
+                                .toTypedArray()
+                        builder
+                            .setSingleChoiceItems(
+                                items, 0
+                            ) { dialog, which ->
+                                // Do something.
+                                selectPosition = which
+                            }
+                    }
+
+                    val dialog: AlertDialog = builder.create()
+                    dialog.show()
+                } else {
+                    // Do nothing.
+                }
             }
         })
 

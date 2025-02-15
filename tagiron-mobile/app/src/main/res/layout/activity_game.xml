@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@{`あなたの` + (viewmodel.isWin ? `勝ち` :`負け`) + `！！`}"
+                    android:text="@{`あなたの` + (viewmodel.isPlayerWin ? `勝ち` :`負け`) + `！！`}"
                     android:textColor="@color/white"
                     android:visibility="@{viewmodel.isPlaying ? View.GONE : View.VISIBLE}" />
 

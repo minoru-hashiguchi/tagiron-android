@@ -49,7 +49,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private var _computerCalledTiles = MutableLiveData<MutableList<TileViewModel>>()
     private var _isMyTurn = MutableLiveData(true)
     private var _turnCount = MutableLiveData(1)
-    private var _isWin = MutableLiveData(false)
+    private var _isPlayerWin = MutableLiveData(false)
 
     private var me = HumanPlayer("あなた")
     private var you = ComputerPlayer("相手")
@@ -79,10 +79,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val leftQuestionsHistory: LiveData<MutableList<QuestionBase>> = me.questionsAndAnswers
     val rightQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
     val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
-    val showQuestionSelector: LiveData<Boolean> =
-        _isQuestion.map { it && _isPlaying.value!! }
-    val showCallEditor: LiveData<Boolean> =
-        _isQuestion.map { !it && _isPlaying.value!! }
+    val showQuestionSelector: LiveData<Boolean> = _isQuestion
+    val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it }
     val selectedTilePosition: LiveData<Int> = _selectedThinkingTilePosition
     val computerSelectedQuestion: LiveData<QuestionBase?> = _computerSelectedQuestion
     val isPlaying: LiveData<Boolean> = _isPlaying
@@ -90,7 +88,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val isMyTurn: LiveData<Boolean> = _isMyTurn
     var isFirstMove: LiveData<Boolean> = _isFirstMove
     val turnCount: LiveData<Int> = _turnCount
-    val isWin: LiveData<Boolean> = _isWin
+    val isPlayerWin: LiveData<Boolean> = _isPlayerWin
 
     fun onClickSelectQestion(view: View) {
         _isQuestion.postValue(true)
@@ -237,6 +235,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
         val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
         if (result) {
             _isPlaying.postValue(false)
+            _isPlayerWin.postValue(true)
         } else {
             if (_isFirstMove.value == false) {
                 _turnCount.postValue(_turnCount.value!! + 1)

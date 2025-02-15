@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.icloud.hashiguchi.minoru.tagiron.TileViewModel" />
+
+        <import type="java.util.List" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="userName"
+            type="String" />
+
+        <variable
+            name="tileList"
+            type="List&lt;TileViewModel>" />
+
+        <variable
+            name="visible"
+            type="Boolean" />
+
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/tiles_background"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="@{visible ? View.VISIBLE : View.GONE}">
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/tiles_label_background"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{userName}"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="のタイル"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <include
+                layout="@layout/tiles_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tileList="@{tileList}" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>
+

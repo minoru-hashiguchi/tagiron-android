@@ -31,31 +31,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewOwnTilesLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/own_tiles_label"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayoutOwnTiles"
-                app:layout_constraintTop_toTopOf="parent" />
+            <include
+                layout="@layout/tiles_view_layout"
+                app:tileList="@{viewmodel.ownTiles}"
+                app:userName="@{`あなた`}"
+                app:visible="@{true}" />
 
-            <LinearLayout
-                android:id="@+id/linearLayoutOwnTiles"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/textViewFieldQuestionCardsLabel"
-                app:layout_constraintTop_toBottomOf="@id/textViewOwnTilesLabel">
-
-                <include
-                    layout="@layout/tiles_layout"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:tileList="@{viewmodel.ownTiles}" />
-            </LinearLayout>
+            <include
+                layout="@layout/tiles_view_layout"
+                app:tileList="@{viewmodel.computerTiles}"
+                app:userName="@{`あいて`}"
+                app:visible="@{!viewmodel.isPlaying()}" />
 
             <LinearLayout
                 android:id="@+id/linearLayoutYourTileButtons"
@@ -85,25 +71,11 @@
                     android:text="@string/edit_button" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textViewFieldQuestionCardsLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:text="@string/field_question_cards_label"
-                android:textColor="@color/black"
-                android:visibility="@{viewmodel.showQuestionSelector ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@+id/recyclerViewQuestions"
-                app:layout_constraintTop_toBottomOf="@id/linearLayoutOwnTiles" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewQuestions"
                 android:layout_width="match_parent"
-                android:layout_height="310dp"
-                android:visibility="@{viewmodel.showQuestionSelector ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/buttonCall"
-                app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions" />
+                android:layout_height="wrap_content"
+                android:visibility="@{viewmodel.showQuestionSelector ? View.VISIBLE : View.GONE}" />
 
 
             <Button
@@ -113,36 +85,14 @@
                 android:layout_gravity="center"
                 android:onClick="onClickCall"
                 android:text="@string/call_button"
-                android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/textViewYourTilesLabel"
-                app:layout_constraintTop_toBottomOf="@id/recyclerViewQuestions" />
+                android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}" />
 
-            <TextView
-                android:id="@+id/textViewYourTilesLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="5dp"
-                android:gravity="center"
-                android:text="@string/your_tiles_label"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@id/linearLayoutYourTileButtons"
-                app:layout_constraintTop_toBottomOf="@id/buttonCall" />
 
-            <LinearLayout
-                android:id="@+id/linearLayoutYourTiles"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:baselineAligned="false"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <include
-                    layout="@layout/tiles_layout"
-                    app:tileList="@{viewmodel.thinkingTiles}"
-                    app:viewmodel="@{viewmodel}" />
-
-            </LinearLayout>
+            <include
+                layout="@layout/tiles_view_layout"
+                app:tileList="@{viewmodel.thinkingTiles}"
+                app:userName="@{`相手(予想)`}"
+                app:visible="@{true}" />
 
             <LinearLayout
                 android:layout_width="match_parent"

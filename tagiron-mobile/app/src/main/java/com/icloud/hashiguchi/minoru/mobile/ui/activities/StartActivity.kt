@@ -8,7 +8,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.icloud.hashiguchi.minoru.mobile.data.EventObserver
-import com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel
+import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.data.StartViewModel
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityStartBinding
@@ -58,7 +58,7 @@ class StartActivity : AppCompatActivity() {
         // 画面遷移の処理
         viewModel.onMoveGameActivity.observe(this, EventObserver {
             val intent = Intent(this, GameActivity::class.java)
-            intent.putExtra(GameLiveDataViewModel.SEND_MESSAGE, it)
+            intent.putExtra(GameViewModel.SEND_MESSAGE, it)
             startActivity(intent)
         })
     }

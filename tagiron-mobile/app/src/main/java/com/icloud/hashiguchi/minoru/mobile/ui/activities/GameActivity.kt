@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBindings
-import com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel
+import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.QuestionsSammaryAdapter
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
@@ -30,7 +30,7 @@ import com.icloud.hashiguchi.tagironmobile.databinding.TilesLayoutBinding
 
 class GameActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
-    private lateinit var viewModel: GameLiveDataViewModel
+    private lateinit var viewModel: GameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(Constant.LOG_TAG, "onCreate -- begin")
@@ -44,8 +44,8 @@ class GameActivity : AppCompatActivity() {
         // viewModel初期化
         viewModel = ViewModelProvider(
             this,
-            GameLiveDataViewModel.Factory(intent)
-        )[GameLiveDataViewModel::class.java]
+            GameViewModel.Factory(intent)
+        )[GameViewModel::class.java]
 
 //        // Obtain binding
 //        val binding: ActivityGameBinding =
@@ -171,7 +171,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun setupFieldQuestionCards(
-        viewModel: GameLiveDataViewModel,
+        viewModel: GameViewModel,
         binding: ActivityGameBinding
     ) {
 
@@ -275,7 +275,7 @@ class GameActivity : AppCompatActivity() {
 
     fun onClickCall(view: View) {
         Log.d(Constant.LOG_TAG, "onClickCall -- begin")
-        val viewModel by viewModels<GameLiveDataViewModel>()
+        val viewModel by viewModels<GameViewModel>()
         if (viewModel.isNgOnCallTilesCheck()) {
             Toast.makeText(
                 this,

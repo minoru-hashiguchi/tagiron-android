@@ -9,7 +9,7 @@
 
         <variable
             name="viewmodel"
-            type="com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel" />
+            type="com.icloud.hashiguchi.minoru.mobile.data.GameViewModel" />
 
         <variable
             name="selectedTilePosition"

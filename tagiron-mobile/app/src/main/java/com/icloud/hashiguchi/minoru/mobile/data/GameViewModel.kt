@@ -16,12 +16,12 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 import java.util.Objects
 
 
-class GameLiveDataViewModel(intent: Intent) : ViewModel() {
+class GameViewModel(intent: Intent) : ViewModel() {
     // ViewModelに引数を追加する設定
     class Factory(private val intent: Intent) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            GameLiveDataViewModel(intent) as T
+            GameViewModel(intent) as T
     }
 
     companion object {

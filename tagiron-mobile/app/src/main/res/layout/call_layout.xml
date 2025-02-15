@@ -13,7 +13,7 @@
 
         <variable
             name="viewmodel"
-            type="com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel" />
+            type="com.icloud.hashiguchi.minoru.mobile.data.GameViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

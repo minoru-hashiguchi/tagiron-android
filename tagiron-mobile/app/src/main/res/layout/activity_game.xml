@@ -15,7 +15,7 @@
 
         <variable
             name="viewmodel"
-            type="com.icloud.hashiguchi.minoru.mobile.data.GameLiveDataViewModel" />
+            type="com.icloud.hashiguchi.minoru.mobile.data.GameViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

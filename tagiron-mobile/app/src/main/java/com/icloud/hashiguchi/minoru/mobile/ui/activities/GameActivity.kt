@@ -26,6 +26,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.CallLayoutBinding
+import com.icloud.hashiguchi.tagironmobile.databinding.TilesLayoutBinding
 
 class GameActivity : AppCompatActivity() {
 
@@ -274,7 +275,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         val inflater = this@GameActivity.layoutInflater
-        val binding: CallLayoutBinding = CallLayoutBinding.inflate(inflater)
+        val binding: TilesLayoutBinding = TilesLayoutBinding.inflate(inflater)
         binding.viewmodel = viewModel
         binding.tileList = viewModel.thinkingTiles.value
         binding.lifecycleOwner = this

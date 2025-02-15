@@ -288,6 +288,7 @@ class GameActivity : AppCompatActivity() {
                     Toast.makeText(this, "正解！！あなたの勝ち！！", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "不正解！！", Toast.LENGTH_SHORT).show()
+                    viewModel.computerAutoPlay()
                 }
             }
             .setNegativeButton("いいえ") { dialog, which ->

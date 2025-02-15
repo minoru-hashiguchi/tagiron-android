@@ -53,6 +53,7 @@ class GameLiveDataViewModel : ViewModel() {
     }
 
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
+    val computerTiles: LiveData<MutableList<TileViewModel>> = you.ownTiles
     val fieldQuestions: LiveData<MutableList<QuestionBase>> = _fieldQuestions
     val leftQuestionsHistory: LiveData<MutableList<QuestionBase>> = me.questionsAndAnswers
     val rightQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
@@ -195,6 +196,9 @@ class GameLiveDataViewModel : ViewModel() {
 
     fun onCall(): Boolean {
         val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
+        if (result) {
+            _isPlaying.postValue(false)
+        }
         return result
     }
 

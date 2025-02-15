@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data></data>
 
@@ -14,14 +13,14 @@
 
         <TextView
             android:id="@+id/textViewAnswerText"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@drawable/border"
             android:gravity="center"
             android:padding="2dp"
             android:textColor="@color/tile_color_red"
-            app:autoSizeTextType="uniform" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/textViewQuestionText"
@@ -31,7 +30,7 @@
             android:gravity="center_vertical|left"
             android:padding="2dp"
             android:textColor="@color/black"
-            app:autoSizeTextType="uniform" />
+            android:textSize="12sp" />
     </LinearLayout>
 </layout>
 

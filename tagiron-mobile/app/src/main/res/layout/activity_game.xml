@@ -31,6 +31,42 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/status_label_background"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{(viewmodel.isMyTurn ? `あなた` :`相手`) + `のターンです`}"
+                    android:textColor="@color/white"
+                    android:visibility="@{viewmodel.isPlaying ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{`あなたの` + (viewmodel.isWin ? `勝ち` :`負け`) + `！！`}"
+                    android:textColor="@color/white"
+                    android:visibility="@{viewmodel.isPlaying ? View.GONE : View.VISIBLE}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@{viewmodel.turnCount + `ターン目`}"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
             <include
                 layout="@layout/tiles_view_layout"
                 app:selectedTilePosition="@{-1}"

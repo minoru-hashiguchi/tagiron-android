@@ -32,6 +32,10 @@ class GameLiveDataViewModel : ViewModel() {
     private var _selectedThinkingTilePosition = MutableLiveData<Int>(null)
     private var _comSelectedQuestion = MutableLiveData<QuestionBase?>(null)
     private var _computerCalledTiles = MutableLiveData<MutableList<TileViewModel>>()
+    private var _isMyTurn = MutableLiveData(true)
+    private var _isFirstMove = MutableLiveData(false)
+    private var _turnCount = MutableLiveData(0)
+    private var _isWin = MutableLiveData(false)
 
     private var me = HumanPlayer("あなた")
     private var you = ComputerPlayer("相手")
@@ -66,6 +70,10 @@ class GameLiveDataViewModel : ViewModel() {
     val commuterSelectedQuestion: LiveData<QuestionBase?> = _comSelectedQuestion
     val isPlaying: LiveData<Boolean> = _isPlaying
     val computerCalledTiles: LiveData<MutableList<TileViewModel>> = _computerCalledTiles
+    val isMyTurn: LiveData<Boolean> = _isMyTurn
+    val isFirstMove: LiveData<Boolean> = _isFirstMove
+    val turnCount: LiveData<Int> = _turnCount
+    val isWin: LiveData<Boolean> = _isWin
 
     fun onClickSelectQestion(view: View) {
         _isQuestion.postValue(true)
@@ -118,9 +126,12 @@ class GameLiveDataViewModel : ViewModel() {
             you.askQuestion(me.ownTiles.value!!, picked.clone())
         }
 
-        // 相手のターン
         replenishQuestions()
-        computerAutoPlay()
+
+        // 相手のターン
+        if (_isFirstMove.value == false) {
+            computerAutoPlay()
+        }
     }
 
     private fun replenishQuestions() {
@@ -153,7 +164,11 @@ class GameLiveDataViewModel : ViewModel() {
     fun computerAutoPlay() {
         Log.d(Constant.LOG_TAG, "autoPlay -- begin")
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
-        _isPlaying.postValue(true)
+        _isMyTurn.postValue(false)
+        if (_isFirstMove.value == false) {
+            _turnCount.postValue(_turnCount.value!! + 1)
+        }
+
 
         // 行動の決定
         val actionNo = you.selectAction(_fieldQuestions.value!!)
@@ -162,7 +177,14 @@ class GameLiveDataViewModel : ViewModel() {
             // 宣言
             _computerCalledTiles.postValue(you.patterns.elementAt(0).toMutableList())
             val result = you.call(me.ownTiles.value!!)
-            _isPlaying.postValue(!result)
+            if (result) {
+                _isPlaying.postValue(!result)
+            } else {
+                if (_isFirstMove.value == false) {
+                    _turnCount.postValue(_turnCount.value!! + 1)
+                }
+                _isMyTurn.postValue(true)
+            }
         } else {
             // 質問
             val picked = you.pickQuestion(actionNo, _fieldQuestions)
@@ -179,6 +201,10 @@ class GameLiveDataViewModel : ViewModel() {
             me.askQuestion(you.ownTiles.value!!, picked.clone())
         }
 
+        if (_isFirstMove.value == true) {
+            _turnCount.postValue(_turnCount.value!! + 1)
+        }
+        _isMyTurn.postValue(true)
         replenishQuestions()
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
     }

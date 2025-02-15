@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="com.icloud.hashiguchi.minoru.mobile.data.GameViewModel" />
+
+        <variable
+            name="number"
+            type="Integer" />
+    </data>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="3dp"
+        android:layout_weight="1"
+        android:onClick="@{() -> viewmodel.onClickNumber(number)}"
+        android:text="@{number.toString()}"
+        android:textSize="18sp" />
+
+</layout>

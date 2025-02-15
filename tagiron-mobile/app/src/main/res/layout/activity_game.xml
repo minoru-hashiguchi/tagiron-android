@@ -149,7 +149,9 @@
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
                     android:onClick="@{() -> viewmodel.onClickClear()}"
-                    android:text="クリア" />
+                    android:text="クリア"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:layout_width="match_parent"
@@ -158,7 +160,9 @@
                     android:layout_weight="1"
                     android:onClick="@{() -> viewmodel.onClickColor(`RED`)}"
                     android:text="赤"
-                    android:textColor="@color/tile_color_red" />
+                    android:textColor="@color/tile_color_red"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:layout_width="match_parent"
@@ -167,7 +171,9 @@
                     android:layout_weight="1"
                     android:onClick="@{() -> viewmodel.onClickColor(`BLUE`)}"
                     android:text="青"
-                    android:textColor="@color/tile_color_blue" />
+                    android:textColor="@color/tile_color_blue"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:layout_width="match_parent"
@@ -176,7 +182,9 @@
                     android:layout_weight="1"
                     android:onClick="@{() -> viewmodel.onClickColor(`YELLOW`)}"
                     android:text="黄"
-                    android:textColor="@color/tile_color_yellow" />
+                    android:textColor="@color/tile_color_yellow"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -186,46 +194,30 @@
                 android:orientation="horizontal"
                 android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}">
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(0)}"
-                    android:text="0" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{0}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(1)}"
-                    android:text="1" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{1}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(2)}"
-                    android:text="2" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{2}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(3)}"
-                    android:text="3" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{3}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(4)}"
-                    android:text="4" />
-
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{4}"
+                    app:viewmodel="@{viewmodel}" />
             </LinearLayout>
 
             <LinearLayout
@@ -234,45 +226,30 @@
                 android:orientation="horizontal"
                 android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}">
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(5)}"
-                    android:text="5" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{5}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(6)}"
-                    android:text="6" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{6}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(7)}"
-                    android:text="7" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{7}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(8)}"
-                    android:text="8" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{8}"
+                    app:viewmodel="@{viewmodel}" />
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{() -> viewmodel.onClickNumber(9)}"
-                    android:text="9" />
+                <include
+                    layout="@layout/number_button_layout"
+                    app:number="@{9}"
+                    app:viewmodel="@{viewmodel}" />
             </LinearLayout>
 
             <LinearLayout

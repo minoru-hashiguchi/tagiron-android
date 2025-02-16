@@ -12,10 +12,9 @@ import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.data.StartViewModel
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityStartBinding
-import kotlin.random.Random
 
 class StartActivity : AppCompatActivity() {
-    private var isFirstMove = true
+    private var firstMoveOrLastAtackNo = 0
     private lateinit var binding: ActivityStartBinding
     private lateinit var viewModel: StartViewModel
 
@@ -31,7 +30,7 @@ class StartActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[StartViewModel::class.java]
 
         binding.buttonStart.setOnClickListener {
-            viewModel.onClickButton(isFirstMove)
+            viewModel.onClickButton(firstMoveOrLastAtackNo)
         }
 
         var spinner = findViewById<Spinner>(R.id.planets_spinner)
@@ -42,11 +41,7 @@ class StartActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                isFirstMove = when (position) {
-                    0 -> true
-                    1 -> false
-                    else -> Random.nextBoolean()
-                }
+                firstMoveOrLastAtackNo = position
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {

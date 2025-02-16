@@ -14,6 +14,7 @@ import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 import java.util.Objects
+import kotlin.random.Random
 
 
 class GameViewModel(intent: Intent) : ViewModel() {
@@ -29,7 +30,6 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     private val _isFirstMove: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>(true) }
-
     private var _isPlaying = MutableLiveData(false)
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
@@ -55,7 +55,13 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private var you = ComputerPlayer("相手")
 
     init {
-        _isFirstMove.value = intent.getBooleanExtra(SEND_MESSAGE, true)
+        val firstMoveOrLastAtackNo = intent.getIntExtra(SEND_MESSAGE, 0)
+        _isFirstMove.value = when (firstMoveOrLastAtackNo) {
+            0 -> true
+            1 -> false
+            else -> Random.nextBoolean()
+        }
+        
         // シャッフル
         _gameTiles.shuffle()
         _gameQuestions.shuffle()

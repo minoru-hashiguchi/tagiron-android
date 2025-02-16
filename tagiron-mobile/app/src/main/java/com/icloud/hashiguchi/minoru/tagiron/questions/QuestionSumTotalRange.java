@@ -15,10 +15,6 @@ public class QuestionSumTotalRange extends QuestionBase {
         this.text = String.format("%sの\n数の合計は？", type.getText());
     }
 
-    public TotalValueType getTotalValueType() {
-        return totalValueType;
-    }
-
     @Override
     public String getSummaryText() {
         return String.format("%sの合計は？", this.totalValueType.getSummaryText());

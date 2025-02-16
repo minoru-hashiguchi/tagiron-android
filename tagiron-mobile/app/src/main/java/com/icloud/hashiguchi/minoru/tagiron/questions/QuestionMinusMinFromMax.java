@@ -12,7 +12,7 @@ public class QuestionMinusMinFromMax extends QuestionBase implements ShareableQu
 
     @Override
     public String getSummaryText() {
-        return "[共]最大ひく最小は？";
+        return getShareableMark() + "最大ひく最小は？";
     }
 
     @Override
@@ -27,4 +27,8 @@ public class QuestionMinusMinFromMax extends QuestionBase implements ShareableQu
         return "";
     }
 
+    @Override
+    public boolean isShared() {
+        return isShared;
+    }
 }

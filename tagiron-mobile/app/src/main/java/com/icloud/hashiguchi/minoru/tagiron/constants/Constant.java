@@ -19,7 +19,9 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhichCenterNo;
 public class Constant {
     public static final boolean D = false;
     public static final String LOG_TAG = "TAGIRON_LOG";
-    public static final String TEXT_SHARED_Q = "[共有情報カード]";
+    public static final String SHAREABLE_QUESTION_TEXT = "[共有情報カード]";
+    public static final String SHAREABLE_QUESTION_TEXT_SUMMARY = "[共]";
+    public static final String SHARED_QUESTION_TEXT_SUMMARY = "[受]";
     public static final TileViewModel[] TILES = new TileViewModel[]{
             new TileViewModel(0, Color.RED),
             new TileViewModel(1, Color.RED),

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public abstract class QuestionBase implements Cloneable {
     protected static final boolean D = Constant.D;
+    protected boolean isShared = false;
     //    private static final Logger logger = LogManager.getLogger("");
     protected String text;
 
@@ -77,6 +78,7 @@ public abstract class QuestionBase implements Cloneable {
             QuestionBase obj = (QuestionBase) super.clone();
             // 回答をクリアして返却
             obj.answers = null;
+            obj.isShared = true;
             return obj;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();

@@ -11,6 +11,11 @@ public class QuestionSumTotalRangeAll extends QuestionSumTotalRange implements S
 
     @Override
     public String getSummaryText() {
-        return "[共]" + super.getSummaryText();
+        return getShareableMark() + super.getSummaryText();
+    }
+
+    @Override
+    public boolean isShared() {
+        return isShared;
     }
 }

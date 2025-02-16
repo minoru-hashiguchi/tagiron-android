@@ -12,7 +12,7 @@ public class QuestionWhichCenterNo extends QuestionBase implements ShareableQues
 
     @Override
     public String getSummaryText() {
-        return "[共]中央は5以上？4以下？";
+        return getShareableMark() + "中央は5以上？4以下？";
     }
 
     @Override
@@ -35,4 +35,8 @@ public class QuestionWhichCenterNo extends QuestionBase implements ShareableQues
         }
     }
 
+    @Override
+    public boolean isShared() {
+        return isShared;
+    }
 }

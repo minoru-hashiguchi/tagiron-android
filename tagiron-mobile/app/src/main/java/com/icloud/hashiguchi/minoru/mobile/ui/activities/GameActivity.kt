@@ -94,8 +94,11 @@ class GameActivity : AppCompatActivity() {
                         R.id.textViewQuestionText
                     ) as TextView
                 val q = viewModel.computerSelectedQuestion.value
-                text.text = q?.text
-
+                if (q is QuestionWhereNoBySelect) {
+                    text.text = q.text + "\n▶︎" + q.summaryText
+                } else {
+                    text.text = q?.text
+                }
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                 builder
                     .setCancelable(false)

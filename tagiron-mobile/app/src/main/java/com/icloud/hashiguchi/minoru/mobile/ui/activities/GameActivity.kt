@@ -304,7 +304,7 @@ class GameActivity : AppCompatActivity() {
             .setView(binding.root)
             .setPositiveButton("OK") { dialog, which ->
                 val result = viewModel.onCall()
-                showDialogOnPlayerCalled(result, viewModel)
+                showModalDialogOnPlayerCalled(result, viewModel)
             }
             .setNegativeButton("いいえ") { dialog, which ->
                 // Do nothing.
@@ -315,10 +315,11 @@ class GameActivity : AppCompatActivity() {
     }
 
     /**
-     * プレイヤーの宣言後に、結果をダイアログ表示する。
-     * 宣言が失敗した時は、相手プレイヤーにターンを委譲する。
+     * プレイヤーの宣言後に、結果をモーダルダイアログに表示する。
+     *
+     * 宣言が失敗した時は、相手プレイヤーのターンへと移行する。
      */
-    private fun showDialogOnPlayerCalled(isSuccess: Boolean, viewModel: GameViewModel) {
+    private fun showModalDialogOnPlayerCalled(isSuccess: Boolean, viewModel: GameViewModel) {
 
         val inflater = this@GameActivity.layoutInflater
         val binding: SimpleDialogLayoutBinding = SimpleDialogLayoutBinding.inflate(inflater)

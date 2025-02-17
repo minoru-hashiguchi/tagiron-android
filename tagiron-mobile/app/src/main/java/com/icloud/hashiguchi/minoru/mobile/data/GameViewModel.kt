@@ -150,7 +150,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
      *
      * @param index プレイヤーが選択した場のカードの場所
      * @param selected 選択式質問カードの選択済み要素番号
-     * @return 選択した質問カード
+     * @return 解答付きの質問カード
      */
     fun onSelectQuestion(index: Int, selected: Int): QuestionBase {
         val picked = me.pickQuestion(index, _fieldQuestions)
@@ -211,10 +211,6 @@ class GameViewModel(intent: Intent) : ViewModel() {
         )
     }
 
-    fun clearComputerSelectedQuestion() {
-        _computerSelectedQuestion.postValue(null)
-    }
-
     private fun computerAutoPlay() {
         Log.d(Constant.LOG_TAG, "autoPlay -- begin")
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
@@ -230,10 +226,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             if (result) {
                 finalize(false)
             } else {
-                if (_isFirstMove.value == false) {
-                    _turnCount.postValue(_turnCount.value!! + 1)
-                }
-                _isMyTurn.postValue(true)
+                finalizeComputerTurn()
             }
         } else {
             // 質問
@@ -244,19 +237,43 @@ class GameViewModel(intent: Intent) : ViewModel() {
         }
     }
 
-    fun computerAutoPlayAskQuestion(picked: QuestionBase) {
+    /**
+     * コンピュータが質問を選択した時の処理
+     *
+     * @param picked コンピュータが選択した質問カード
+     * @return 解答付きの質問カード
+     */
+    fun onComputerSelectedQuestion(picked: QuestionBase): QuestionBase {
+        _computerSelectedQuestion.postValue(null)
         you.askQuestion(me.ownTiles.value!!, picked)
+        return picked
+    }
+
+    /**
+     * コンピュータの質問と解答を表示後の処理
+     *
+     * @param picked 選択した質問カード
+     * @return 質問が共有情報カードの場合は複製した質問カード、そうでなければnullを返却
+     */
+    fun doShareableQuestionAfterOnComputerSelectQuestion(picked: QuestionBase): QuestionBase? {
+        var selectableQuestion: QuestionBase? = null
         // 共有情報カードの場合は自分も相手に回答する
         if (picked is ShareableQuestion) {
-            me.askQuestion(you.ownTiles.value!!, picked.clone())
+            selectableQuestion = picked.clone()
+            me.askQuestion(you.ownTiles.value!!, selectableQuestion)
         }
+        return selectableQuestion
+    }
 
-        if (_isFirstMove.value == true) {
+    /**
+     * コンピュータターンの終了時処理
+     */
+    fun finalizeComputerTurn() {
+        if (_isFirstMove.value == false) {
             _turnCount.postValue(_turnCount.value!! + 1)
         }
         _isMyTurn.postValue(true)
         replenishQuestions()
-        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
     }
 
     fun isNgOnCallTilesCheck(): Boolean {

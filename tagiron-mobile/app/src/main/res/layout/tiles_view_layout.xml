@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:background="@drawable/tiles_background"
+        android:background="@drawable/contents_background"
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="horizontal"
@@ -46,7 +46,7 @@
         <LinearLayout
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:background="@drawable/tiles_label_background"
+            android:background="@drawable/contents_label_background"
             android:gravity="center"
             android:orientation="vertical">
 

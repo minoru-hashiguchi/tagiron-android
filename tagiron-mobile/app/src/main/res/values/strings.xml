@@ -11,13 +11,17 @@
     <string name="edit_button">予想する</string>
     <string name="call_button">宣言する</string>
     <string name="ng_message_on_call_check">未入力のタイルがあります</string>
+    <string name="confirm_message_on_ask_question">この内容で質問しますか？</string>
     <string name="confirm_message_on_question">この内容で宣言しますか？</string>
     <string name="confirm_message_on_call">この内容で宣言しますか？</string>
     <string name="button_label_cancel">やめる</string>
     <string name="button_label_ok">OK</string>
     <string name="dialog_title_called">宣言しました</string>
+    <string name="dialog_title_answer">質問の解答です</string>
+    <string name="dialog_title_shared_answer">共有情報を解答しました</string>
     <string name="message_on_player_call_succeed">正解！あなたの勝ち！！</string>
     <string name="message_on_player_call_failed">はずれ！\n相手のターンになります。</string>
+    <string name="selectable_question_text_signal"> ▶︎ </string>
     <string-array name="first_move_last_attack_list">
         <item>先攻</item>
         <item>後攻</item>

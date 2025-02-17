@@ -61,7 +61,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             1 -> false
             else -> Random.nextBoolean()
         }
-        
+
         // シャッフル
         _gameTiles.shuffle()
         _gameQuestions.shuffle()
@@ -104,8 +104,15 @@ class GameViewModel(intent: Intent) : ViewModel() {
         _isQuestion.postValue(false)
     }
 
-    fun onClickTile(number: Int) {
-        _selectedThinkingTilePosition.postValue(number)
+    /**
+     * 予想中のタイルをタップした時の処理
+     *
+     * プレイ中のみ、タップしたタイル下に編集中カーソルを表示する
+     */
+    fun onClickThinkingTile(number: Int) {
+        if (_isPlaying.value == true) {
+            _selectedThinkingTilePosition.postValue(number)
+        }
     }
 
     fun onClickNumber(number: Int) {
@@ -195,8 +202,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             _computerCalledTiles.postValue(you.patterns.elementAt(0).toMutableList())
             val result = you.call(me.ownTiles.value!!)
             if (result) {
-                _isPlaying.postValue(!result)
-                _isPlayerWin.postValue(false)
+                finalize(false)
             } else {
                 if (_isFirstMove.value == false) {
                     _turnCount.postValue(_turnCount.value!! + 1)
@@ -241,8 +247,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     fun onCall(): Boolean {
         val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
         if (result) {
-            _isPlaying.postValue(false)
-            _isPlayerWin.postValue(true)
+            finalize(true)
         } else {
             if (_isFirstMove.value == false) {
                 _turnCount.postValue(_turnCount.value!! + 1)
@@ -251,4 +256,14 @@ class GameViewModel(intent: Intent) : ViewModel() {
         return result
     }
 
+    /**
+     * 勝敗が決した時の終了処理
+     *
+     * @param isPlayerWin プレイヤーの勝敗
+     */
+    private fun finalize(isPlayerWin: Boolean) {
+        _isPlaying.postValue(false)
+        _isPlayerWin.postValue(isPlayerWin)
+        _selectedThinkingTilePosition.postValue(-1)
+    }
 }

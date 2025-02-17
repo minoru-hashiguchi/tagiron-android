@@ -38,49 +38,29 @@ class GameActivity : AppCompatActivity() {
         Log.d(Constant.LOG_TAG, "onCreate -- begin")
         super.onCreate(savedInstanceState)
 
-//        val viewModel by viewModels<GameLiveDataViewModel>()
-// viewBinding初期化
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // viewModel初期化
         viewModel = ViewModelProvider(
             this,
             GameViewModel.Factory(intent)
         )[GameViewModel::class.java]
-
-//        // Obtain binding
-//        val binding: ActivityGameBinding =
-//            DataBindingUtil.setContentView(this, R.layout.activity_game)
-
-        // Bind layout with ViewModel
         binding.viewmodel = viewModel
-
-        // LiveData needs the lifecycle owner
         binding.lifecycleOwner = this
 
-        binding.recyclerViewQuestions.adapter
-
+        // 場の質問カードのRecyclerViewの設定
         setupFieldQuestionCards(viewModel, binding)
-
+        // プレイヤー用の質問履歴RecyclerViewの設定
         setupQuestionHistory(
-            R.id.recyclerViewQuestions1,
-            viewModel.leftQuestionsHistory,
-            binding.recyclerViewQuestions1
+            viewModel.playerQuestionHistory,
+            binding.recyclerViewPlayerQuestionHistory
+        )
+        // コンピュータ用の質問履歴RecyclerViewの設定
+        setupQuestionHistory(
+            viewModel.computerQuestionsHistory,
+            binding.recyclerViewComputerQuestionHistory
         )
 
-        setupQuestionHistory(
-            R.id.recyclerViewQuestions2,
-            viewModel.rightQuestionsHistory,
-            binding.recyclerViewQuestions2
-        )
-
-        viewModel.showQuestionSelector.observe(this) {
-            Log.d(Constant.LOG_TAG, "showQuestionSelector.observe=${it}")
-        }
-        viewModel.showCallEditor.observe(this) {
-            Log.d(Constant.LOG_TAG, "showCallEditor.observe=${it}")
-        }
+        // コンピュータが選択する質問の監視
         viewModel.computerSelectedQuestion.observe(this) {
             Log.d(
                 Constant.LOG_TAG,
@@ -95,6 +75,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        // コンピュータが宣言するタイルの監視
         viewModel.computerCalledTiles.observe(this) {
             if (viewModel.computerCalledTiles.value?.isNotEmpty()!!) {
                 val inflater = this@GameActivity.layoutInflater
@@ -115,6 +96,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        // OSの戻るボタン押下時のコールバックを登録
         onBackPressedDispatcher.addCallback(callbackBackPressed)
     }
 
@@ -142,17 +124,16 @@ class GameActivity : AppCompatActivity() {
         binding: ActivityGameBinding
     ) {
 
-        val fqcAdapter = FieldQuestionCardsAdapter(viewModel.fieldQuestions)
-        val fqcRecyclerView: RecyclerView = findViewById(R.id.recyclerViewQuestions)
-        fqcRecyclerView.adapter = fqcAdapter
-        fqcRecyclerView.layoutManager = GridLayoutManager(
+        val adapter = FieldQuestionCardsAdapter(viewModel.fieldQuestions)
+        binding.recyclerViewQuestions.adapter = adapter
+        binding.recyclerViewQuestions.layoutManager = GridLayoutManager(
             this,
             2,
             RecyclerView.VERTICAL,
             false
         )
 
-        fqcAdapter.setListener(object :
+        adapter.setListener(object :
             FieldQuestionCardsAdapter.FieldQuestionCardsAdapterListener {
 
             /**
@@ -209,28 +190,26 @@ class GameActivity : AppCompatActivity() {
             }
         })
 
-        binding.recyclerViewQuestions.adapter = fqcAdapter
+        binding.recyclerViewQuestions.adapter = adapter
         viewModel.fieldQuestions.observe(this, Observer {
             it.let {
                 Log.d(Constant.LOG_TAG, "fieldQuestions.observe -> ${it.size}")
-                fqcAdapter.data = it
+                adapter.data = it
             }
         })
     }
 
-    fun setupQuestionHistory(
-        rid: Int,
+    private fun setupQuestionHistory(
         liveData: LiveData<MutableList<QuestionBase>>,
-        bindingRecyclerView: RecyclerView
+        recyclerView: RecyclerView
     ) {
         val adapter = QuestionsSammaryAdapter(liveData)
-        val recyclerView: RecyclerView = findViewById(rid)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         val separate = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         recyclerView.addItemDecoration(separate)
 
-        bindingRecyclerView.adapter = adapter
+        recyclerView.adapter = adapter
         liveData.observe(this, Observer {
             it.let {
                 adapter.data = it

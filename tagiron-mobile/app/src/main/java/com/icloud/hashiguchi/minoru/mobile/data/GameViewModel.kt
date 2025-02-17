@@ -82,8 +82,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
     val computerTiles: LiveData<MutableList<TileViewModel>> = you.ownTiles
     val fieldQuestions: LiveData<MutableList<QuestionBase>> = _fieldQuestions
-    val leftQuestionsHistory: LiveData<MutableList<QuestionBase>> = me.questionsAndAnswers
-    val rightQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
+    val playerQuestionHistory: LiveData<MutableList<QuestionBase>> = me.questionsAndAnswers
+    val computerQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
     val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
     val showQuestionSelector: LiveData<Boolean> = _isQuestion
     val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it }

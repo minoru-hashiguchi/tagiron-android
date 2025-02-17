@@ -145,20 +145,46 @@ class GameViewModel(intent: Intent) : ViewModel() {
         return _fieldQuestions.value?.get(index)!!
     }
 
-    fun onSelectQuestion(index: Int, selected: Int) {
+    /**
+     * プレイヤーが質問を選択した時の処理
+     *
+     * @param index プレイヤーが選択した場のカードの場所
+     * @param selected 選択式質問カードの選択済み要素番号
+     * @return 解答付きの質問カード
+     */
+    fun onSelectQuestion(index: Int, selected: Int): QuestionBase {
         val picked = me.pickQuestion(index, _fieldQuestions)
         me.selectPosition = selected
         me.askQuestion(you.ownTiles.value!!, picked)
+        return picked
+    }
+
+    /**
+     * プレイヤーが質問を選択して解答を表示後の処理
+     *
+     * @param picked 選択した質問カード
+     * @return 質問が共有情報カードの場合は複製した質問カード、そうでなければnullを返却
+     */
+    fun doShareableQuestionAfterOnSelectQuestion(picked: QuestionBase): QuestionBase? {
+        var selectableQuestion: QuestionBase? = null
         // 共有情報カードの場合は自分も相手に回答する
         if (picked is ShareableQuestion) {
-            you.askQuestion(me.ownTiles.value!!, picked.clone())
+            selectableQuestion = picked.clone()
+            you.askQuestion(me.ownTiles.value!!, selectableQuestion)
         }
+        return selectableQuestion
+    }
 
-        replenishQuestions()
-
+    /**
+     * 自ターンの終了時処理
+     *
+     * 相手のターンに移行する
+     */
+    fun finalizePlayerTurn() {
         if (_isFirstMove.value == false) {
             _turnCount.postValue(_turnCount.value!! + 1)
         }
+        replenishQuestions()
         computerAutoPlay()
     }
 
@@ -185,11 +211,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
         )
     }
 
-    fun clearComputerSelectedQuestion() {
-        _computerSelectedQuestion.postValue(null)
-    }
-
-    fun computerAutoPlay() {
+    private fun computerAutoPlay() {
         Log.d(Constant.LOG_TAG, "autoPlay -- begin")
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
         _isMyTurn.postValue(false)
@@ -204,10 +226,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             if (result) {
                 finalize(false)
             } else {
-                if (_isFirstMove.value == false) {
-                    _turnCount.postValue(_turnCount.value!! + 1)
-                }
-                _isMyTurn.postValue(true)
+                finalizeComputerTurn()
             }
         } else {
             // 質問
@@ -218,19 +237,43 @@ class GameViewModel(intent: Intent) : ViewModel() {
         }
     }
 
-    fun computerAutoPlayAskQuestion(picked: QuestionBase) {
+    /**
+     * コンピュータが質問を選択した時の処理
+     *
+     * @param picked コンピュータが選択した質問カード
+     * @return 解答付きの質問カード
+     */
+    fun onComputerSelectedQuestion(picked: QuestionBase): QuestionBase {
+        _computerSelectedQuestion.postValue(null)
         you.askQuestion(me.ownTiles.value!!, picked)
+        return picked
+    }
+
+    /**
+     * コンピュータの質問と解答を表示後の処理
+     *
+     * @param picked 選択した質問カード
+     * @return 質問が共有情報カードの場合は複製した質問カード、そうでなければnullを返却
+     */
+    fun doShareableQuestionAfterOnComputerSelectQuestion(picked: QuestionBase): QuestionBase? {
+        var selectableQuestion: QuestionBase? = null
         // 共有情報カードの場合は自分も相手に回答する
         if (picked is ShareableQuestion) {
-            me.askQuestion(you.ownTiles.value!!, picked.clone())
+            selectableQuestion = picked.clone()
+            me.askQuestion(you.ownTiles.value!!, selectableQuestion)
         }
+        return selectableQuestion
+    }
 
+    /**
+     * コンピュータターンの終了時処理
+     */
+    fun finalizeComputerTurn() {
         if (_isFirstMove.value == true) {
             _turnCount.postValue(_turnCount.value!! + 1)
         }
         _isMyTurn.postValue(true)
         replenishQuestions()
-        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
     }
 
     fun isNgOnCallTilesCheck(): Boolean {
@@ -244,15 +287,13 @@ class GameViewModel(intent: Intent) : ViewModel() {
         return ngCount != 0
     }
 
+    /**
+     * プレイヤーが宣言する
+     *
+     * @return true: 成功、false: 失敗
+     */
     fun onCall(): Boolean {
         val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
-        if (result) {
-            finalize(true)
-        } else {
-            if (_isFirstMove.value == false) {
-                _turnCount.postValue(_turnCount.value!! + 1)
-            }
-        }
         return result
     }
 
@@ -261,7 +302,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
      *
      * @param isPlayerWin プレイヤーの勝敗
      */
-    private fun finalize(isPlayerWin: Boolean) {
+    fun finalize(isPlayerWin: Boolean) {
         _isPlaying.postValue(false)
         _isPlayerWin.postValue(isPlayerWin)
         _selectedThinkingTilePosition.postValue(-1)

@@ -25,6 +25,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
+import com.icloud.hashiguchi.tagironmobile.databinding.AnswerDialogLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.CallLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.SimpleDialogLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.TilesLayoutBinding
@@ -83,52 +84,14 @@ class GameActivity : AppCompatActivity() {
         viewModel.computerSelectedQuestion.observe(this) {
             Log.d(
                 Constant.LOG_TAG,
-                "comSelectedQuestion.observe -- ${viewModel.computerSelectedQuestion.value}"
+                "comSelectedQuestion.observe -- ${it?.text}"
             )
-            if (viewModel.computerSelectedQuestion.value != null) {
+            // コンピュータが選択した質問が更新された場合、質問表示ダイアログをモーダル表示する
+            if (it != null) {
+                // 表示が早すぎるので、気持ちDelayを入れる
                 Thread.sleep(1000)
-                val inflater = this@GameActivity.layoutInflater
-                val dialogView = inflater.inflate(R.layout.question_card_layout, null)
-                val text: TextView =
-                    ViewBindings.findChildViewById<View>(
-                        dialogView,
-                        R.id.textViewQuestionText
-                    ) as TextView
-                val q = viewModel.computerSelectedQuestion.value
-                if (q is QuestionWhereNoBySelect) {
-                    text.text = q.text + "\n▶︎" + q.summaryText
-                } else {
-                    text.text = q?.text
-                }
-                val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
-                builder
-                    .setCancelable(false)
-                    .setTitle("相手からの質問です")
-                    .setView(dialogView)
-//                .setPositiveButton("OK") { dialog, which ->
-//                    // Do something.
-//                    viewModel.onSelectQuestion(position, selectPosition)
-//                }
-                    .setNegativeButton("OK") { dialog, which ->
-                        viewModel.clearComputerSelectedQuestion()
-                        viewModel.computerAutoPlayAskQuestion(q!!)
-                    }
-
-//            if (selectable) {
-//                val items: Array<String> =
-//                    (q as QuestionWhereNoBySelect).selectNumbers.map { "${it} にする" }
-//                        .toTypedArray()
-//                builder
-//                    .setSingleChoiceItems(
-//                        items, 0
-//                    ) { dialog, which ->
-//                        // Do something.
-//                        selectPosition = which
-//                    }
-//            }
-
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
+                val question = viewModel.onComputerSelectedQuestion(it)
+                showModalDialogComputerSelectedQuestion(question, viewModel)
             }
         }
 
@@ -215,12 +178,13 @@ class GameActivity : AppCompatActivity() {
 
                     val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                     builder
-                        .setTitle("この内容で質問しますか？")
+                        .setTitle(getString(R.string.confirm_message_on_ask_question))
                         .setView(dialogView)
-                        .setPositiveButton("OK") { dialog, which ->
-                            viewModel.onSelectQuestion(position, selectPosition)
+                        .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                            var picked = viewModel.onSelectQuestion(position, selectPosition)
+                            showModalDialogOnAnswerReceived(picked, viewModel)
                         }
-                        .setNegativeButton("やめる") { dialog, which ->
+                        .setNegativeButton(R.string.button_label_cancel) { dialog, which ->
                             // Do nothing.
                         }
 
@@ -320,20 +284,20 @@ class GameActivity : AppCompatActivity() {
      * 宣言が失敗した時は、相手プレイヤーのターンへと移行する。
      */
     private fun showModalDialogOnPlayerCalled(isSuccess: Boolean, viewModel: GameViewModel) {
-
         val inflater = this@GameActivity.layoutInflater
         val binding: SimpleDialogLayoutBinding = SimpleDialogLayoutBinding.inflate(inflater)
         binding.lifecycleOwner = this
+        binding.messageColor = getColor(R.color.white)
         val action: () -> Unit
         if (isSuccess) {
             binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_succeed)
             action = {
-                // Do nothing.
+                viewModel.finalize(true)
             }
         } else {
             binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_failed)
             action = {
-                viewModel.computerAutoPlay()
+                viewModel.finalizePlayerTurn()
             }
         }
         val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
@@ -345,6 +309,114 @@ class GameActivity : AppCompatActivity() {
                 action()
             }
 
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    /**
+     * 相手の質問に対する解答をモーダル表示する
+     *
+     * モーダル終了後、共有情報カードの場合はその解答モーダルを表示、それ以外は相手のターンに移行する
+     */
+    private fun showModalDialogOnAnswerReceived(picked: QuestionBase, viewModel: GameViewModel) {
+        val inflater = this@GameActivity.layoutInflater
+        val binding: AnswerDialogLayoutBinding = AnswerDialogLayoutBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.textViewMessage.text = picked.answerText
+        binding.messageColor = getColor(R.color.red)
+        var text = picked.text
+        if (picked is QuestionWhereNoBySelect) {
+            text += "\n︎" + getString(R.string.selectable_question_text_signal) + picked.summaryText
+        }
+        binding.textViewQuestionText.text = text
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+        builder
+            .setCancelable(false)
+            .setTitle(getString(R.string.dialog_title_answer))
+            .setView(binding.root)
+            .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                val sharedQuestion = viewModel.doShareableQuestionAfterOnSelectQuestion(picked)
+                if (sharedQuestion != null) {
+                    showModalDialogSharedQuestion(
+                        sharedQuestion,
+                        R.string.dialog_title_shared_answer,
+                        { viewModel.finalizePlayerTurn() }
+                    )
+                } else {
+                    viewModel.finalizePlayerTurn()
+                }
+            }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    /**
+     * プレイヤーが共有情報カードを選んだ時の、相手プレイヤーへの解答内容をモーダル表示する
+     *
+     * モーダル終了後、相手のターンに移行する
+     */
+    private fun showModalDialogSharedQuestion(
+        sharedQuestion: QuestionBase,
+        titleResourceId: Int,
+        afterExecute: () -> Unit
+    ) {
+        val inflater = this@GameActivity.layoutInflater
+        val binding: AnswerDialogLayoutBinding = AnswerDialogLayoutBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.textViewMessage.text = sharedQuestion.answerText
+        binding.messageColor = getColor(R.color.red)
+        binding.question = sharedQuestion
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+        builder
+            .setCancelable(false)
+            .setTitle(getString(titleResourceId))
+            .setView(binding.root)
+            .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                afterExecute()
+            }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    /**
+     * コンピュータからの質問とその解答をモーダルダイアログに表示する
+     *
+     * モーダル終了後、共有情報カードの場合はその解答モーダルを表示、それ以外は相手のターンに移行する
+     * @param question 解答付きの質問カード
+     * @param viewModel ゲーム画面のViewModel
+     */
+    private fun showModalDialogComputerSelectedQuestion(
+        question: QuestionBase,
+        viewModel: GameViewModel
+    ) {
+        var text = question.text
+        if (question is QuestionWhereNoBySelect) {
+            text += "\n︎" + getString(R.string.selectable_question_text_signal) + question.summaryText
+        }
+        val inflater = this@GameActivity.layoutInflater
+        val binding: AnswerDialogLayoutBinding = AnswerDialogLayoutBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        binding.textViewQuestionText.text = text
+        binding.textViewMessage.text = question.answerText
+        binding.messageColor = getColor(R.color.red)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+        builder
+            .setCancelable(false)
+            .setTitle(getString(R.string.dialog_title_received_question))
+            .setView(binding.root)
+            .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                val sharedQuestion =
+                    viewModel.doShareableQuestionAfterOnComputerSelectQuestion(question)
+                if (sharedQuestion != null) {
+                    showModalDialogSharedQuestion(
+                        sharedQuestion,
+                        R.string.dialog_title_shared_answer_from,
+                        { viewModel.finalizeComputerTurn() }
+                    )
+                } else {
+                    viewModel.finalizeComputerTurn()
+                }
+            }
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }

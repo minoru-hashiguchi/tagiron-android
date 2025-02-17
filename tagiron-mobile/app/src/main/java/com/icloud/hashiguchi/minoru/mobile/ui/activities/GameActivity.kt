@@ -26,6 +26,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.CallLayoutBinding
+import com.icloud.hashiguchi.tagironmobile.databinding.SimpleDialogLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.TilesLayoutBinding
 
 class GameActivity : AppCompatActivity() {
@@ -303,12 +304,7 @@ class GameActivity : AppCompatActivity() {
             .setView(binding.root)
             .setPositiveButton("OK") { dialog, which ->
                 val result = viewModel.onCall()
-                if (result) {
-                    Toast.makeText(this, "正解！！あなたの勝ち！！", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "不正解！！", Toast.LENGTH_SHORT).show()
-                    viewModel.computerAutoPlay()
-                }
+                showModalDialogOnPlayerCalled(result, viewModel)
             }
             .setNegativeButton("いいえ") { dialog, which ->
                 // Do nothing.
@@ -318,5 +314,39 @@ class GameActivity : AppCompatActivity() {
         Log.d(Constant.LOG_TAG, "onClickCall -- end")
     }
 
+    /**
+     * プレイヤーの宣言後に、結果をモーダルダイアログに表示する。
+     *
+     * 宣言が失敗した時は、相手プレイヤーのターンへと移行する。
+     */
+    private fun showModalDialogOnPlayerCalled(isSuccess: Boolean, viewModel: GameViewModel) {
+
+        val inflater = this@GameActivity.layoutInflater
+        val binding: SimpleDialogLayoutBinding = SimpleDialogLayoutBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+        val action: () -> Unit
+        if (isSuccess) {
+            binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_succeed)
+            action = {
+                // Do nothing.
+            }
+        } else {
+            binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_failed)
+            action = {
+                viewModel.computerAutoPlay()
+            }
+        }
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+        builder
+            .setCancelable(false)
+            .setTitle(getString(R.string.dialog_title_called))
+            .setView(binding.root)
+            .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                action()
+            }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
 }
 

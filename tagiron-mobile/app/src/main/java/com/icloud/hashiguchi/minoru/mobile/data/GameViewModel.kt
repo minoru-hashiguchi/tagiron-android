@@ -269,7 +269,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
      * コンピュータターンの終了時処理
      */
     fun finalizeComputerTurn() {
-        if (_isFirstMove.value == false) {
+        if (_isFirstMove.value == true) {
             _turnCount.postValue(_turnCount.value!! + 1)
         }
         _isMyTurn.postValue(true)
@@ -287,11 +287,13 @@ class GameViewModel(intent: Intent) : ViewModel() {
         return ngCount != 0
     }
 
+    /**
+     * プレイヤーが宣言する
+     *
+     * @return true: 成功、false: 失敗
+     */
     fun onCall(): Boolean {
         val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
-        if (result) {
-            finalize(true)
-        }
         return result
     }
 
@@ -300,7 +302,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
      *
      * @param isPlayerWin プレイヤーの勝敗
      */
-    private fun finalize(isPlayerWin: Boolean) {
+    fun finalize(isPlayerWin: Boolean) {
         _isPlaying.postValue(false)
         _isPlayerWin.postValue(isPlayerWin)
         _selectedThinkingTilePosition.postValue(-1)

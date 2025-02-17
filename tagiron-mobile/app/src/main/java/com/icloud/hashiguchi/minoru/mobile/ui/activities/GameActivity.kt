@@ -292,7 +292,7 @@ class GameActivity : AppCompatActivity() {
         if (isSuccess) {
             binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_succeed)
             action = {
-                // Do nothing.
+                viewModel.finalize(true)
             }
         } else {
             binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_failed)

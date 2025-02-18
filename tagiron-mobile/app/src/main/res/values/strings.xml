@@ -13,9 +13,9 @@
     <string name="answer">解答</string>
     <string name="ng_message_on_call_check">未入力のタイルがあります</string>
     <string name="confirm_message_on_ask_question">この内容で質問しますか？</string>
-    <string name="confirm_message_on_question">この内容で宣言しますか？</string>
     <string name="confirm_message_on_call">この内容で宣言しますか？</string>
     <string name="button_label_cancel">やめる</string>
+    <string name="button_label_no">いいえ</string>
     <string name="button_label_ok">OK</string>
     <string name="dialog_title_received_question">相手からの質問に解答しました</string>
     <string name="dialog_title_called">宣言しました</string>

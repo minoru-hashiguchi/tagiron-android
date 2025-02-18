@@ -4,8 +4,6 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +14,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBindings
 import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.QuestionsSammaryAdapter
@@ -27,6 +24,7 @@ import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityGameBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.AnswerDialogLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.CallLayoutBinding
+import com.icloud.hashiguchi.tagironmobile.databinding.QuestionCardLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.SimpleDialogLayoutBinding
 import com.icloud.hashiguchi.tagironmobile.databinding.TilesLayoutBinding
 
@@ -145,22 +143,22 @@ class GameActivity : AppCompatActivity() {
             override fun contentTapped(position: Int) {
 
                 if (viewModel.isPlaying.value == true) {
-                    val inflater = this@GameActivity.layoutInflater
-                    val dialogView = inflater.inflate(R.layout.question_card_layout, null)
-                    val text: TextView =
-                        ViewBindings.findChildViewById<View>(
-                            dialogView,
-                            R.id.textViewQuestionText
-                        ) as TextView
-                    val q = viewModel.getQuestion(position)
-                    text.text = q.text
-                    val selectable = q is QuestionWhereNoBySelect
+                    val question = viewModel.getQuestion(position)
                     var selectPosition = 0
+                    val items: Array<String> = if (question is QuestionWhereNoBySelect) {
+                        question.selectNumbers.map { "${it} にする" }.toTypedArray()
+                    } else {
+                        arrayOf()
+                    }
 
+                    val inflater = this@GameActivity.layoutInflater
+                    val binding: QuestionCardLayoutBinding =
+                        QuestionCardLayoutBinding.inflate(inflater)
+                    binding.textViewQuestionText.text = question.text
                     val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                     builder
                         .setTitle(getString(R.string.confirm_message_on_ask_question))
-                        .setView(dialogView)
+                        .setView(binding.root)
                         .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
                             var picked = viewModel.onSelectQuestion(position, selectPosition)
                             showModalDialogOnAnswerReceived(picked, viewModel)
@@ -168,24 +166,15 @@ class GameActivity : AppCompatActivity() {
                         .setNegativeButton(R.string.button_label_cancel) { dialog, which ->
                             // Do nothing.
                         }
-
-                    if (selectable) {
-                        val items: Array<String> =
-                            (q as QuestionWhereNoBySelect).selectNumbers.map { "${it} にする" }
-                                .toTypedArray()
-                        builder
-                            .setSingleChoiceItems(
-                                items, 0
-                            ) { dialog, which ->
-                                // Do something.
-                                selectPosition = which
-                            }
+                    if (items.isNotEmpty()) {
+                        builder.setSingleChoiceItems(items, 0) { dialog, which ->
+                            selectPosition = which
+                        }
                     }
-
                     val dialog: AlertDialog = builder.create()
                     dialog.show()
                 } else {
-                    // Do nothing.
+                    // プレイ終了後の質問カードのタップを抑止する
                 }
             }
         })
@@ -227,12 +216,8 @@ class GameActivity : AppCompatActivity() {
     fun onClickCall(view: View) {
         Log.d(Constant.LOG_TAG, "onClickCall -- begin")
         val viewModel by viewModels<GameViewModel>()
-        if (viewModel.isNgOnCallTilesCheck()) {
-            Toast.makeText(
-                this,
-                "未入力のタイルがあります",
-                Toast.LENGTH_SHORT
-            ).show()
+        if (viewModel.isFailedCheckThinkingTiles()) {
+            showSimpleModalDialog(getString(R.string.ng_message_on_call_check), "", true, {})
             return
         }
 
@@ -243,13 +228,25 @@ class GameActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
         builder
-            .setTitle("この内容で宣言しますか？")
+            .setTitle(getString(R.string.confirm_message_on_call))
             .setView(binding.root)
-            .setPositiveButton("OK") { dialog, which ->
-                val result = viewModel.onCall()
-                showModalDialogOnPlayerCalled(result, viewModel)
+            .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                // プレイヤーの宣言後に、結果をモーダルダイアログに表示する
+                // 宣言が失敗した時は、相手プレイヤーのターンへと移行する
+                val isSucceed = viewModel.onCall()
+                val title = getString(R.string.dialog_title_called)
+                val text: String
+                val callback: () -> Unit
+                if (isSucceed) {
+                    text = getString(R.string.message_on_player_call_succeed)
+                    callback = { viewModel.finalize(true) }
+                } else {
+                    text = getString(R.string.message_on_player_call_failed)
+                    callback = { viewModel.finalizePlayerTurn() }
+                }
+                showSimpleModalDialog(title, text, false, callback)
             }
-            .setNegativeButton("いいえ") { dialog, which ->
+            .setNegativeButton(getString(R.string.button_label_no)) { dialog, which ->
                 // Do nothing.
             }
         val dialog: AlertDialog = builder.create()
@@ -257,37 +254,27 @@ class GameActivity : AppCompatActivity() {
         Log.d(Constant.LOG_TAG, "onClickCall -- end")
     }
 
-    /**
-     * プレイヤーの宣言後に、結果をモーダルダイアログに表示する。
-     *
-     * 宣言が失敗した時は、相手プレイヤーのターンへと移行する。
-     */
-    private fun showModalDialogOnPlayerCalled(isSuccess: Boolean, viewModel: GameViewModel) {
-        val inflater = this@GameActivity.layoutInflater
-        val binding: SimpleDialogLayoutBinding = SimpleDialogLayoutBinding.inflate(inflater)
-        binding.lifecycleOwner = this
-        binding.messageColor = getColor(R.color.white)
-        val action: () -> Unit
-        if (isSuccess) {
-            binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_succeed)
-            action = {
-                viewModel.finalize(true)
-            }
-        } else {
-            binding.textViewOnCallResult.text = getString(R.string.message_on_player_call_failed)
-            action = {
-                viewModel.finalizePlayerTurn()
-            }
-        }
+    private fun showSimpleModalDialog(
+        title: String,
+        text: String,
+        cancelable: Boolean,
+        callback: () -> Unit
+    ) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+        if (text.isNotEmpty()) {
+            val inflater = this@GameActivity.layoutInflater
+            val binding: SimpleDialogLayoutBinding = SimpleDialogLayoutBinding.inflate(inflater)
+            binding.lifecycleOwner = this
+            binding.messageColor = getColor(R.color.white)
+            binding.textViewOnCallResult.text = text
+            builder.setView(binding.root)
+        }
         builder
-            .setCancelable(false)
-            .setTitle(getString(R.string.dialog_title_called))
-            .setView(binding.root)
+            .setCancelable(cancelable)
+            .setTitle(title)
             .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
-                action()
+                callback()
             }
-
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
@@ -400,4 +387,3 @@ class GameActivity : AppCompatActivity() {
         dialog.show()
     }
 }
-

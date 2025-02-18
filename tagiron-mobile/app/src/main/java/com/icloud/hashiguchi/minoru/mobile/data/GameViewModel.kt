@@ -276,12 +276,13 @@ class GameViewModel(intent: Intent) : ViewModel() {
         replenishQuestions()
     }
 
-    fun isNgOnCallTilesCheck(): Boolean {
+    /**
+     * 予想タイルの入力チェックを実施する
+     *
+     * @return 番号か色どちらかが一つでも未入力の場合はNG
+     */
+    fun isFailedCheckThinkingTiles(): Boolean {
         val ngCount = _thinkingTiles.value?.filter {
-//            Log.d(
-//                Constant.LOG_TAG,
-//                "isNgOnCallTilesCheck -> no=${it.no.value}, color=${it.color.value}"
-//            )
             it.no.value == null || it.color.value == null
         }?.size
         return ngCount != 0

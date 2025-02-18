@@ -50,6 +50,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private var _isMyTurn = MutableLiveData(true)
     private var _turnCount = MutableLiveData(1)
     private var _isPlayerWin = MutableLiveData(false)
+    private var _isShownInitDialog = MutableLiveData<Boolean>(false)
 
     private var me = HumanPlayer("あなた")
     private var you = ComputerPlayer("相手")
@@ -72,10 +73,6 @@ class GameViewModel(intent: Intent) : ViewModel() {
         }
 
         replenishQuestions()
-        _isPlaying.postValue(true)
-        if (_isFirstMove.value == false) {
-            computerAutoPlay()
-        }
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isQuestion=${_isQuestion.value}")
     }
 
@@ -95,6 +92,15 @@ class GameViewModel(intent: Intent) : ViewModel() {
     var isFirstMove: LiveData<Boolean> = _isFirstMove
     val turnCount: LiveData<Int> = _turnCount
     val isPlayerWin: LiveData<Boolean> = _isPlayerWin
+    val isShownInitDialog: LiveData<Boolean> = _isShownInitDialog
+
+    fun onClickInitDialogButton() {
+        _isShownInitDialog.postValue(true)
+        _isPlaying.postValue(true)
+        if (_isFirstMove.value == false) {
+            computerAutoPlay()
+        }
+    }
 
     fun onClickSelectQestion(view: View) {
         _isQuestion.postValue(true)

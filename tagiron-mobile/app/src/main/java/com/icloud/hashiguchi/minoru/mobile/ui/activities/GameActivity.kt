@@ -57,7 +57,6 @@ class GameActivity : AppCompatActivity() {
             viewModel.computerQuestionsHistory,
             binding.recyclerViewComputerQuestionHistory
         )
-
         // コンピュータが選択する質問の監視
         viewModel.computerSelectedQuestion.observe(this) {
             Log.d(
@@ -72,14 +71,13 @@ class GameActivity : AppCompatActivity() {
                 showModalDialogComputerSelectedQuestion(question, viewModel)
             }
         }
-
         // コンピュータが宣言するタイルの監視
         viewModel.computerCalledTiles.observe(this) {
-            if (viewModel.computerCalledTiles.value?.isNotEmpty()!!) {
+            if (it.isNotEmpty()) {
                 val inflater = this@GameActivity.layoutInflater
                 val binding: CallLayoutBinding = CallLayoutBinding.inflate(inflater)
                 binding.viewmodel = viewModel
-                binding.tileList = viewModel.computerCalledTiles.value
+                binding.tileList = it
                 binding.lifecycleOwner = this
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                 builder
@@ -92,6 +90,18 @@ class GameActivity : AppCompatActivity() {
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
             }
+        }
+
+        // ゲーム開始の最初だけダイアログを表示
+        if (viewModel.isShownInitDialog.value == false) {
+            val name: String = if (viewModel.isFirstMove.value == true) "あなた" else "相手"
+            showSimpleModalDialog(
+//                getString(R.string.dialog_title_game_start),
+                name + getString(R.string.message_game_start),
+                "",
+                false,
+                { viewModel.onClickInitDialogButton() })
+
         }
 
         // OSの戻るボタン押下時のコールバックを登録

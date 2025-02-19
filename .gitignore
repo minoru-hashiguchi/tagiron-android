@@ -27,3 +27,5 @@ replay_pid*
 .kotlin/
 .DS_Store
 tagiron-mobile/.idea/
+tagiron-mobile/app/debug/
+tagiron-mobile/app/release/

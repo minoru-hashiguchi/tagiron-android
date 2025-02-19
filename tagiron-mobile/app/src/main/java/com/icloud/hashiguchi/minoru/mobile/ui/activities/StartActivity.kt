@@ -1,9 +1,11 @@
 package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +28,10 @@ class StartActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        // version
+        val info: PackageInfo = packageManager.getPackageInfo(packageName, 0)
+        binding.textViewVersion.text = "Ver.${info.versionName}"
+
         // viewModel初期化
         viewModel = ViewModelProvider(this)[StartViewModel::class.java]
 
@@ -34,6 +40,12 @@ class StartActivity : AppCompatActivity() {
         }
 
         var spinner = findViewById<Spinner>(R.id.planets_spinner)
+        spinner.adapter =
+            ArrayAdapter(
+                this,
+                R.layout.view_spinner_item_layout,
+                resources.getTextArray(R.array.first_move_last_attack_list)
+            )
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

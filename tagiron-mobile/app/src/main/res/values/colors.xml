@@ -8,12 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="gray">#8C8989</color>
     <color name="tile_color_red">#FF0000</color>
     <color name="tile_color_blue">#0000FF</color>
     <color name="tile_color_yellow">#FFC000</color>
     <color name="tile_color_undefined">#7F7F7F</color>
     <color name="question_card_bg1">#FFF2CC</color>
     <color name="question_card_bg2">#FFD966</color>
-    <color name="app_bg">#8C8989</color>
+    <color name="app_bg">#9DBFE4E2</color>
     <color name="green">#4CAF50</color>
 </resources>

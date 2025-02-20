@@ -125,6 +125,7 @@
                     android:autoSizeMinTextSize="@dimen/commom_text_min_size"
                     android:autoSizeTextType="uniform"
                     android:background="@drawable/call_button_background"
+                    android:enabled="@{viewmodel.isPlaying}"
                     android:onClick="onClickCall"
                     android:padding="10dp"
                     android:text="@string/call_button"

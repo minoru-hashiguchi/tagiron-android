@@ -30,7 +30,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     private val _isFirstMove: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>(true) }
-    private var _isPlaying = MutableLiveData(false)
+    private var _isPlaying = MutableLiveData(true)
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
     private var _gameQuestions = Constant.QUESTIONS.toMutableList()

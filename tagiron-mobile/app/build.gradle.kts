@@ -13,7 +13,7 @@ android {
         applicationId = "com.icloud.hashiguchi.tagironmobile"
         minSdk = 28
         targetSdk = 35
-        versionCode = 2
+        versionCode = 3
         versionName = "0.9.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

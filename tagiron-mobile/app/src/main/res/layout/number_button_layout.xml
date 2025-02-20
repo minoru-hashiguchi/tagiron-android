@@ -17,8 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="3dp"
         android:layout_weight="1"
+        android:autoSizeMaxTextSize="@dimen/normal_button_text_max_size"
+        android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+        android:autoSizeTextType="uniform"
         android:onClick="@{() -> viewmodel.onClickNumber(number)}"
-        android:text="@{number.toString()}"
-        android:textSize="18sp" />
+        android:text="@{number.toString()}" />
 
 </layout>

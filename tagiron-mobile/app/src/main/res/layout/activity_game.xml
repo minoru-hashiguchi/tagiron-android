@@ -33,7 +33,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/status_label_background"
@@ -43,6 +43,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
                     android:text="@{(viewmodel.isMyTurn ? `あなた` :`相手`) + `のターンです`}"
                     android:textColor="@color/white"
@@ -52,6 +55,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
                     android:text="@{`あなたの` + (viewmodel.isPlayerWin ? `勝ち` :`負け`) + `！！`}"
                     android:textColor="@color/white"
@@ -61,6 +67,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
                     android:text="@{viewmodel.turnCount + `ターン目`}"
                     android:textColor="@color/white" />
@@ -86,40 +95,54 @@
             <LinearLayout
                 android:id="@+id/linearLayoutYourTileButtons"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/normal_button_height"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
                     android:allowClickWhenDisabled="false"
+                    android:autoSizeMaxTextSize="@dimen/normal_button_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:background="@drawable/button_background"
                     android:enabled="@{!viewmodel.showQuestionSelector}"
                     android:onClick="@{viewmodel::onClickSelectQestion}"
+                    android:padding="10dp"
                     android:text="@string/question_button" />
 
                 <Button
                     android:id="@+id/buttonCall"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/normal_button_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:background="@drawable/call_button_background"
                     android:onClick="onClickCall"
+                    android:padding="10dp"
                     android:text="@string/call_button"
                     android:visibility="@{viewmodel.showCallEditor ? View.VISIBLE : View.GONE}" />
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
                     android:allowClickWhenDisabled="false"
+                    android:autoSizeMaxTextSize="@dimen/normal_button_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:background="@drawable/button_background"
                     android:enabled="@{!viewmodel.showCallEditor}"
                     android:onClick="@{viewmodel::onClickSelectCall}"
+                    android:padding="10dp"
                     android:text="@string/edit_button" />
             </LinearLayout>
 
@@ -132,14 +155,15 @@
             <include
                 layout="@layout/tiles_view_layout"
                 app:selectedTilePosition="@{viewmodel.selectedTilePosition}"
+                app:sufix="@{`(予想)`}"
                 app:tileList="@{viewmodel.thinkingTiles}"
-                app:userName="@{`相手(予想)`}"
+                app:userName="@{`相手`}"
                 app:viewmodel="@{viewmodel}"
                 app:visible="@{true}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/small_button_height"
                 android:orientation="horizontal"
                 android:visibility="@{(viewmodel.isPlaying &amp;&amp; viewmodel.showCallEditor) ? View.VISIBLE : View.GONE}">
 
@@ -148,9 +172,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/medium_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:onClick="@{() -> viewmodel.onClickClear()}"
                     android:text="クリア"
-                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <Button
@@ -158,10 +184,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/medium_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:onClick="@{() -> viewmodel.onClickColor(`RED`)}"
                     android:text="赤"
                     android:textColor="@color/tile_color_red"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <Button
@@ -169,10 +197,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/medium_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:onClick="@{() -> viewmodel.onClickColor(`BLUE`)}"
                     android:text="青"
                     android:textColor="@color/tile_color_blue"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <Button
@@ -180,17 +210,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="5dp"
                     android:layout_weight="1"
+                    android:autoSizeMaxTextSize="@dimen/medium_text_max_size"
+                    android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                    android:autoSizeTextType="uniform"
                     android:onClick="@{() -> viewmodel.onClickColor(`YELLOW`)}"
                     android:text="黄"
                     android:textColor="@color/tile_color_yellow"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/small_button_height"
                 android:orientation="horizontal"
                 android:visibility="@{(viewmodel.isPlaying &amp;&amp; viewmodel.showCallEditor) ? View.VISIBLE : View.GONE}">
 
@@ -222,7 +254,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/small_button_height"
                 android:orientation="horizontal"
                 android:visibility="@{(viewmodel.isPlaying &amp;&amp; viewmodel.showCallEditor) ? View.VISIBLE : View.GONE}">
 
@@ -267,7 +299,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingHorizontal="5dp">
@@ -276,6 +308,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+                            android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                            android:autoSizeTextType="uniform"
                             android:gravity="center"
                             android:text="@string/human_player"
                             android:textColor="@color/black" />
@@ -284,6 +319,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+                            android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                            android:autoSizeTextType="uniform"
                             android:gravity="center"
                             android:text="@{viewmodel.isFirstMove ? `先攻` : `後攻`}"
                             android:textColor="@color/black" />
@@ -309,7 +347,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="20dp"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingHorizontal="5dp">
@@ -318,6 +356,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+                            android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                            android:autoSizeTextType="uniform"
                             android:gravity="center"
                             android:text="@string/computer_player"
                             android:textColor="@color/black" />
@@ -326,6 +367,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+                            android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                            android:autoSizeTextType="uniform"
                             android:gravity="center"
                             android:text="@{viewmodel.isFirstMove ? `後攻` : `先攻`}"
                             android:textColor="@color/black" />

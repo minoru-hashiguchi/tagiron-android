@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="commom_text_min_size">1sp</dimen>
+    <dimen name="small_text_max_size">12sp</dimen>
+    <dimen name="medium_text_max_size">14sp</dimen>
+    <dimen name="normal_button_text_max_size">14sp</dimen>
+    <dimen name="normal_button_height">50dp</dimen>
+    <dimen name="small_button_height">40dp</dimen>
+    <dimen name="question_card_text_height">70dp</dimen>
+    <dimen name="question_card_text_width">175dp</dimen>
+    <dimen name="question_card_text_margin">5dp</dimen>
+    <dimen name="question_card_text_max_size">12sp</dimen>
+    <dimen name="question_card_text_min_size">1sp</dimen>
+</resources>

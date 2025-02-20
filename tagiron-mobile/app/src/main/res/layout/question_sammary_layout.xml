@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_gravity="center"
         android:background="@color/white"
         android:gravity="center"
@@ -14,8 +14,11 @@
         <TextView
             android:id="@+id/textViewAnswerText"
             android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+            android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+            android:autoSizeTextType="uniform"
             android:background="@drawable/border"
             android:gravity="center"
             android:padding="2dp"
@@ -25,7 +28,10 @@
         <TextView
             android:id="@+id/textViewQuestionText"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:autoSizeMaxTextSize="@dimen/small_text_max_size"
+            android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+            android:autoSizeTextType="uniform"
             android:background="@drawable/border"
             android:gravity="center_vertical|left"
             android:padding="2dp"

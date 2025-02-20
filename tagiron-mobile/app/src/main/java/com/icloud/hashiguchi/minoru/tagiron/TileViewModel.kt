@@ -30,12 +30,12 @@ class TileViewModel(no: Int?, color: Color?) : ViewModel(), Cloneable {
         _color.postValue(color)
     }
 
-    val colorStr: LiveData<Int> = _color.map {
+    val drawabeResource: LiveData<Int> = _color.map {
         when (it) {
-            RED -> R.color.tile_color_red
-            BLUE -> R.color.tile_color_blue
-            YELLOW -> R.color.tile_color_yellow
-            null -> R.color.tile_color_undefined
+            RED -> R.drawable.tile_red_background
+            BLUE -> R.drawable.tile_blue_background
+            YELLOW -> R.drawable.tile_yellow_background
+            null -> R.drawable.tile_undefined_background
         }
     }
 

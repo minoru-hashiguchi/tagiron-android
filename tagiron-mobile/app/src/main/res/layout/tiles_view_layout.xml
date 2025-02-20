@@ -19,6 +19,10 @@
             type="String" />
 
         <variable
+            name="sufix"
+            type="String" />
+
+        <variable
             name="tileList"
             type="List&lt;TileViewModel>" />
 
@@ -48,21 +52,20 @@
             android:layout_height="match_parent"
             android:background="@drawable/contents_label_background"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{userName}"
+                android:autoSizeMaxTextSize="@dimen/medium_text_max_size"
+                android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:text="@{sufix == null ? userName + `\nのタイル` : userName + `\nのタイル\n` + sufix }"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="のタイル"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout

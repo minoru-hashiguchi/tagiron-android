@@ -4,24 +4,33 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginVertical="3dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="3dp">
+        android:gravity="center">
 
-        <TextView
-            android:id="@+id/textViewQuestionText"
-            android:layout_width="175dp"
-            android:layout_height="70dp"
+        <LinearLayout
+            android:layout_width="@dimen/question_card_text_width"
+            android:layout_height="@dimen/question_card_text_height"
             android:layout_gravity="center"
+            android:layout_marginVertical="3dp"
             android:background="@drawable/question_card_background"
-            android:enabled="true"
             android:gravity="center"
-            android:maxLines="3"
-            android:text="@string/call_button"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
+            android:orientation="vertical"
+            android:padding="3dp">
+
+            <TextView
+                android:id="@+id/textViewQuestionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/question_card_text_margin"
+                android:autoSizeMaxTextSize="@dimen/question_card_text_max_size"
+                android:autoSizeMinTextSize="@dimen/question_card_text_min_size"
+                android:autoSizeTextType="uniform"
+                android:enabled="true"
+                android:gravity="center"
+                android:maxLines="3"
+                android:text="@string/call_button"
+                android:textColor="@color/black" />
+        </LinearLayout>
     </LinearLayout>
 </layout>
 

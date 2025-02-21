@@ -19,13 +19,16 @@
     <string name="button_label_ok">OK</string>
     <string name="dialog_title_received_question">相手からの質問に解答しました</string>
     <string name="dialog_title_called">宣言しました</string>
+    <string name="dialog_title_computer_called">相手が宣言しました</string>
     <string name="dialog_title_answer">質問に解答されました</string>
     <string name="dialog_title_shared_answer">共有情報を相手に解答しました</string>
     <string name="dialog_title_shared_answer_from">共有情報が相手から解答されました</string>
     <string name="dialog_title_game_start">ゲームの開始</string>
     <string name="message_game_start">のターンから始まります</string>
     <string name="message_on_player_call_succeed">正解！あなたの勝ち！！</string>
-    <string name="message_on_player_call_failed">はずれ！\n相手のターンになります。</string>
+    <string name="message_on_player_call_failed">はずれ！\n相手のターンになります</string>
+    <string name="message_on_computer_call_succeed">正解！あなたの負け！！</string>
+    <string name="message_on_computer_call_failed">はずれ！\nあなたのターンになります</string>
     <string name="selectable_question_text_signal"> ▶︎ </string>
     <string-array name="first_move_last_attack_list">
         <item>先攻</item>

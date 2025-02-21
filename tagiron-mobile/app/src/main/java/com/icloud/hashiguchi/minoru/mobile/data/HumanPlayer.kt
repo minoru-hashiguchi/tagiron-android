@@ -13,7 +13,7 @@ class HumanPlayer(name: String) : Player(name) {
         TODO("Not yet implemented")
     }
 
-    override fun call(yourTiles: MutableList<TileViewModel>): Boolean {
+    override fun call(): Array<TileViewModel> {
         TODO("Not yet implemented")
     }
 

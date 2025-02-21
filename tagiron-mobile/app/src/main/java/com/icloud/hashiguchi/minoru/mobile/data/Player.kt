@@ -38,10 +38,9 @@ abstract class Player(var name: String) {
     /**
      * 宣言する
      *
-     * @param yourTiles
      * @return true: 正解、false: 不正解
      */
-    abstract fun call(yourTiles: MutableList<TileViewModel>): Boolean
+    abstract fun call(): Array<TileViewModel>
 
     /**
      * 指定した質問の数字を選択する

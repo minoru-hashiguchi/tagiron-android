@@ -5,8 +5,6 @@ import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
-import java.util.Arrays
-import java.util.Objects
 import java.util.Random
 
 
@@ -23,15 +21,9 @@ class ComputerPlayer(name: String) : Player(name) {
         return pickedIndex
     }
 
-    override fun call(yourTiles: MutableList<TileViewModel>): Boolean {
-        Log.d(Constant.LOG_TAG, "pattern:${Arrays.toString(patterns.elementAt(0))}")
-        if (Objects.deepEquals(yourTiles.toTypedArray(), patterns.elementAt(0))) {
-            Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "正解！")
-            return true
-        } else {
-            Log.println(Log.ERROR, Constant.LOG_TAG + "[${name}]", "不正解！")
-            return false
-        }
+    override fun call(): Array<TileViewModel> {
+        val index = Random().nextInt(patterns.size)
+        return patterns.elementAt(index)
     }
 
     override fun selectNumber(question: QuestionWhereNoBySelect): Int {

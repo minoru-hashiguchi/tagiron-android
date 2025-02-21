@@ -65,8 +65,6 @@ class GameActivity : AppCompatActivity() {
             )
             // コンピュータが選択した質問が更新された場合、質問表示ダイアログをモーダル表示する
             if (it != null) {
-                // 表示が早すぎるので、気持ちDelayを入れる
-                Thread.sleep(1000)
                 val question = viewModel.onComputerSelectedQuestion(it)
                 showModalDialogComputerSelectedQuestion(question, viewModel)
             }
@@ -152,7 +150,7 @@ class GameActivity : AppCompatActivity() {
              */
             override fun contentTapped(position: Int) {
 
-                if (viewModel.isPlaying.value == true) {
+                if (viewModel.isPlaying.value == true && viewModel.isMyTurn.value == true) {
                     val question = viewModel.getQuestion(position)
                     var selectPosition = 0
                     val items: Array<String> = if (question is QuestionWhereNoBySelect) {

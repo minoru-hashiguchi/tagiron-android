@@ -8,11 +8,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
 import com.icloud.hashiguchi.minoru.tagiron.constants.Color
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Objects
 import kotlin.random.Random
 
@@ -190,8 +193,12 @@ class GameViewModel(intent: Intent) : ViewModel() {
         if (_isFirstMove.value == false) {
             _turnCount.postValue(_turnCount.value!! + 1)
         }
+        _isMyTurn.postValue(false)
         replenishQuestions()
-        computerAutoPlay()
+        viewModelScope.launch(Dispatchers.IO) {
+            Thread.sleep(Constant.COMPUTER_THINKING_LATENCY)
+            computerAutoPlay()
+        }
     }
 
     private fun replenishQuestions() {
@@ -220,7 +227,6 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private fun computerAutoPlay() {
         Log.d(Constant.LOG_TAG, "autoPlay -- begin")
         Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
-        _isMyTurn.postValue(false)
 
         // 行動の決定
         val actionNo = you.selectAction(_fieldQuestions.value!!)

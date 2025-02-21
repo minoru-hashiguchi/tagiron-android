@@ -57,6 +57,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
 
     private var me = HumanPlayer("あなた")
     private var you = ComputerPlayer("相手")
+    private lateinit var calledTiles: Array<TileViewModel>
 
     init {
         val firstMoveOrLastAtackNo = intent.getIntExtra(SEND_MESSAGE, 0)
@@ -233,20 +234,32 @@ class GameViewModel(intent: Intent) : ViewModel() {
 
         if (actionNo == null) {
             // 宣言
-            _computerCalledTiles.postValue(you.patterns.elementAt(0).toMutableList())
-            val result = you.call(me.ownTiles.value!!)
-            if (result) {
-                finalize(false)
-            } else {
-                finalizeComputerTurn()
-            }
+            calledTiles = you.call()
+            _computerCalledTiles.postValue(calledTiles.toMutableList())
         } else {
             // 質問
             val picked = you.pickQuestion(actionNo, _fieldQuestions)
             _computerSelectedQuestion.postValue(picked)
-
-            Log.d(Constant.LOG_TAG, "autoPlay -- end")
         }
+        Log.d(Constant.LOG_TAG, "autoPlay -- end")
+    }
+
+    /**
+     * コンピュータの宣言を判定する
+     *
+     * @param true: 成功、false: 失敗
+     */
+    fun judge(): Boolean {
+        val result = Objects.deepEquals(_computerCalledTiles.value, me.ownTiles.value)
+        if (result) {
+            finalize(false)
+        } else {
+            val old = you.patterns.size
+            you.patterns.remove(calledTiles)
+            Log.d(Constant.LOG_TAG, "you patterns size : ${old} -> ${you.patterns.size}")
+            finalizeComputerTurn()
+        }
+        return result
     }
 
     /**

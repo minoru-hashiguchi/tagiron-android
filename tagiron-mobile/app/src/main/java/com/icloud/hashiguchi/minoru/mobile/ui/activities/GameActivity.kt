@@ -72,17 +72,28 @@ class GameActivity : AppCompatActivity() {
         // コンピュータが宣言するタイルの監視
         viewModel.computerCalledTiles.observe(this) {
             if (it.isNotEmpty()) {
+                // 判定
+                val isSucceed = viewModel.judge()
+                val text =
+                    if (isSucceed) {
+                        getString(R.string.message_on_computer_call_succeed)
+                    } else {
+                        getString(R.string.message_on_computer_call_failed)
+                    }
+
+                // 判定結果の表示
                 val inflater = this@GameActivity.layoutInflater
                 val binding: CallLayoutBinding = CallLayoutBinding.inflate(inflater)
                 binding.viewmodel = viewModel
                 binding.tileList = it
                 binding.lifecycleOwner = this
+                binding.textViewCallResult.text = text
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
                 builder
                     .setCancelable(false)
-                    .setTitle("相手が宣言しました")
+                    .setTitle(getString(R.string.dialog_title_computer_called))
                     .setView(binding.root)
-                    .setNegativeButton("OK") { dialog, which ->
+                    .setNegativeButton(getString(R.string.button_label_ok)) { dialog, which ->
                         // Do nothing.
                     }
                 val dialog: AlertDialog = builder.create()

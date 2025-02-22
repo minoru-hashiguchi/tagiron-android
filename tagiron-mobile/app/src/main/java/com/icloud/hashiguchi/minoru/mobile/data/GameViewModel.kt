@@ -83,8 +83,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
     val computerTiles: LiveData<MutableList<TileViewModel>> = you.ownTiles
     val fieldQuestions: LiveData<MutableList<QuestionBase>> = _fieldQuestions
-    val playerQuestionHistory: LiveData<MutableList<QuestionBase>> = me.questionsAndAnswers
-    val computerQuestionsHistory: LiveData<MutableList<QuestionBase>> = you.questionsAndAnswers
+    val playerQuestionHistory: LiveData<MutableList<ActionItem>> = me.questionsAndAnswers
+    val computerQuestionsHistory: LiveData<MutableList<ActionItem>> = you.questionsAndAnswers
     val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
     val showQuestionSelector: LiveData<Boolean> = _isQuestion
     val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it }
@@ -259,6 +259,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             Log.d(Constant.LOG_TAG, "you patterns size : ${old} -> ${you.patterns.size}")
             finalizeComputerTurn()
         }
+        addActionHistoryOnCall(_thinkingTiles, you, result)
         return result
     }
 
@@ -320,6 +321,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
      */
     fun onCall(): Boolean {
         val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
+        addActionHistoryOnCall(_thinkingTiles, me, result)
         return result
     }
 
@@ -332,5 +334,21 @@ class GameViewModel(intent: Intent) : ViewModel() {
         _isPlaying.postValue(false)
         _isPlayerWin.postValue(isPlayerWin)
         _selectedThinkingTilePosition.postValue(-1)
+    }
+
+    private fun addActionHistoryOnCall(
+        data: MutableLiveData<MutableList<TileViewModel>>,
+        player: Player,
+        isSucceed: Boolean
+    ) {
+        val actionList = player.questionsAndAnswers.value!!
+        val tiles: MutableList<TileViewModel> = mutableListOf()
+        data.value?.forEach({
+            // タイルは別インスタンスで格納
+            tiles.add(TileViewModel(it))
+        })
+        player.patterns.remove(tiles.toTypedArray())
+        actionList.add(ActionItem(tiles, player.patterns.size, isSucceed))
+        player.questionsAndAnswers.postValue(actionList)
     }
 }

@@ -1,6 +1,7 @@
 package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
 import android.app.AlertDialog
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.icloud.hashiguchi.minoru.mobile.data.ActionItem
 import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.QuestionsSammaryAdapter
@@ -50,12 +52,14 @@ class GameActivity : AppCompatActivity() {
         // プレイヤー用の質問履歴RecyclerViewの設定
         setupQuestionHistory(
             viewModel.playerQuestionHistory,
-            binding.recyclerViewPlayerQuestionHistory
+            binding.recyclerViewPlayerQuestionHistory,
+            resources
         )
         // コンピュータ用の質問履歴RecyclerViewの設定
         setupQuestionHistory(
             viewModel.computerQuestionsHistory,
-            binding.recyclerViewComputerQuestionHistory
+            binding.recyclerViewComputerQuestionHistory,
+            resources
         )
         // コンピュータが選択する質問の監視
         viewModel.computerSelectedQuestion.observe(this) {
@@ -208,10 +212,11 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun setupQuestionHistory(
-        liveData: LiveData<MutableList<QuestionBase>>,
-        recyclerView: RecyclerView
+        liveData: LiveData<MutableList<ActionItem>>,
+        recyclerView: RecyclerView,
+        resource: Resources
     ) {
-        val adapter = QuestionsSammaryAdapter(liveData)
+        val adapter = QuestionsSammaryAdapter(liveData, viewModel.isPlaying, resource)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         val separate = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
@@ -223,12 +228,10 @@ class GameActivity : AppCompatActivity() {
                 adapter.data = it
             }
         })
-
-        adapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
-            override fun contentTapped(position: Int) {
-                // Do nothing.
+        viewModel.isPlaying.observe(this, Observer {
+            it.let {
+                adapter.isPlaying = it
             }
-
         })
     }
 

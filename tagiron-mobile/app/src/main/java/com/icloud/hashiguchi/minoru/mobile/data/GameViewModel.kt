@@ -83,8 +83,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
     val computerTiles: LiveData<MutableList<TileViewModel>> = you.ownTiles
     val fieldQuestions: LiveData<MutableList<QuestionBase>> = _fieldQuestions
-    val playerQuestionHistory: LiveData<MutableList<ActionItem>> = me.questionsAndAnswers
-    val computerQuestionsHistory: LiveData<MutableList<ActionItem>> = you.questionsAndAnswers
+    val playerActionHistory: LiveData<MutableList<ActionItem>> = me.actionHistory
+    val computerActionHistory: LiveData<MutableList<ActionItem>> = you.actionHistory
     val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
     val showQuestionSelector: LiveData<Boolean> = _isQuestion
     val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it }
@@ -341,7 +341,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
         player: Player,
         isSucceed: Boolean
     ) {
-        val actionList = player.questionsAndAnswers.value!!
+        val actionList = player.actionHistory.value!!
         val tiles: MutableList<TileViewModel> = mutableListOf()
         data.value?.forEach({
             // タイルは別インスタンスで格納
@@ -349,6 +349,6 @@ class GameViewModel(intent: Intent) : ViewModel() {
         })
         player.patterns.remove(tiles.toTypedArray())
         actionList.add(ActionItem(tiles, player.patterns.size, isSucceed))
-        player.questionsAndAnswers.postValue(actionList)
+        player.actionHistory.postValue(actionList)
     }
 }

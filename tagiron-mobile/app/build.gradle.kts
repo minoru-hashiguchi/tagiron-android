@@ -13,17 +13,18 @@ android {
         applicationId = "com.icloud.hashiguchi.tagironmobile"
         minSdk = 28
         targetSdk = 35
-        versionCode = 4
-        versionName = "0.9.2"
+        versionCode = 5
+        versionName = "0.9.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName("release") {
+            isShrinkResources = true
+            isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
+                getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
             )
         }

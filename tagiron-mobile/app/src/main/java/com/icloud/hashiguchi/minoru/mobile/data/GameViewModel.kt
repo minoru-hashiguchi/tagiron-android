@@ -16,7 +16,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Objects
+import java.util.Arrays
 import kotlin.random.Random
 
 
@@ -37,15 +37,6 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private var _isQuestion = MutableLiveData(true)
     private var _gameTiles = Constant.TILES.toMutableList()
     private var _gameQuestions = Constant.QUESTIONS.toMutableList()
-    private var _thinkingTiles = MutableLiveData<MutableList<TileViewModel>>(
-        mutableListOf(
-            TileViewModel(),
-            TileViewModel(),
-            TileViewModel(),
-            TileViewModel(),
-            TileViewModel()
-        )
-    )
     private var _fieldQuestions = MutableLiveData<MutableList<QuestionBase>>(mutableListOf())
     private var _selectedThinkingTilePosition = MutableLiveData<Int>(null)
     private var _computerSelectedQuestion = MutableLiveData<QuestionBase?>(null)
@@ -85,7 +76,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val fieldQuestions: LiveData<MutableList<QuestionBase>> = _fieldQuestions
     val playerActionHistory: LiveData<MutableList<ActionItem>> = me.actionHistory
     val computerActionHistory: LiveData<MutableList<ActionItem>> = you.actionHistory
-    val thinkingTiles: LiveData<MutableList<TileViewModel>> = _thinkingTiles
+    val thinkingTiles: LiveData<MutableList<TileViewModel>> = me.thinkingTiles
     val showQuestionSelector: LiveData<Boolean> = _isQuestion
     val showCallEditor: LiveData<Boolean> = _isQuestion.map { !it }
     val selectedTilePosition: LiveData<Int> = _selectedThinkingTilePosition
@@ -126,14 +117,14 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     fun onClickNumber(number: Int) {
-        var tile = _selectedThinkingTilePosition.value?.let { _thinkingTiles.value?.get(it - 1) }
+        var tile = _selectedThinkingTilePosition.value?.let { me.thinkingTiles.value?.get(it - 1) }
         if (tile != null) {
             tile.setNo(number)
         }
     }
 
     fun onClickColor(strColor: String) {
-        var tile = _selectedThinkingTilePosition.value?.let { _thinkingTiles.value?.get(it - 1) }
+        var tile = _selectedThinkingTilePosition.value?.let { me.thinkingTiles.value?.get(it - 1) }
         if (tile != null) {
             when (strColor) {
                 "RED" -> tile.setColor(Color.RED)
@@ -144,7 +135,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     fun onClickClear() {
-        var tile = _selectedThinkingTilePosition.value?.let { _thinkingTiles.value?.get(it - 1) }
+        var tile = _selectedThinkingTilePosition.value?.let { me.thinkingTiles.value?.get(it - 1) }
         if (tile != null) {
             tile.setNo(null)
             tile.setColor(null)
@@ -250,16 +241,13 @@ class GameViewModel(intent: Intent) : ViewModel() {
      * @param true: 成功、false: 失敗
      */
     fun judge(): Boolean {
-        val result = Objects.deepEquals(_computerCalledTiles.value, me.ownTiles.value)
+        val result = Arrays.deepEquals(calledTiles, me.ownTiles.value!!.toTypedArray())
+        addActionHistoryOnCall(calledTiles, you, result)
         if (result) {
             finalize(false)
         } else {
-            val old = you.patterns.size
-            you.patterns.remove(calledTiles)
-            Log.d(Constant.LOG_TAG, "you patterns size : ${old} -> ${you.patterns.size}")
             finalizeComputerTurn()
         }
-        addActionHistoryOnCall(_thinkingTiles, you, result)
         return result
     }
 
@@ -308,7 +296,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
      * @return 番号か色どちらかが一つでも未入力の場合はNG
      */
     fun isFailedCheckThinkingTiles(): Boolean {
-        val ngCount = _thinkingTiles.value?.filter {
+        val ngCount = me.thinkingTiles.value?.filter {
             it.no.value == null || it.color.value == null
         }?.size
         return ngCount != 0
@@ -320,8 +308,9 @@ class GameViewModel(intent: Intent) : ViewModel() {
      * @return true: 成功、false: 失敗
      */
     fun onCall(): Boolean {
-        val result = Objects.deepEquals(_thinkingTiles.value, you.ownTiles.value)
-        addActionHistoryOnCall(_thinkingTiles, me, result)
+        val called = me.call()
+        val result = Arrays.deepEquals(called, you.ownTiles.value!!.toTypedArray())
+        addActionHistoryOnCall(called, me, result)
         return result
     }
 
@@ -337,17 +326,21 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     private fun addActionHistoryOnCall(
-        data: MutableLiveData<MutableList<TileViewModel>>,
+        data: Array<TileViewModel>,
         player: Player,
         isSucceed: Boolean
     ) {
         val actionList = player.actionHistory.value!!
         val tiles: MutableList<TileViewModel> = mutableListOf()
-        data.value?.forEach({
+        data.forEach({
             // タイルは別インスタンスで格納
             tiles.add(TileViewModel(it))
         })
-        player.patterns.remove(tiles.toTypedArray())
+        if (player.patterns.remove(data)) {
+            Log.d(Constant.LOG_TAG, "addActionHistoryOnCall: Done delete pattern on call.")
+        } else {
+            Log.d(Constant.LOG_TAG, "addActionHistoryOnCall: Don't delete pattern on call.")
+        }
         actionList.add(ActionItem(tiles, player.patterns.size, isSucceed))
         player.actionHistory.postValue(actionList)
     }

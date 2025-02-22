@@ -331,7 +331,7 @@
 
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewPlayerQuestionHistory"
+                        android:id="@+id/recyclerViewPlayerActionHistory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="1dp"
@@ -378,7 +378,7 @@
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewComputerQuestionHistory"
+                        android:id="@+id/recyclerViewComputerActionHistory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="1dp"

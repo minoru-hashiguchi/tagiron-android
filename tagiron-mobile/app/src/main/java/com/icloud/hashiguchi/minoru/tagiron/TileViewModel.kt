@@ -14,6 +14,8 @@ class TileViewModel(no: Int?, color: Color?) : ViewModel(), Cloneable {
     private val _no: MutableLiveData<Int?> = MutableLiveData(no)
     private val _color: MutableLiveData<Color?> = MutableLiveData(color)
 
+    constructor(tile: TileViewModel) : this(tile.no.value, tile.color.value)
+
     constructor() : this(null, null)
 
     val no: LiveData<Int?> = _no

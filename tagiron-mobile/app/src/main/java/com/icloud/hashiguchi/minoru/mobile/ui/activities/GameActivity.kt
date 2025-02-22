@@ -1,6 +1,7 @@
 package com.icloud.hashiguchi.minoru.mobile.ui.activities
 
 import android.app.AlertDialog
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,9 +15,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.icloud.hashiguchi.minoru.mobile.data.ActionItem
 import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
+import com.icloud.hashiguchi.minoru.mobile.utils.ActionItemsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
-import com.icloud.hashiguchi.minoru.mobile.utils.QuestionsSammaryAdapter
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
@@ -48,21 +50,19 @@ class GameActivity : AppCompatActivity() {
         // 場の質問カードのRecyclerViewの設定
         setupFieldQuestionCards(viewModel, binding)
         // プレイヤー用の質問履歴RecyclerViewの設定
-        setupQuestionHistory(
-            viewModel.playerQuestionHistory,
-            binding.recyclerViewPlayerQuestionHistory
+        setupActionItemHistory(
+            viewModel.playerActionHistory,
+            binding.recyclerViewPlayerActionHistory,
+            resources
         )
         // コンピュータ用の質問履歴RecyclerViewの設定
-        setupQuestionHistory(
-            viewModel.computerQuestionsHistory,
-            binding.recyclerViewComputerQuestionHistory
+        setupActionItemHistory(
+            viewModel.computerActionHistory,
+            binding.recyclerViewComputerActionHistory,
+            resources
         )
         // コンピュータが選択する質問の監視
         viewModel.computerSelectedQuestion.observe(this) {
-            Log.d(
-                Constant.LOG_TAG,
-                "comSelectedQuestion.observe -- ${it?.text}"
-            )
             // コンピュータが選択した質問が更新された場合、質問表示ダイアログをモーダル表示する
             if (it != null) {
                 val question = viewModel.onComputerSelectedQuestion(it)
@@ -207,28 +207,27 @@ class GameActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupQuestionHistory(
-        liveData: LiveData<MutableList<QuestionBase>>,
-        recyclerView: RecyclerView
+    private fun setupActionItemHistory(
+        items: LiveData<MutableList<ActionItem>>,
+        recyclerView: RecyclerView,
+        resource: Resources
     ) {
-        val adapter = QuestionsSammaryAdapter(liveData)
+        val adapter = ActionItemsAdapter(items, viewModel.isPlaying, resource)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         val separate = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         recyclerView.addItemDecoration(separate)
 
         recyclerView.adapter = adapter
-        liveData.observe(this, Observer {
+        items.observe(this, Observer {
             it.let {
-                adapter.data = it
+                adapter.items = it
             }
         })
-
-        adapter.setListener(object : QuestionsSammaryAdapter.QuestionsSammaryAdapterListener {
-            override fun contentTapped(position: Int) {
-                // Do nothing.
+        viewModel.isPlaying.observe(this, Observer {
+            it.let {
+                adapter.isPlaying = it
             }
-
         })
     }
 

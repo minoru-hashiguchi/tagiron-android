@@ -58,7 +58,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
             else -> Random.nextBoolean()
         }
 
-        // シャッフル
+        _isMyTurn.postValue(_isFirstMove.value)
+
         _gameTiles.shuffle()
         _gameQuestions.shuffle()
 
@@ -93,7 +94,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
         _isShownInitDialog.postValue(true)
         _isPlaying.postValue(true)
         if (_isFirstMove.value == false) {
-            computerAutoPlay()
+            asyncComputerAutoPlay()
         }
     }
 
@@ -187,6 +188,10 @@ class GameViewModel(intent: Intent) : ViewModel() {
         }
         _isMyTurn.postValue(false)
         replenishQuestions()
+        asyncComputerAutoPlay()
+    }
+
+    private fun asyncComputerAutoPlay() {
         viewModelScope.launch(Dispatchers.IO) {
             Thread.sleep(Constant.COMPUTER_THINKING_LATENCY)
             computerAutoPlay()

@@ -9,6 +9,9 @@ import java.util.Random
 
 
 class ComputerPlayer(name: String) : Player(name) {
+    var level = Level.STRONG
+    var pickedQuestionIndex = 0
+    var pickedNumberIndex = 0
 
     override fun selectAction(questions: MutableList<QuestionBase>): Int? {
         // 場の質問カードがないときは宣言のみ
@@ -16,9 +19,31 @@ class ComputerPlayer(name: String) : Player(name) {
             Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "宣言する")
             return null
         }
-        // TODO 質問は暫定でランダム
-        val pickedIndex: Int = Random().nextInt(questions.size)
-        return pickedIndex
+
+        when (level) {
+            Level.NOMAL -> {
+                pickedQuestionIndex = Random().nextInt(questions.size)
+            }
+
+            Level.STRONG -> {
+                var list = createExpectedAnswersList(questions)
+                list.sortWith(
+                    compareByDescending<ExpectedAnswers> { it.onlyOne }
+                        .thenBy { it.average }
+                        .thenByDescending { it.oneCount }
+                        .thenBy { it.isShareable }
+                )
+                list.forEach({ Log.d(Constant.LOG_TAG, "${it}") })
+                if (list.isEmpty()) {
+                    // パターンが減らせる質問がなければ宣言する
+                    return null
+                }
+                pickedQuestionIndex = list.get(0).questionIndex
+                pickedNumberIndex = list.get(0).numberIndex ?: 0
+            }
+        }
+
+        return pickedQuestionIndex
     }
 
     override fun call(): Array<TileViewModel> {
@@ -28,8 +53,39 @@ class ComputerPlayer(name: String) : Player(name) {
 
     override fun selectNumber(question: QuestionWhereNoBySelect): Int {
         val values = question.selectNumbers
-        // TODO 暫定でランダム
-        val index: Int = Random().nextInt(values.size)
+        val index = when (level) {
+            Level.NOMAL -> Random().nextInt(values.size)
+            Level.STRONG -> pickedNumberIndex
+        }
         return values[index]
+    }
+
+    private fun createExpectedAnswersList(questions: MutableList<QuestionBase>): MutableList<ExpectedAnswers> {
+        var results: MutableList<ExpectedAnswers> = mutableListOf()
+        for (questionIndex in 0..questions.size - 1) {
+            var q = questions.get(questionIndex)
+            if (q is QuestionWhereNoBySelect) {
+                for (numberIndex in 0..q.selectNumbers.size - 1) {
+                    var clone = q.clone()
+                    clone.selectedNo = q.selectNumbers.get(numberIndex)
+                    var expected =
+                        ExpectedAnswers(clone, patterns, questionIndex, numberIndex).execute()
+                    if (expected.ignore) {
+                        Log.d(Constant.LOG_TAG, "除外：#${clone.summaryText}")
+                    } else {
+                        results.add(expected)
+                    }
+                }
+            } else {
+                var expected =
+                    ExpectedAnswers(q, patterns, questionIndex).execute()
+                if (expected.ignore) {
+                    Log.d(Constant.LOG_TAG, "除外：#${q.summaryText}")
+                } else {
+                    results.add(expected)
+                }
+            }
+        }
+        return results
     }
 }

@@ -22,7 +22,7 @@ class ListViewableAdapter(context: Context, list: MutableList<ListViewable>) :
         return textView
     }
 
-    override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val textView = super.getDropDownView(position, convertView, parent) as TextView
         textView.text = getItem(position)?.displayName
         return textView

@@ -361,7 +361,7 @@
                             android:autoSizeMinTextSize="@dimen/commom_text_min_size"
                             android:autoSizeTextType="uniform"
                             android:gravity="center"
-                            android:text="@string/computer_player"
+                            android:text="@{viewmodel.computerPlayerName}"
                             android:textColor="@color/black" />
 
                         <TextView

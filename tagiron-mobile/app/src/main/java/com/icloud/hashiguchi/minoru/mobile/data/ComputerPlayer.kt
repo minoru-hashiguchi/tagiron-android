@@ -15,11 +15,12 @@ class ComputerPlayer(name: String) : Player(name) {
             field = value
             Logger.i(
                 Constant.LOG_TAG,
-                "コンピュータのレベルは${value}(${value.displayName})で設定されました"
+                "コンピュータのレベルは${field}(${field.displayName})で設定されました"
             )
         }
     var pickedQuestionIndex = 0
     var pickedNumberIndex = 0
+    override var name: String = "${name}(${level.displayName})"
 
     override fun selectAction(questions: MutableList<QuestionBase>): Int? {
         // 場の質問カードがないときは宣言のみ

@@ -90,6 +90,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val turnCount: LiveData<Int> = _turnCount
     val isPlayerWin: LiveData<Boolean> = _isPlayerWin
     val isShownInitDialog: LiveData<Boolean> = _isShownInitDialog
+    val computerPlayerName: String = you.name
 
     fun onClickInitDialogButton() {
         _isShownInitDialog.postValue(true)

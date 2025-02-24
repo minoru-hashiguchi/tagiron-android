@@ -45,8 +45,10 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // スピナーの設定
         binding.spinnerFirstMoveLastAttack.adapter =
             ListViewableAdapter(this, Constant.FIRST_OR_SECOND_SPINNER_ITEMS.toMutableList())
+        binding.spinnerComputerLevel.onItemSelectedListener = this
         binding.spinnerComputerLevel.adapter =
             ListViewableAdapter(this, Constant.COMPUTER_LEVEL_SPINNER_ITEMS.toMutableList())
+        binding.spinnerComputerLevel.onItemSelectedListener = this
 
         // 画面遷移の処理
         viewModel.onMoveGameActivity.observe(this, EventObserver {
@@ -57,8 +59,8 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         })
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (parent?.id) {
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+        when (parent.id) {
             R.id.spinnerFirstMoveLastAttack -> {
                 firstOrSecondMove = parent.selectedItem as FirstOrSecondMove
             }

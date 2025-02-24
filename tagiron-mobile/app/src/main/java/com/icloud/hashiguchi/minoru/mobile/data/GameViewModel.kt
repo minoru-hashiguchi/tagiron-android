@@ -17,7 +17,6 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.ShareableQuestion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Arrays
-import kotlin.random.Random
 
 
 class GameViewModel(intent: Intent) : ViewModel() {
@@ -29,7 +28,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     companion object {
-        const val SEND_MESSAGE = "SEND_MESSAGE"
+        const val SEND_FIRST_MOVE = "FIRST_OR_SECOND_MOVE"
+        const val SEND_COMPUTER_LEVEL = "COMPUTER_LEVEL"
     }
 
     private val _isFirstMove: MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>(true) }
@@ -51,14 +51,12 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private lateinit var calledTiles: Array<TileViewModel>
 
     init {
-        val firstMoveOrLastAtackNo = intent.getIntExtra(SEND_MESSAGE, 0)
-        _isFirstMove.value = when (firstMoveOrLastAtackNo) {
-            0 -> true
-            1 -> false
-            else -> Random.nextBoolean()
-        }
-
+        val firstOrSecondMove = intent.getStringExtra(SEND_FIRST_MOVE)!!
+        _isFirstMove.value = FirstOrSecondMove.valueOf(firstOrSecondMove).getValue()
         _isMyTurn.postValue(_isFirstMove.value)
+
+        val level = intent.getStringExtra(SEND_COMPUTER_LEVEL)!!
+        you.level = Level.valueOf(level)
 
         _gameTiles.shuffle()
         _gameQuestions.shuffle()

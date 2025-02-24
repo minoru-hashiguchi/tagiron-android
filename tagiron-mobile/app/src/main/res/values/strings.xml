@@ -2,9 +2,10 @@
     <string name="app_name">ひとりでタギロン！</string>
     <string name="start_button">はじめる</string>
     <string name="first_move">先攻</string>
-    <string name="last_atack">後攻</string>
+    <string name="last_attack">後攻</string>
     <string name="random">ランダム</string>
-    <string name="msg_select_for_first_move_or_last_attack">先攻・後攻を選択してください</string>
+    <string name="message_select_for_first_move_or_last_attack">先攻・後攻を選択してください</string>
+    <string name="message_select_for_computer_level">コンピュータの強さを選んでください</string>
     <string name="human_player">あなた</string>
     <string name="computer_player">相手</string>
     <string name="question_button">質問する</string>
@@ -30,9 +31,4 @@
     <string name="message_on_computer_call_succeed">正解！あなたの負け！！</string>
     <string name="message_on_computer_call_failed">はずれ！\nあなたのターンになります</string>
     <string name="selectable_question_text_signal"> ▶︎ </string>
-    <string-array name="first_move_last_attack_list">
-        <item>先攻</item>
-        <item>後攻</item>
-        <item>おまかせ</item>
-    </string-array>
 </resources>

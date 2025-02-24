@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.icloud.hashiguchi.minoru.mobile.ui.activities.LogViewActivity">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewLogFiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="100dp">
+
+        <TextView
+            android:id="@+id/textViewLog"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="10sp" />
+    </ScrollView>
+</LinearLayout>

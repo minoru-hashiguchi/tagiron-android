@@ -119,4 +119,6 @@ public class Constant {
             Level.NORMAL,
             Level.STRONG,
     };
+
+    public static final int CLICK_COUNT_FOR_LOG_SCREEN = 5;
 }

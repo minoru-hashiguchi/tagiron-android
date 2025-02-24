@@ -13,7 +13,7 @@ import java.util.Objects
 import java.util.function.Consumer
 import java.util.stream.Collectors
 
-abstract class Player(var name: String) {
+abstract class Player(open var name: String) {
     var ownTiles: MutableLiveData<MutableList<TileViewModel>> =
         MutableLiveData<MutableList<TileViewModel>>(mutableListOf())
         protected set

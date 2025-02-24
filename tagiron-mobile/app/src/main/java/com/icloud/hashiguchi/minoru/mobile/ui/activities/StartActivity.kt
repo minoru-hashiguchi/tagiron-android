@@ -13,6 +13,7 @@ import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.data.Level
 import com.icloud.hashiguchi.minoru.mobile.data.StartViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.ListViewableAdapter
+import com.icloud.hashiguchi.minoru.mobile.utils.Logger
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.tagironmobile.R
 import com.icloud.hashiguchi.tagironmobile.databinding.ActivityStartBinding
@@ -22,6 +23,7 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var computerLevel = Level.NORMAL
     private lateinit var binding: ActivityStartBinding
     private lateinit var viewModel: StartViewModel
+    private var clickCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +40,6 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // viewModel初期化
         viewModel = ViewModelProvider(this)[StartViewModel::class.java]
 
-        binding.buttonStart.setOnClickListener {
-            viewModel.onClickButton(firstOrSecondMove, computerLevel)
-        }
-
         // スピナーの設定
         binding.spinnerFirstMoveLastAttack.adapter =
             ListViewableAdapter(this, Constant.FIRST_OR_SECOND_SPINNER_ITEMS.toMutableList())
@@ -50,13 +48,31 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             ListViewableAdapter(this, Constant.COMPUTER_LEVEL_SPINNER_ITEMS.toMutableList())
         binding.spinnerComputerLevel.onItemSelectedListener = this
 
-        // 画面遷移の処理
+        // ゲーム画面への遷移の処理
+        binding.buttonStart.setOnClickListener {
+            Logger.i(
+                Constant.LOG_TAG,
+                "onClick start button : ${firstOrSecondMove}, $computerLevel"
+            )
+            viewModel.onClickButton(firstOrSecondMove, computerLevel)
+        }
         viewModel.onMoveGameActivity.observe(this, EventObserver {
             val intent = Intent(this, GameActivity::class.java)
             intent.putExtra(GameViewModel.SEND_FIRST_MOVE, it.firstOrSecondMove.name)
             intent.putExtra(GameViewModel.SEND_COMPUTER_LEVEL, it.level.name)
             startActivity(intent)
         })
+
+        // ログ表示画面への遷移
+        binding.textViewVersion.setOnClickListener {
+            if (clickCount < Constant.CLICK_COUNT_FOR_LOG_SCREEN) {
+                clickCount++
+            } else {
+                clickCount = 0
+                val intent = Intent(this, LogViewActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {

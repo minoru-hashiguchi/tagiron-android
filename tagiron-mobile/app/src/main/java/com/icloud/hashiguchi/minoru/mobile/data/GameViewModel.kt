@@ -1,7 +1,6 @@
 package com.icloud.hashiguchi.minoru.mobile.data
 
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.icloud.hashiguchi.minoru.mobile.utils.Logger
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
 import com.icloud.hashiguchi.minoru.tagiron.constants.Color
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
@@ -67,7 +67,10 @@ class GameViewModel(intent: Intent) : ViewModel() {
         }
 
         replenishQuestions()
-        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}, _isQuestion=${_isQuestion.value}")
+        Logger.d(
+            Constant.LOG_TAG,
+            "_isPlaying=${_isPlaying.value}, _isQuestion=${_isQuestion.value}"
+        )
     }
 
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
@@ -197,7 +200,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     private fun replenishQuestions() {
-        Log.d(Constant.LOG_TAG, "replenishQuestions -- begin")
+        Logger.d(Constant.LOG_TAG, "replenishQuestions -- begin")
         val old = _fieldQuestions.value?.size
         // 不足数
         val count: Int = Constant.OPEN_QUESTIONS_COUNT - _fieldQuestions.value?.size!!
@@ -213,15 +216,15 @@ class GameViewModel(intent: Intent) : ViewModel() {
             // 山札の先頭を削除
             _gameQuestions.removeAt(0)
         }
-        Log.d(
+        Logger.d(
             Constant.LOG_TAG,
             "replenishQuestions -- end (${old} -> ${_fieldQuestions.value!!.size})"
         )
     }
 
     private fun computerAutoPlay() {
-        Log.d(Constant.LOG_TAG, "autoPlay -- begin")
-        Log.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
+        Logger.d(Constant.LOG_TAG, "autoPlay -- begin")
+        Logger.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
 
         // 行動の決定
         val actionNo = you.selectAction(_fieldQuestions.value!!)
@@ -235,7 +238,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             val picked = you.pickQuestion(actionNo, _fieldQuestions)
             _computerSelectedQuestion.postValue(picked)
         }
-        Log.d(Constant.LOG_TAG, "autoPlay -- end")
+        Logger.d(Constant.LOG_TAG, "autoPlay -- end")
     }
 
     /**
@@ -340,9 +343,9 @@ class GameViewModel(intent: Intent) : ViewModel() {
             tiles.add(TileViewModel(it))
         })
         if (player.patterns.remove(data)) {
-            Log.d(Constant.LOG_TAG, "addActionHistoryOnCall: Done delete pattern on call.")
+            Logger.d(Constant.LOG_TAG, "addActionHistoryOnCall: Done delete pattern on call.")
         } else {
-            Log.d(Constant.LOG_TAG, "addActionHistoryOnCall: Don't delete pattern on call.")
+            Logger.d(Constant.LOG_TAG, "addActionHistoryOnCall: Don't delete pattern on call.")
         }
         actionList.add(ActionItem(tiles, player.patterns.size, isSucceed))
         player.actionHistory.postValue(actionList)

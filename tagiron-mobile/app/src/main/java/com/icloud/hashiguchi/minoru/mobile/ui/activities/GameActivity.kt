@@ -3,7 +3,6 @@ package com.icloud.hashiguchi.minoru.mobile.ui.activities
 import android.app.AlertDialog
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -19,6 +18,7 @@ import com.icloud.hashiguchi.minoru.mobile.data.ActionItem
 import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.ActionItemsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
+import com.icloud.hashiguchi.minoru.mobile.utils.Logger
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
@@ -35,7 +35,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var viewModel: GameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(Constant.LOG_TAG, "onCreate -- begin")
+        Logger.d(Constant.LOG_TAG, "onCreate -- begin")
         super.onCreate(savedInstanceState)
 
         binding = ActivityGameBinding.inflate(layoutInflater)
@@ -201,7 +201,7 @@ class GameActivity : AppCompatActivity() {
         binding.recyclerViewQuestions.adapter = adapter
         viewModel.fieldQuestions.observe(this, Observer {
             it.let {
-                Log.d(Constant.LOG_TAG, "fieldQuestions.observe -> ${it.size}")
+                Logger.d(Constant.LOG_TAG, "fieldQuestions.observe -> ${it.size}")
                 adapter.data = it
             }
         })
@@ -232,7 +232,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun onClickCall(view: View) {
-        Log.d(Constant.LOG_TAG, "onClickCall -- begin")
+        Logger.d(Constant.LOG_TAG, "onClickCall -- begin")
         val viewModel by viewModels<GameViewModel>()
         if (viewModel.isFailedCheckThinkingTiles()) {
             showSimpleModalDialog(getString(R.string.ng_message_on_call_check), "", true, {})
@@ -269,7 +269,7 @@ class GameActivity : AppCompatActivity() {
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()
-        Log.d(Constant.LOG_TAG, "onClickCall -- end")
+        Logger.d(Constant.LOG_TAG, "onClickCall -- end")
     }
 
     private fun showSimpleModalDialog(

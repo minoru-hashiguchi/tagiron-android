@@ -2,6 +2,7 @@ package com.icloud.hashiguchi.minoru.mobile.data
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.icloud.hashiguchi.minoru.mobile.utils.Logger
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
 import com.icloud.hashiguchi.minoru.tagiron.constants.Color
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
@@ -84,7 +85,7 @@ abstract class Player(var name: String) {
             "patterns count: ${oldSize} -> ${patterns.size} "
         )
         if (patterns.size <= 10) {
-            patterns.forEach { Log.d(Constant.LOG_TAG, Arrays.toString(it)) }
+            patterns.forEach { Logger.d(Constant.LOG_TAG, Arrays.toString(it)) }
         }
         return patterns.size == 1
     }
@@ -262,7 +263,7 @@ abstract class Player(var name: String) {
 
             val tiles: Array<TileViewModel> = arrayOf(t1, t2, t3, t4, t5)
             val key = tiles.joinToString { it.no.value.toString() + it.color.value.toString() }
-//            Log.d(Constant.LOG_TAG + "[${name}]", "key -> ${key}")
+//            Logger.d(Constant.LOG_TAG + "[${name}]", "key -> ${key}")
             patternsMap.put(key, tiles)
 
         }

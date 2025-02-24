@@ -1,6 +1,7 @@
 package com.icloud.hashiguchi.minoru.mobile.data
 
 import android.util.Log
+import com.icloud.hashiguchi.minoru.mobile.utils.Logger
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
@@ -12,7 +13,7 @@ class ComputerPlayer(name: String) : Player(name) {
     var level = Level.STRONG
         set(value) {
             field = value
-            Log.i(
+            Logger.i(
                 Constant.LOG_TAG,
                 "コンピュータのレベルは${value}(${value.displayName})で設定されました"
             )
@@ -40,7 +41,7 @@ class ComputerPlayer(name: String) : Player(name) {
                         .thenByDescending { it.oneCount }
                         .thenBy { it.isShareable }
                 )
-                list.forEach({ Log.d(Constant.LOG_TAG, "${it}") })
+                list.forEach({ Logger.d(Constant.LOG_TAG, "${it}") })
                 if (list.isEmpty()) {
                     // パターンが減らせる質問がなければ宣言する
                     return null
@@ -78,7 +79,7 @@ class ComputerPlayer(name: String) : Player(name) {
                     var expected =
                         ExpectedAnswers(clone, patterns, questionIndex, numberIndex).execute()
                     if (expected.ignore) {
-                        Log.d(Constant.LOG_TAG, "除外：#${clone.summaryText}")
+                        Logger.d(Constant.LOG_TAG, "除外：#${clone.summaryText}")
                     } else {
                         results.add(expected)
                     }
@@ -87,7 +88,7 @@ class ComputerPlayer(name: String) : Player(name) {
                 var expected =
                     ExpectedAnswers(q, patterns, questionIndex).execute()
                 if (expected.ignore) {
-                    Log.d(Constant.LOG_TAG, "除外：#${q.summaryText}")
+                    Logger.d(Constant.LOG_TAG, "除外：#${q.summaryText}")
                 } else {
                     results.add(expected)
                 }

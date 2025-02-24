@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModel
 
 class StartViewModel : ViewModel() {
 
-    private val _onMoveSubActivity: MutableLiveData<Event<Int>> by lazy { MutableLiveData<Event<Int>>() }
-    val onMoveGameActivity: LiveData<Event<Int>> = _onMoveSubActivity
+    private val _onMoveGameActivity: MutableLiveData<Event<Parameter>> by lazy { MutableLiveData<Event<Parameter>>() }
+    val onMoveGameActivity: LiveData<Event<Parameter>> = _onMoveGameActivity
 
     //　「始める」をクリックしたときの処理
-    fun onClickButton(firstMoveOrLastAtackNo: Int) {
-        _onMoveSubActivity.value = Event(firstMoveOrLastAtackNo)
+    fun onClickButton(firstOrSecondMove: FirstOrSecondMove, level: Level) {
+        _onMoveGameActivity.value = Event(Parameter(firstOrSecondMove, level))
     }
+
+    class Parameter(val firstOrSecondMove: FirstOrSecondMove, val level: Level)
 }

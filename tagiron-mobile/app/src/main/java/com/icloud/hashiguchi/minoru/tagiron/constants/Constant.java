@@ -1,5 +1,7 @@
 package com.icloud.hashiguchi.minoru.tagiron.constants;
 
+import com.icloud.hashiguchi.minoru.mobile.data.FirstOrSecondMove;
+import com.icloud.hashiguchi.minoru.mobile.data.Level;
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase;
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionHowColor;
@@ -107,4 +109,14 @@ public class Constant {
 
     };
     public static final int OPEN_QUESTIONS_COUNT = 6;
+
+    public static final FirstOrSecondMove[] FIRST_OR_SECOND_SPINNER_ITEMS = new FirstOrSecondMove[]{
+            FirstOrSecondMove.RANDOM,
+            FirstOrSecondMove.FIRST,
+            FirstOrSecondMove.SECOND,
+    };
+    public static final Level[] COMPUTER_LEVEL_SPINNER_ITEMS = new Level[]{
+            Level.NORMAL,
+            Level.STRONG,
+    };
 }

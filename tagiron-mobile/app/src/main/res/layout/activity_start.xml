@@ -57,11 +57,30 @@
             android:autoSizeMinTextSize="@dimen/commom_text_min_size"
             android:autoSizeTextType="uniform"
             android:gravity="center"
-            android:text="@string/msg_select_for_first_move_or_last_attack"
+            android:text="@string/message_select_for_first_move_or_last_attack"
             android:textColor="@color/black" />
 
         <Spinner
-            android:id="@+id/planets_spinner"
+            android:id="@+id/spinnerFirstMoveLastAttack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:autoSizeMaxTextSize="@dimen/medium_text_max_size"
+            android:autoSizeMinTextSize="@dimen/commom_text_min_size"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:text="@string/message_select_for_computer_level"
+            android:textColor="@color/black" />
+
+        <Spinner
+            android:id="@+id/spinnerComputerLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

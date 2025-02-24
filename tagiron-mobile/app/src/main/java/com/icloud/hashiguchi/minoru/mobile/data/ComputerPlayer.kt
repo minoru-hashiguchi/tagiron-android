@@ -10,6 +10,13 @@ import java.util.Random
 
 class ComputerPlayer(name: String) : Player(name) {
     var level = Level.STRONG
+        set(value) {
+            field = value
+            Log.i(
+                Constant.LOG_TAG,
+                "コンピュータのレベルは${value}(${value.displayName})で設定されました"
+            )
+        }
     var pickedQuestionIndex = 0
     var pickedNumberIndex = 0
 
@@ -21,7 +28,7 @@ class ComputerPlayer(name: String) : Player(name) {
         }
 
         when (level) {
-            Level.NOMAL -> {
+            Level.NORMAL -> {
                 pickedQuestionIndex = Random().nextInt(questions.size)
             }
 
@@ -54,7 +61,7 @@ class ComputerPlayer(name: String) : Player(name) {
     override fun selectNumber(question: QuestionWhereNoBySelect): Int {
         val values = question.selectNumbers
         val index = when (level) {
-            Level.NOMAL -> Random().nextInt(values.size)
+            Level.NORMAL -> Random().nextInt(values.size)
             Level.STRONG -> pickedNumberIndex
         }
         return values[index]

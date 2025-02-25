@@ -1,7 +1,6 @@
 package com.icloud.hashiguchi.minoru.tagiron.questions;
 
-import android.util.Log;
-
+import com.icloud.hashiguchi.minoru.mobile.utils.Logger;
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel;
 import com.icloud.hashiguchi.minoru.tagiron.constants.Constant;
 
@@ -66,10 +65,11 @@ public abstract class QuestionBase implements Cloneable {
                 : "";
 
         String answerStr = getAnswerText();
-        Log.println(Log.INFO, Constant.LOG_TAG, String.format("!! %s %s -> [%s]",
+        String logtext = String.format("!! %s %s -> [%s]",
                 text.replaceAll("\n", ""),
                 selectStr,
-                answerStr));
+                answerStr);
+        Logger.i(logtext);
     }
 
     @Override

@@ -19,7 +19,6 @@ import com.icloud.hashiguchi.minoru.mobile.data.GameViewModel
 import com.icloud.hashiguchi.minoru.mobile.utils.ActionItemsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.FieldQuestionCardsAdapter
 import com.icloud.hashiguchi.minoru.mobile.utils.Logger
-import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import com.icloud.hashiguchi.tagironmobile.R
@@ -35,7 +34,8 @@ class GameActivity : AppCompatActivity() {
     private lateinit var viewModel: GameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Logger.d(Constant.LOG_TAG, "onCreate -- begin")
+        Logger.i("### ----- ゲームを開始します ----- ###")
+        Logger.d("${localClassName}#onCreate")
         super.onCreate(savedInstanceState)
 
         binding = ActivityGameBinding.inflate(layoutInflater)
@@ -117,6 +117,36 @@ class GameActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(callbackBackPressed)
     }
 
+    override fun onStart() {
+        Logger.d("${localClassName}#onStart")
+        super.onStart()
+    }
+
+    override fun onRestart() {
+        Logger.d("${localClassName}#onRestart")
+        super.onRestart()
+    }
+
+    override fun onResume() {
+        Logger.d("${localClassName}#onResume")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Logger.d("${localClassName}#onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Logger.d("${localClassName}#onStop")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Logger.d("${localClassName}#onDestroy")
+        super.onDestroy()
+    }
+
     val callbackBackPressed = object : OnBackPressedCallback(true) {
         //コールバックのhandleOnBackPressedを呼び出して、戻るキーを押したときの処理を記述
         override fun handleOnBackPressed() {
@@ -124,6 +154,7 @@ class GameActivity : AppCompatActivity() {
             builder
                 .setTitle("ゲームを終了しますか？")
                 .setPositiveButton("終わる") { dialog, which ->
+                    Logger.i("### ----- ゲームを終了します ----- ###")
                     finish()
                 }
                 .setNegativeButton("まだ続ける") { dialog, which ->
@@ -201,7 +232,6 @@ class GameActivity : AppCompatActivity() {
         binding.recyclerViewQuestions.adapter = adapter
         viewModel.fieldQuestions.observe(this, Observer {
             it.let {
-                Logger.d(Constant.LOG_TAG, "fieldQuestions.observe -> ${it.size}")
                 adapter.data = it
             }
         })
@@ -232,7 +262,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun onClickCall(view: View) {
-        Logger.d(Constant.LOG_TAG, "onClickCall -- begin")
+        Logger.d("#onClickCall -- begin")
         val viewModel by viewModels<GameViewModel>()
         if (viewModel.isFailedCheckThinkingTiles()) {
             showSimpleModalDialog(getString(R.string.ng_message_on_call_check), "", true, {})
@@ -269,7 +299,7 @@ class GameActivity : AppCompatActivity() {
             }
         val dialog: AlertDialog = builder.create()
         dialog.show()
-        Logger.d(Constant.LOG_TAG, "onClickCall -- end")
+        Logger.d("#onClickCall -- end")
     }
 
     private fun showSimpleModalDialog(

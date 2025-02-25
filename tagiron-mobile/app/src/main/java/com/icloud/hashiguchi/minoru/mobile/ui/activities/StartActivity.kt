@@ -26,6 +26,8 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var clickCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Logger.i("### ----- アプリ起動 ----- ###")
+        Logger.d("${localClassName}#onCreate")
         super.onCreate(savedInstanceState)
 
         // viewBinding初期化
@@ -50,10 +52,7 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         // ゲーム画面への遷移の処理
         binding.buttonStart.setOnClickListener {
-            Logger.i(
-                Constant.LOG_TAG,
-                "onClick start button : ${firstOrSecondMove}, $computerLevel"
-            )
+            Logger.i("onClick start button : ${firstOrSecondMove}, $computerLevel")
             viewModel.onClickButton(firstOrSecondMove, computerLevel)
         }
         viewModel.onMoveGameActivity.observe(this, EventObserver {
@@ -73,6 +72,36 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 startActivity(intent)
             }
         }
+    }
+
+    override fun onStart() {
+        Logger.d("${localClassName}#onStart")
+        super.onStart()
+    }
+
+    override fun onRestart() {
+        Logger.d("${localClassName}#onRestart")
+        super.onRestart()
+    }
+
+    override fun onResume() {
+        Logger.d("${localClassName}#onResume")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Logger.d("${localClassName}#onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Logger.d("${localClassName}#onStop")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Logger.d("${localClassName}#onDestroy")
+        super.onDestroy()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {

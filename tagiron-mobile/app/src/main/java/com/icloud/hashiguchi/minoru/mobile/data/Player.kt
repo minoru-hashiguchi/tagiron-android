@@ -1,6 +1,5 @@
 package com.icloud.hashiguchi.minoru.mobile.data
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.icloud.hashiguchi.minoru.mobile.utils.Logger
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
@@ -79,13 +78,9 @@ abstract class Player(open var name: String) {
                 itr.remove()
             }
         }
-
-        Log.println(
-            Log.DEBUG, Constant.LOG_TAG + "[${name}]",
-            "patterns count: ${oldSize} -> ${patterns.size} "
-        )
+        Logger.d("[${name}] patterns count: ${oldSize} -> ${patterns.size} ")
         if (patterns.size <= 10) {
-            patterns.forEach { Logger.d(Constant.LOG_TAG, Arrays.toString(it)) }
+            patterns.forEach { Logger.d("[${name}] " + Arrays.toString(it)) }
         }
         return patterns.size == 1
     }
@@ -136,13 +131,13 @@ abstract class Player(open var name: String) {
      * 手札のタイルを出力する
      */
     fun printMyTiles() {
-        Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "-- 手札 --")
+        Logger.i("[${name}] -- 手札 --")
         // カンマ区切りで出力
         val str: String = ownTiles.value!!.stream()
             .map<Any> { v: TileViewModel -> v.toString() }
             .collect(Collectors.toList())
             .joinToString(", ")
-        Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", str)
+        Logger.i("[${name}] ${str}")
     }
 
     /**
@@ -151,10 +146,10 @@ abstract class Player(open var name: String) {
      * @param size 予想手札パターン数の閾値
      */
     fun printPatterns(size: Int) {
-        Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", "候補件数 -> " + patterns.size)
+        Logger.d("[${name}] 候補件数 -> " + patterns.size)
         if (patterns.size <= size) {
             patterns.forEach(Consumer<Array<TileViewModel>> { p: Array<TileViewModel> ->
-                Log.println(Log.INFO, Constant.LOG_TAG + "[${name}]", Arrays.toString(p))
+                Logger.d("[${name}] ${Arrays.toString(p)}")
             })
         }
     }
@@ -173,21 +168,17 @@ abstract class Player(open var name: String) {
                 !ownTiles.value!!.any { it === tile }
             }
 
-        Log.println(Log.DEBUG, Constant.LOG_TAG + "[${name}]", "baseTiles => " + baseTiles)
+        Logger.d("[${name}] baseTiles => " + baseTiles)
 
         for (t1 in baseTiles) {
             doNestedCreateTilePattern(patternsMap, baseTiles, t1)
         }
         patterns = patternsMap.values.toMutableSet()
 
-        Log.println(
-            Log.DEBUG,
-            Constant.LOG_TAG + "[${name}]",
-            "候補件数[重複排除後] => " + patterns.size
-        )
+        Logger.d("[${name}] 候補件数[重複排除後] => " + patterns.size)
         val endTime = System.currentTimeMillis() // 処理終了時間を取得
         val elapsedTime = endTime - startTime // 処理時間を計算
-        Log.println(Log.DEBUG, Constant.LOG_TAG + "[${name}]", "処理時間: $elapsedTime ms")
+        Logger.d("[${name}] 処理時間: $elapsedTime ms")
         isCreatedPatterns.postValue(true)
     }
 
@@ -259,13 +250,9 @@ abstract class Player(open var name: String) {
             ) {
                 continue
             }
-
-
             val tiles: Array<TileViewModel> = arrayOf(t1, t2, t3, t4, t5)
             val key = tiles.joinToString { it.no.value.toString() + it.color.value.toString() }
-//            Logger.d(Constant.LOG_TAG + "[${name}]", "key -> ${key}")
             patternsMap.put(key, tiles)
-
         }
     }
 }

@@ -51,6 +51,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private lateinit var calledTiles: Array<TileViewModel>
 
     init {
+        Logger.d("${javaClass}#init -- start")
         val firstOrSecondMove = intent.getStringExtra(SEND_FIRST_MOVE)!!
         _isFirstMove.value = FirstOrSecondMove.valueOf(firstOrSecondMove).getValue()
         _isMyTurn.postValue(_isFirstMove.value)
@@ -67,10 +68,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
         }
 
         replenishQuestions()
-        Logger.d(
-            Constant.LOG_TAG,
-            "_isPlaying=${_isPlaying.value}, _isQuestion=${_isQuestion.value}"
-        )
+        Logger.d("${javaClass}#init -- end")
     }
 
     val ownTiles: LiveData<MutableList<TileViewModel>> = me.ownTiles
@@ -201,13 +199,12 @@ class GameViewModel(intent: Intent) : ViewModel() {
     }
 
     private fun replenishQuestions() {
-        Logger.d(Constant.LOG_TAG, "replenishQuestions -- begin")
         val old = _fieldQuestions.value?.size
         // 不足数
         val count: Int = Constant.OPEN_QUESTIONS_COUNT - _fieldQuestions.value?.size!!
         for (i in 0 until count) {
-            if (_gameQuestions.size == 0) {
-                println("質問の山札なし")
+            if (_gameQuestions.isEmpty()) {
+                Logger.w("--- 質問カードなし")
                 break
             }
 
@@ -217,15 +214,10 @@ class GameViewModel(intent: Intent) : ViewModel() {
             // 山札の先頭を削除
             _gameQuestions.removeAt(0)
         }
-        Logger.d(
-            Constant.LOG_TAG,
-            "replenishQuestions -- end (${old} -> ${_fieldQuestions.value!!.size})"
-        )
     }
 
     private fun computerAutoPlay() {
-        Logger.d(Constant.LOG_TAG, "autoPlay -- begin")
-        Logger.d(Constant.LOG_TAG, "_isPlaying=${_isPlaying.value}")
+        Logger.d("#computerAutoPlay -- begin")
 
         // 行動の決定
         val actionNo = you.selectAction(_fieldQuestions.value!!)
@@ -239,7 +231,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
             val picked = you.pickQuestion(actionNo, _fieldQuestions)
             _computerSelectedQuestion.postValue(picked)
         }
-        Logger.d(Constant.LOG_TAG, "autoPlay -- end")
+        Logger.d("#computerAutoPlay -- end")
     }
 
     /**
@@ -344,9 +336,9 @@ class GameViewModel(intent: Intent) : ViewModel() {
             tiles.add(TileViewModel(it))
         })
         if (player.patterns.remove(data)) {
-            Logger.d(Constant.LOG_TAG, "addActionHistoryOnCall: Done delete pattern on call.")
+            Logger.d("addActionHistoryOnCall: Done delete pattern on call.")
         } else {
-            Logger.d(Constant.LOG_TAG, "addActionHistoryOnCall: Don't delete pattern on call.")
+            Logger.d("addActionHistoryOnCall: Don't delete pattern on call.")
         }
         actionList.add(ActionItem(tiles, player.patterns.size, isSucceed))
         player.actionHistory.postValue(actionList)

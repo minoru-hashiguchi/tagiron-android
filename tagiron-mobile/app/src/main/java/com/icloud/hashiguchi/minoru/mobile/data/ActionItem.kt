@@ -2,7 +2,6 @@ package com.icloud.hashiguchi.minoru.mobile.data
 
 import com.icloud.hashiguchi.minoru.mobile.utils.Logger
 import com.icloud.hashiguchi.minoru.tagiron.TileViewModel
-import com.icloud.hashiguchi.minoru.tagiron.constants.Constant
 import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionBase
 
 class ActionItem(var question: QuestionBase?, var count: Int) {
@@ -14,7 +13,7 @@ class ActionItem(var question: QuestionBase?, var count: Int) {
         count: Int,
         isSucceed: Boolean
     ) : this(null, count) {
-        Logger.d(Constant.LOG_TAG, "ActionItem: calledTiles=${calledTiles}")
+        Logger.d("ActionItem: calledTiles=${calledTiles}")
         this.isSucceed = isSucceed
         calledTiles.forEach({
             this.calledTiles.add(it.clone())

@@ -7,12 +7,7 @@ import com.icloud.hashiguchi.minoru.tagiron.questions.QuestionWhereNoBySelect
 import java.util.Random
 
 
-class ComputerPlayer(name: String) : Player(name) {
-    var level = Level.STRONG
-        set(value) {
-            field = value
-            Logger.i("コンピュータのレベルは${field}(${field.displayName})で設定されました")
-        }
+class ComputerPlayer(name: String, var level: Level) : Player(name) {
     var pickedQuestionIndex = 0
     var pickedNumberIndex = 0
     override var name: String = "${name}(${level.displayName})"

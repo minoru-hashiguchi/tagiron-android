@@ -46,8 +46,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private var _isPlayerWin = MutableLiveData(false)
     private var _isShownInitDialog = MutableLiveData<Boolean>(false)
 
-    private var me = HumanPlayer("あなた")
-    private var you = ComputerPlayer("相手")
+    private lateinit var me: HumanPlayer
+    private lateinit var you: ComputerPlayer
     private lateinit var calledTiles: Array<TileViewModel>
 
     init {
@@ -57,7 +57,8 @@ class GameViewModel(intent: Intent) : ViewModel() {
         _isMyTurn.postValue(_isFirstMove.value)
 
         val level = intent.getStringExtra(SEND_COMPUTER_LEVEL)!!
-        you.level = Level.valueOf(level)
+        you = ComputerPlayer("相手", Level.valueOf(level))
+        me = HumanPlayer("あなた")
 
         _gameTiles.shuffle()
         _gameQuestions.shuffle()

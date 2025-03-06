@@ -1,23 +1,27 @@
 <resources>
     <string name="app_name">ひとりでタギロン！</string>
-    <string name="start_button">はじめる</string>
     <string name="first_move">先攻</string>
     <string name="last_attack">後攻</string>
-    <string name="random">ランダム</string>
-    <string name="message_select_for_first_move_or_last_attack">先攻・後攻を選択してください</string>
-    <string name="message_select_for_computer_level">コンピュータの強さを選んでください</string>
     <string name="human_player">あなた</string>
     <string name="computer_player">相手</string>
+    <string name="success">正解！</string>
+    <string name="failed">はずれ！</string>
+    <string name="answer">解答</string>
+    <string name="random">ランダム</string>
+
+    <string name="start_button">はじめる</string>
     <string name="question_button">質問する</string>
     <string name="edit_button">予想する</string>
     <string name="call_button">宣言する</string>
-    <string name="answer">解答</string>
-    <string name="ng_message_on_call_check">未入力のタイルがあります</string>
-    <string name="confirm_message_on_ask_question">この内容で質問しますか？</string>
-    <string name="confirm_message_on_call">この内容で宣言しますか？</string>
     <string name="button_label_cancel">やめる</string>
     <string name="button_label_no">いいえ</string>
     <string name="button_label_ok">OK</string>
+
+    <string name="message_select_for_first_move_or_last_attack">先攻・後攻を選択してください</string>
+    <string name="message_select_for_computer_level">コンピュータの強さを選んでください</string>
+    <string name="ng_message_on_call_check">未入力のタイルがあります</string>
+    <string name="confirm_message_on_ask_question">この内容で質問しますか？</string>
+    <string name="confirm_message_on_call">この内容で宣言しますか？</string>
     <string name="dialog_title_received_question">相手からの質問に解答しました</string>
     <string name="dialog_title_called">宣言しました</string>
     <string name="dialog_title_computer_called">相手が宣言しました</string>
@@ -25,10 +29,12 @@
     <string name="dialog_title_shared_answer">共有情報を相手に解答しました</string>
     <string name="dialog_title_shared_answer_from">共有情報が相手から解答されました</string>
     <string name="dialog_title_game_start">ゲームの開始</string>
-    <string name="message_game_start">のターンから始まります</string>
-    <string name="message_on_player_call_succeed">正解！あなたの勝ち！！</string>
-    <string name="message_on_player_call_failed">はずれ！\n相手のターンになります</string>
-    <string name="message_on_computer_call_succeed">正解！あなたの負け！！</string>
-    <string name="message_on_computer_call_failed">はずれ！\nあなたのターンになります</string>
+    <string name="message_alert_call_only">このターンは宣言しかできません</string>
+    <string name="message_game_start">%1$sのターンから始まります</string>
+    <string name="message_you_win">%1$sあなたの勝ち！！</string>
+    <string name="message_you_lose">%1$sあなたの負け！！</string>
+    <string name="message_draw">%1$s引き分け！！</string>
+    <string name="message_on_player_call_succeed_by_first_player">正解！\n後攻プレイヤーは一度だけ宣言が可能です</string>
+    <string name="message_turn_change">%1$s\n%2$sのターンになります</string>
     <string name="selectable_question_text_signal"> ▶︎ </string>
 </resources>

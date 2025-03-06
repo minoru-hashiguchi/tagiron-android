@@ -43,8 +43,9 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private var _computerCalledTiles = MutableLiveData<MutableList<TileViewModel>>()
     private var _isMyTurn = MutableLiveData(true)
     private var _turnCount = MutableLiveData(1)
-    private var _isPlayerWin = MutableLiveData(false)
+    private var _isPlayerWin = MutableLiveData<Boolean?>()
     private var _isShownInitDialog = MutableLiveData<Boolean>(false)
+    private var _isSucceedCallFirstPlayer = MutableLiveData(false)
 
     private lateinit var me: HumanPlayer
     private lateinit var you: ComputerPlayer
@@ -87,9 +88,15 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val isMyTurn: LiveData<Boolean> = _isMyTurn
     var isFirstMove: LiveData<Boolean> = _isFirstMove
     val turnCount: LiveData<Int> = _turnCount
-    val isPlayerWin: LiveData<Boolean> = _isPlayerWin
+    val isPlayerWin: LiveData<Boolean?> = _isPlayerWin
     val isShownInitDialog: LiveData<Boolean> = _isShownInitDialog
     val computerPlayerName: String = you.name
+    val isSucceedCallFirstPlayer: LiveData<Boolean> = _isSucceedCallFirstPlayer
+    var resultText: LiveData<String> = when (_isPlayerWin.value) {
+        true -> MutableLiveData<String>("あなたの勝ち！！")
+        false -> MutableLiveData<String>("あなたの負け！！")
+        else -> MutableLiveData<String>("引き分け！！")
+    }
 
     fun onClickInitDialogButton() {
         _isShownInitDialog.postValue(true)
@@ -243,11 +250,6 @@ class GameViewModel(intent: Intent) : ViewModel() {
     fun judge(): Boolean {
         val result = Arrays.deepEquals(calledTiles, me.ownTiles.value!!.toTypedArray())
         addActionHistoryOnCall(calledTiles, you, result)
-        if (result) {
-            finalize(false)
-        } else {
-            finalizeComputerTurn()
-        }
         return result
     }
 
@@ -314,12 +316,16 @@ class GameViewModel(intent: Intent) : ViewModel() {
         return result
     }
 
+    fun setIsSucceedCallFirstPlayer() {
+        _isSucceedCallFirstPlayer.postValue(true)
+    }
+
     /**
      * 勝敗が決した時の終了処理
      *
      * @param isPlayerWin プレイヤーの勝敗
      */
-    fun finalize(isPlayerWin: Boolean) {
+    fun finalize(isPlayerWin: Boolean?) {
         _isPlaying.postValue(false)
         _isPlayerWin.postValue(isPlayerWin)
         _selectedThinkingTilePosition.postValue(-1)

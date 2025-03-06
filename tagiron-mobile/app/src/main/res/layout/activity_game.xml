@@ -59,7 +59,7 @@
                     android:autoSizeMinTextSize="@dimen/commom_text_min_size"
                     android:autoSizeTextType="uniform"
                     android:gravity="center"
-                    android:text="@{`あなたの` + (viewmodel.isPlayerWin ? `勝ち` :`負け`) + `！！`}"
+                    android:text="@{viewmodel.resultText}"
                     android:textColor="@color/white"
                     android:visibility="@{viewmodel.isPlaying ? View.GONE : View.VISIBLE}" />
 

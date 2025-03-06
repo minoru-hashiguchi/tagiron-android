@@ -74,13 +74,53 @@ class GameActivity : AppCompatActivity() {
             if (it.isNotEmpty()) {
                 // 判定
                 val isSucceed = viewModel.judge()
-                val text =
-                    if (isSucceed) {
-                        getString(R.string.message_on_computer_call_succeed)
+                val text: String
+                val callback: () -> Unit
+                if (isSucceed) {
+                    if (viewModel.isFirstMove.value == false && viewModel.isSucceedCallFirstPlayer.value == false) {
+                        // 先攻のコンピュータが宣言に成功した場合：フラグ立てて相手のターンへ移行
+                        text = getString(R.string.message_on_player_call_succeed_by_first_player)
+                        callback = {
+                            Logger.i(text)
+                            viewModel.setIsSucceedCallFirstPlayer()
+                            viewModel.finalizeComputerTurn()
+                        }
+                    } else if (viewModel.isFirstMove.value == true && viewModel.isSucceedCallFirstPlayer.value == true) {
+                        // 先攻の操作プレイヤーが宣言成功後、後攻のコンピュータが宣言に成功した場合：引き分けでゲーム終了
+                        text = getString(R.string.message_draw, getString(R.string.success))
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalize(null)
+                        }
                     } else {
-                        getString(R.string.message_on_computer_call_failed)
+                        // 上記以外でコンピュータが宣言成功：コンピュータ勝利でゲーム終了
+                        text = getString(R.string.message_you_lose, getString(R.string.success))
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalize(false)
+                        }
                     }
-
+                } else {
+                    if (viewModel.isFirstMove.value == true && viewModel.isSucceedCallFirstPlayer.value == true) {
+                        // 先攻の操作プレイヤーが宣言成功後、後攻のコンピュータが宣言に失敗した場合：コンピュータの負けでゲーム終了
+                        text = getString(R.string.message_you_win, getString(R.string.failed))
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalize(null)
+                        }
+                    } else {
+                        // 上記以外で操作プレイヤーが宣言に失敗した場合：相手のターンへ移行
+                        text = getString(
+                            R.string.message_turn_change,
+                            getString(R.string.failed),
+                            getString(R.string.human_player)
+                        )
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalizeComputerTurn()
+                        }
+                    }
+                }
                 // 判定結果の表示
                 val inflater = this@GameActivity.layoutInflater
                 val binding: CallLayoutBinding = CallLayoutBinding.inflate(inflater)
@@ -93,8 +133,8 @@ class GameActivity : AppCompatActivity() {
                     .setCancelable(false)
                     .setTitle(getString(R.string.dialog_title_computer_called))
                     .setView(binding.root)
-                    .setNegativeButton(getString(R.string.button_label_ok)) { dialog, which ->
-                        // Do nothing.
+                    .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                        callback()
                     }
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
@@ -103,10 +143,14 @@ class GameActivity : AppCompatActivity() {
 
         // ゲーム開始の最初だけダイアログを表示
         if (viewModel.isShownInitDialog.value == false) {
-            val name: String = if (viewModel.isFirstMove.value == true) "あなた" else "相手"
+            val name: String =
+                if (viewModel.isFirstMove.value == true) {
+                    getString(R.string.human_player)
+                } else {
+                    getString(R.string.computer_player)
+                }
             showSimpleModalDialog(
-//                getString(R.string.dialog_title_game_start),
-                name + getString(R.string.message_game_start),
+                getString(R.string.message_game_start, name),
                 "",
                 false,
                 { viewModel.onClickInitDialogButton() })
@@ -192,7 +236,9 @@ class GameActivity : AppCompatActivity() {
              */
             override fun contentTapped(position: Int) {
 
-                if (viewModel.isPlaying.value == true && viewModel.isMyTurn.value == true) {
+                if (viewModel.isSucceedCallFirstPlayer.value == false) {
+                    showSimpleModalDialog(getString(R.string.message_alert_call_only), "", true, {})
+                } else if (viewModel.isPlaying.value == true && viewModel.isMyTurn.value == true) {
                     val question = viewModel.getQuestion(position)
                     var selectPosition = 0
                     val items: Array<String> = if (question is QuestionWhereNoBySelect) {
@@ -286,11 +332,49 @@ class GameActivity : AppCompatActivity() {
                 val text: String
                 val callback: () -> Unit
                 if (isSucceed) {
-                    text = getString(R.string.message_on_player_call_succeed)
-                    callback = { viewModel.finalize(true) }
+                    if (viewModel.isFirstMove.value == true && viewModel.isSucceedCallFirstPlayer.value == false) {
+                        // 先攻の操作プレイヤーが宣言に成功した場合：フラグ立てて相手のターンへ移行
+                        text = getString(R.string.message_on_player_call_succeed_by_first_player)
+                        callback = {
+                            Logger.i(text)
+                            viewModel.setIsSucceedCallFirstPlayer()
+                            viewModel.finalizePlayerTurn()
+                        }
+                    } else if (viewModel.isFirstMove.value == false && viewModel.isSucceedCallFirstPlayer.value == true) {
+                        // 先攻のコンピュータが宣言成功後、後攻の操作プレイヤーが宣言に成功した場合：引き分けでゲーム終了
+                        text = getString(R.string.message_draw, getString(R.string.success))
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalize(null)
+                        }
+                    } else {
+                        // 上記以外で操作プレイヤーが宣言成功：プレイヤー勝利でゲーム終了
+                        text = getString(R.string.message_you_win, getString(R.string.success))
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalize(true)
+                        }
+                    }
                 } else {
-                    text = getString(R.string.message_on_player_call_failed)
-                    callback = { viewModel.finalizePlayerTurn() }
+                    if (viewModel.isFirstMove.value == false && viewModel.isSucceedCallFirstPlayer.value == true) {
+                        // 先攻のコンピュータが宣言成功後、後攻の操作プレイヤーが宣言に失敗した場合：操作プレイヤーの負けでゲーム終了
+                        text = getString(R.string.message_you_lose, getString(R.string.failed))
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalize(null)
+                        }
+                    } else {
+                        // 上記以外で操作プレイヤーが宣言に失敗した場合：相手のターンへ移行
+                        text = getString(
+                            R.string.message_turn_change,
+                            getString(R.string.failed),
+                            getString(R.string.computer_player)
+                        )
+                        callback = {
+                            Logger.i(text)
+                            viewModel.finalizePlayerTurn()
+                        }
+                    }
                 }
                 showSimpleModalDialog(title, text, false, callback)
             }

@@ -236,41 +236,49 @@ class GameActivity : AppCompatActivity() {
              */
             override fun contentTapped(position: Int) {
 
-                if (viewModel.isSucceedCallFirstPlayer.value == true) {
-                    showSimpleModalDialog(getString(R.string.message_alert_call_only), "", true, {})
-                } else if (viewModel.isPlaying.value == true && viewModel.isMyTurn.value == true) {
-                    val question = viewModel.getQuestion(position)
-                    var selectPosition = 0
-                    val items: Array<String> = if (question is QuestionWhereNoBySelect) {
-                        question.selectNumbers.map { "${it} にする" }.toTypedArray()
+                if (viewModel.isPlaying.value == true && viewModel.isMyTurn.value == true) {
+                    if (viewModel.isSucceedCallFirstPlayer.value == true) {
+                        // プレイ中、かつ自分のターンで先攻が宣言成功している場合は宣言しかできない警告をする
+                        showSimpleModalDialog(
+                            getString(R.string.message_alert_call_only),
+                            "",
+                            true,
+                            {})
                     } else {
-                        arrayOf()
-                    }
+                        // プレイ中、かつ自分のターンで上記以外の場合は質問の選択が可能
+                        val question = viewModel.getQuestion(position)
+                        var selectPosition = 0
+                        val items: Array<String> = if (question is QuestionWhereNoBySelect) {
+                            question.selectNumbers.map { "${it} にする" }.toTypedArray()
+                        } else {
+                            arrayOf()
+                        }
 
-                    val inflater = this@GameActivity.layoutInflater
-                    val binding: QuestionCardLayoutBinding =
-                        QuestionCardLayoutBinding.inflate(inflater)
-                    binding.textViewQuestionText.text = question.text
-                    val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
-                    builder
-                        .setTitle(getString(R.string.confirm_message_on_ask_question))
-                        .setView(binding.root)
-                        .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
-                            var picked = viewModel.onSelectQuestion(position, selectPosition)
-                            showModalDialogOnAnswerReceived(picked, viewModel)
+                        val inflater = this@GameActivity.layoutInflater
+                        val binding: QuestionCardLayoutBinding =
+                            QuestionCardLayoutBinding.inflate(inflater)
+                        binding.textViewQuestionText.text = question.text
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(this@GameActivity)
+                        builder
+                            .setTitle(getString(R.string.confirm_message_on_ask_question))
+                            .setView(binding.root)
+                            .setPositiveButton(getString(R.string.button_label_ok)) { dialog, which ->
+                                var picked = viewModel.onSelectQuestion(position, selectPosition)
+                                showModalDialogOnAnswerReceived(picked, viewModel)
+                            }
+                            .setNegativeButton(R.string.button_label_cancel) { dialog, which ->
+                                // Do nothing.
+                            }
+                        if (items.isNotEmpty()) {
+                            builder.setSingleChoiceItems(items, 0) { dialog, which ->
+                                selectPosition = which
+                            }
                         }
-                        .setNegativeButton(R.string.button_label_cancel) { dialog, which ->
-                            // Do nothing.
-                        }
-                    if (items.isNotEmpty()) {
-                        builder.setSingleChoiceItems(items, 0) { dialog, which ->
-                            selectPosition = which
-                        }
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
                     }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
                 } else {
-                    // プレイ終了後の質問カードのタップを抑止する
+                    // プレイ終了後、および相手ターン中の質問カードのタップを抑止する
                 }
             }
         })

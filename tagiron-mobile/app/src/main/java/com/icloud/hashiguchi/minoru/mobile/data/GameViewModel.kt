@@ -228,7 +228,7 @@ class GameViewModel(intent: Intent) : ViewModel() {
         Logger.d("#computerAutoPlay -- begin")
 
         // 行動の決定
-        val actionNo = you.selectAction(_fieldQuestions.value!!)
+        val actionNo = you.selectAction(_fieldQuestions.value!!, isSucceedCallFirstPlayer.value!!)
 
         if (actionNo == null) {
             // 宣言

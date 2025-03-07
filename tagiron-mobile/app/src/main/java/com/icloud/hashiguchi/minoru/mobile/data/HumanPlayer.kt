@@ -20,7 +20,7 @@ class HumanPlayer(name: String) : Player(name) {
         )
     )
 
-    override fun selectAction(questions: MutableList<QuestionBase>): Int? {
+    override fun selectAction(questions: MutableList<QuestionBase>, isCallOnly: Boolean): Int? {
         TODO("Not yet implemented")
     }
 

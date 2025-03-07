@@ -12,9 +12,9 @@ class ComputerPlayer(name: String, var level: Level) : Player(name) {
     var pickedNumberIndex = 0
     override var name: String = "${name}(${level.displayName})"
 
-    override fun selectAction(questions: MutableList<QuestionBase>): Int? {
-        // 場の質問カードがないときは宣言のみ
-        if (questions.size == 0 || patterns.size == 1) {
+    override fun selectAction(questions: MutableList<QuestionBase>, isCallOnly: Boolean): Int? {
+        // 場の質問カードがない、残パターン数が2以下、宣言しか許容されていない場合は宣言のみ
+        if (questions.size == 0 || patterns.size <= 2 || isCallOnly) {
             Logger.i("[${name}] 宣言する")
             return null
         }

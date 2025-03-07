@@ -30,10 +30,11 @@ abstract class Player(open var name: String) {
     /**
      * 質問か宣言か、行動を選択する
      *
-     * @param questions
+     * @param questions 場の質問カード
+     * @param isCallOnly 宣言しかできない場合ON
      * @return 行動が質問の場合は質問番号、宣言の場合はnull
      */
-    abstract fun selectAction(questions: MutableList<QuestionBase>): Int?
+    abstract fun selectAction(questions: MutableList<QuestionBase>, isCallOnly: Boolean): Int?
 
     /**
      * 宣言する

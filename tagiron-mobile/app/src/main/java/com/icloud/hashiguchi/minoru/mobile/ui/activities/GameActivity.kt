@@ -236,7 +236,7 @@ class GameActivity : AppCompatActivity() {
              */
             override fun contentTapped(position: Int) {
 
-                if (viewModel.isSucceedCallFirstPlayer.value == false) {
+                if (viewModel.isSucceedCallFirstPlayer.value == true) {
                     showSimpleModalDialog(getString(R.string.message_alert_call_only), "", true, {})
                 } else if (viewModel.isPlaying.value == true && viewModel.isMyTurn.value == true) {
                     val question = viewModel.getQuestion(position)

@@ -90,14 +90,14 @@ class GameActivity : AppCompatActivity() {
                         text = getString(R.string.message_draw, getString(R.string.success))
                         callback = {
                             Logger.i(text)
-                            viewModel.finalize(null)
+                            viewModel.finalize(getString(R.string.message_draw, ""))
                         }
                     } else {
                         // 上記以外でコンピュータが宣言成功：コンピュータ勝利でゲーム終了
                         text = getString(R.string.message_you_lose, getString(R.string.success))
                         callback = {
                             Logger.i(text)
-                            viewModel.finalize(false)
+                            viewModel.finalize(getString(R.string.message_you_lose, ""))
                         }
                     }
                 } else {
@@ -106,7 +106,7 @@ class GameActivity : AppCompatActivity() {
                         text = getString(R.string.message_you_win, getString(R.string.failed))
                         callback = {
                             Logger.i(text)
-                            viewModel.finalize(null)
+                            viewModel.finalize(getString(R.string.message_you_win, ""))
                         }
                     } else {
                         // 上記以外で操作プレイヤーが宣言に失敗した場合：相手のターンへ移行
@@ -353,14 +353,14 @@ class GameActivity : AppCompatActivity() {
                         text = getString(R.string.message_draw, getString(R.string.success))
                         callback = {
                             Logger.i(text)
-                            viewModel.finalize(null)
+                            viewModel.finalize(getString(R.string.message_draw, ""))
                         }
                     } else {
                         // 上記以外で操作プレイヤーが宣言成功：プレイヤー勝利でゲーム終了
                         text = getString(R.string.message_you_win, getString(R.string.success))
                         callback = {
                             Logger.i(text)
-                            viewModel.finalize(true)
+                            viewModel.finalize(getString(R.string.message_you_win, ""))
                         }
                     }
                 } else {
@@ -369,7 +369,7 @@ class GameActivity : AppCompatActivity() {
                         text = getString(R.string.message_you_lose, getString(R.string.failed))
                         callback = {
                             Logger.i(text)
-                            viewModel.finalize(null)
+                            viewModel.finalize(getString(R.string.message_you_lose, ""))
                         }
                     } else {
                         // 上記以外で操作プレイヤーが宣言に失敗した場合：相手のターンへ移行

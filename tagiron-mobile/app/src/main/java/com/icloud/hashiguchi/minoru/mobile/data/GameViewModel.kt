@@ -43,12 +43,12 @@ class GameViewModel(intent: Intent) : ViewModel() {
     private var _computerCalledTiles = MutableLiveData<MutableList<TileViewModel>>()
     private var _isMyTurn = MutableLiveData(true)
     private var _turnCount = MutableLiveData(1)
-    private var _isPlayerWin = MutableLiveData<Boolean?>()
     private var _isShownInitDialog = MutableLiveData<Boolean>(false)
     private var _isSucceedCallFirstPlayer = MutableLiveData(false)
+    private var _gameResultText = MutableLiveData<String>()
 
-    private lateinit var me: HumanPlayer
-    private lateinit var you: ComputerPlayer
+    private var me: HumanPlayer
+    private var you: ComputerPlayer
     private lateinit var calledTiles: Array<TileViewModel>
 
     init {
@@ -88,15 +88,10 @@ class GameViewModel(intent: Intent) : ViewModel() {
     val isMyTurn: LiveData<Boolean> = _isMyTurn
     var isFirstMove: LiveData<Boolean> = _isFirstMove
     val turnCount: LiveData<Int> = _turnCount
-    val isPlayerWin: LiveData<Boolean?> = _isPlayerWin
     val isShownInitDialog: LiveData<Boolean> = _isShownInitDialog
     val computerPlayerName: String = you.name
     val isSucceedCallFirstPlayer: LiveData<Boolean> = _isSucceedCallFirstPlayer
-    var resultText: LiveData<String> = when (_isPlayerWin.value) {
-        true -> MutableLiveData<String>("あなたの勝ち！！")
-        false -> MutableLiveData<String>("あなたの負け！！")
-        else -> MutableLiveData<String>("引き分け！！")
-    }
+    val gameResultText: LiveData<String> = _gameResultText
 
     fun onClickInitDialogButton() {
         _isShownInitDialog.postValue(true)
@@ -325,9 +320,9 @@ class GameViewModel(intent: Intent) : ViewModel() {
      *
      * @param isPlayerWin プレイヤーの勝敗
      */
-    fun finalize(isPlayerWin: Boolean?) {
+    fun finalize(resultText: String) {
         _isPlaying.postValue(false)
-        _isPlayerWin.postValue(isPlayerWin)
+        _gameResultText.postValue(resultText)
         _selectedThinkingTilePosition.postValue(-1)
     }
 

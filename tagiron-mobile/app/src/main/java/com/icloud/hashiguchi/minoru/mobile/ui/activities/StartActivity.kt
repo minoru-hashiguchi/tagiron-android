@@ -42,10 +42,11 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // viewModel初期化
         viewModel = ViewModelProvider(this)[StartViewModel::class.java]
 
-        // スピナーの設定
+        // 先攻後攻スピナーの設定
         binding.spinnerFirstMoveLastAttack.adapter =
             ListViewableAdapter(this, Constant.FIRST_OR_SECOND_SPINNER_ITEMS.toMutableList())
-        binding.spinnerComputerLevel.onItemSelectedListener = this
+        binding.spinnerFirstMoveLastAttack.onItemSelectedListener = this
+        // コンピュータの強さスピナーの設定
         binding.spinnerComputerLevel.adapter =
             ListViewableAdapter(this, Constant.COMPUTER_LEVEL_SPINNER_ITEMS.toMutableList())
         binding.spinnerComputerLevel.onItemSelectedListener = this
@@ -108,10 +109,12 @@ class StartActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         when (parent.id) {
             R.id.spinnerFirstMoveLastAttack -> {
                 firstOrSecondMove = parent.selectedItem as FirstOrSecondMove
+                Logger.i("#onItemSelected : $firstOrSecondMove")
             }
 
             R.id.spinnerComputerLevel -> {
                 computerLevel = parent.selectedItem as Level
+                Logger.i("#onItemSelected : $computerLevel")
             }
         }
     }
